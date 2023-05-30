@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GarbageModel {
+struct GarbageRegistModel {
     //ゴミの種類
     let garbageTypes:[String] = ["燃えるゴミ","燃えないゴミ","プラスチック","ビン・カン","燃えないゴミ",
                                 "プラスチック","ペットボトル","古紙","ダンボール","資源ゴミ","粗大ごみ"]

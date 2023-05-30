@@ -11,6 +11,9 @@
 		1634FFC529DD53D50054D499 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1634FFC429DD53D50054D499 /* ContentView.swift */; };
 		1634FFC729DD53D60054D499 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1634FFC629DD53D60054D499 /* Assets.xcassets */; };
 		1634FFCA29DD53D60054D499 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1634FFC929DD53D60054D499 /* Preview Assets.xcassets */; };
+		165FD6F42A25E3D10034ED2F /* GarbageRegistVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165FD6F32A25E3D10034ED2F /* GarbageRegistVM.swift */; };
+		165FD6F62A25F1A30034ED2F /* GarbageRegistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165FD6F52A25F1A30034ED2F /* GarbageRegistView.swift */; };
+		165FD6FA2A2600740034ED2F /* FloatingActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165FD6F92A2600740034ED2F /* FloatingActionButton.swift */; };
 		168B48C429DD5B1400AB2BD8 /* ParentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48C029DD5B1400AB2BD8 /* ParentView.swift */; };
 		168B48C529DD5B1400AB2BD8 /* SetAdressInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48C129DD5B1400AB2BD8 /* SetAdressInfoView.swift */; };
 		168B48C629DD5B1400AB2BD8 /* PermitPositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48C229DD5B1400AB2BD8 /* PermitPositionView.swift */; };
@@ -26,7 +29,7 @@
 		168B48DB29DD5BCB00AB2BD8 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48D829DD5BCB00AB2BD8 /* LocationManager.swift */; };
 		168B48DF29DE73C000AB2BD8 /* ScaleEffectProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48DE29DE73C000AB2BD8 /* ScaleEffectProgressView.swift */; };
 		168B48E129DF019E00AB2BD8 /* GarbageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48E029DF019E00AB2BD8 /* GarbageListView.swift */; };
-		168B48E329DF026900AB2BD8 /* GarbageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48E229DF026900AB2BD8 /* GarbageModel.swift */; };
+		168B48E329DF026900AB2BD8 /* GarbageRegistModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48E229DF026900AB2BD8 /* GarbageRegistModel.swift */; };
 		168B48E52A09E81200AB2BD8 /* UserAdressModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48E42A09E81200AB2BD8 /* UserAdressModel.swift */; };
 		168B48E72A0A0BAD00AB2BD8 /* GarbageMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48E62A0A0BAD00AB2BD8 /* GarbageMapView.swift */; };
 		168B48E92A0A0C1100AB2BD8 /* GarbageVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48E82A0A0C1100AB2BD8 /* GarbageVM.swift */; };
@@ -42,6 +45,10 @@
 		1634FFC429DD53D50054D499 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		1634FFC629DD53D60054D499 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1634FFC929DD53D60054D499 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		165FD6F22A2477E70034ED2F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		165FD6F32A25E3D10034ED2F /* GarbageRegistVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageRegistVM.swift; sourceTree = "<group>"; };
+		165FD6F52A25F1A30034ED2F /* GarbageRegistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageRegistView.swift; sourceTree = "<group>"; };
+		165FD6F92A2600740034ED2F /* FloatingActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingActionButton.swift; sourceTree = "<group>"; };
 		168B48C029DD5B1400AB2BD8 /* ParentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParentView.swift; sourceTree = "<group>"; };
 		168B48C129DD5B1400AB2BD8 /* SetAdressInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetAdressInfoView.swift; sourceTree = "<group>"; };
 		168B48C229DD5B1400AB2BD8 /* PermitPositionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PermitPositionView.swift; sourceTree = "<group>"; };
@@ -57,7 +64,7 @@
 		168B48D829DD5BCB00AB2BD8 /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		168B48DE29DE73C000AB2BD8 /* ScaleEffectProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaleEffectProgressView.swift; sourceTree = "<group>"; };
 		168B48E029DF019E00AB2BD8 /* GarbageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageListView.swift; sourceTree = "<group>"; };
-		168B48E229DF026900AB2BD8 /* GarbageModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageModel.swift; sourceTree = "<group>"; };
+		168B48E229DF026900AB2BD8 /* GarbageRegistModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageRegistModel.swift; sourceTree = "<group>"; };
 		168B48E42A09E81200AB2BD8 /* UserAdressModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAdressModel.swift; sourceTree = "<group>"; };
 		168B48E62A0A0BAD00AB2BD8 /* GarbageMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageMapView.swift; sourceTree = "<group>"; };
 		168B48E82A0A0C1100AB2BD8 /* GarbageVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageVM.swift; sourceTree = "<group>"; };
@@ -111,11 +118,13 @@
 		1634FFC129DD53D50054D499 /* GarbageCalendar */ = {
 			isa = PBXGroup;
 			children = (
+				165FD6F22A2477E70034ED2F /* Info.plist */,
 				168B48DD29DE739E00AB2BD8 /* Util */,
 				168B48DC29DE61BF00AB2BD8 /* ViewModel */,
 				168B48D529DD5BCB00AB2BD8 /* Manager */,
-				168B48C829DD5B8400AB2BD8 /* Models */,
 				168B48BF29DD5B1400AB2BD8 /* Views */,
+				168B48C829DD5B8400AB2BD8 /* Models */,
+				165FD6F72A25FC220034ED2F /* New Group */,
 				1634FFC229DD53D50054D499 /* GarbageCalendarApp.swift */,
 				1634FFC429DD53D50054D499 /* ContentView.swift */,
 				1634FFC629DD53D60054D499 /* Assets.xcassets */,
@@ -132,9 +141,25 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		165FD6F72A25FC220034ED2F /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "New Group";
+			sourceTree = "<group>";
+		};
+		165FD6F82A2600580034ED2F /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+				165FD6F92A2600740034ED2F /* FloatingActionButton.swift */,
+			);
+			path = Custom;
+			sourceTree = "<group>";
+		};
 		168B48BF29DD5B1400AB2BD8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				165FD6F82A2600580034ED2F /* Custom */,
 				168B48C029DD5B1400AB2BD8 /* ParentView.swift */,
 				168B48C229DD5B1400AB2BD8 /* PermitPositionView.swift */,
 				168B48C129DD5B1400AB2BD8 /* SetAdressInfoView.swift */,
@@ -142,6 +167,7 @@
 				168B48E029DF019E00AB2BD8 /* GarbageListView.swift */,
 				168B48E62A0A0BAD00AB2BD8 /* GarbageMapView.swift */,
 				168B48C329DD5B1400AB2BD8 /* CalendarView.swift */,
+				165FD6F52A25F1A30034ED2F /* GarbageRegistView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -153,7 +179,7 @@
 				168B48CA29DD5B8400AB2BD8 /* Model.swift */,
 				168B48CC29DD5B8400AB2BD8 /* UserDataModel.swift */,
 				168B48CD29DD5B8400AB2BD8 /* AdrSetModel.swift */,
-				168B48E229DF026900AB2BD8 /* GarbageModel.swift */,
+				168B48E229DF026900AB2BD8 /* GarbageRegistModel.swift */,
 				168B48E42A09E81200AB2BD8 /* UserAdressModel.swift */,
 			);
 			path = Models;
@@ -174,6 +200,7 @@
 			children = (
 				168B48CB29DD5B8400AB2BD8 /* SetAdressInfoVM.swift */,
 				168B48E82A0A0C1100AB2BD8 /* GarbageVM.swift */,
+				165FD6F32A25E3D10034ED2F /* GarbageRegistVM.swift */,
 				169F8E902A243A1F0082F330 /* BaseVM.swift */,
 			);
 			path = ViewModel;
@@ -315,12 +342,14 @@
 				168B48C629DD5B1400AB2BD8 /* PermitPositionView.swift in Sources */,
 				168B48CE29DD5B8400AB2BD8 /* Geocoder.swift in Sources */,
 				168B48DF29DE73C000AB2BD8 /* ScaleEffectProgressView.swift in Sources */,
-				168B48E329DF026900AB2BD8 /* GarbageModel.swift in Sources */,
+				168B48E329DF026900AB2BD8 /* GarbageRegistModel.swift in Sources */,
 				168B48DB29DD5BCB00AB2BD8 /* LocationManager.swift in Sources */,
 				168B48D229DD5B8400AB2BD8 /* AdrSetModel.swift in Sources */,
 				168B48D129DD5B8400AB2BD8 /* UserDataModel.swift in Sources */,
 				168B48D929DD5BCB00AB2BD8 /* PostDataManager.swift in Sources */,
 				168B48E129DF019E00AB2BD8 /* GarbageListView.swift in Sources */,
+				165FD6F62A25F1A30034ED2F /* GarbageRegistView.swift in Sources */,
+				165FD6FA2A2600740034ED2F /* FloatingActionButton.swift in Sources */,
 				1634FFC529DD53D50054D499 /* ContentView.swift in Sources */,
 				168B48D429DD5BB700AB2BD8 /* Const.swift in Sources */,
 				168B48E52A09E81200AB2BD8 /* UserAdressModel.swift in Sources */,
@@ -330,6 +359,7 @@
 				168B48C429DD5B1400AB2BD8 /* ParentView.swift in Sources */,
 				168B48DA29DD5BCB00AB2BD8 /* LocationClient.swift in Sources */,
 				1634FFC329DD53D50054D499 /* GarbageCalendarApp.swift in Sources */,
+				165FD6F42A25E3D10034ED2F /* GarbageRegistVM.swift in Sources */,
 				168B48C529DD5B1400AB2BD8 /* SetAdressInfoView.swift in Sources */,
 				168B48E72A0A0BAD00AB2BD8 /* GarbageMapView.swift in Sources */,
 				168B48D029DD5B8400AB2BD8 /* SetAdressInfoVM.swift in Sources */,
@@ -467,6 +497,7 @@
 				DEVELOPMENT_TEAM = 27PDE49Z62;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GarbageCalendar/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -498,6 +529,7 @@
 				DEVELOPMENT_TEAM = 27PDE49Z62;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GarbageCalendar/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

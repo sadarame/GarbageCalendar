@@ -33,7 +33,6 @@ class SetAdressInfoVM: BaseVM {
     @Published var subThoroughfare = ""
     //建物名
     @Published var buildName = ""
-    
     //緯度
     @Published var latitude = ""
     //経度
@@ -64,12 +63,17 @@ class SetAdressInfoVM: BaseVM {
     func DispInitValue(locationClient:LocationClient){
         do {
             let realm = try Realm()
+            
+            //データが存在する場合
             if let adrSetModelData = realm.objects(AdrSetModel.self).first {
                 adrSetModel = adrSetModelData
+                
+            //データが存在しない場合
             } else {
                 adrSetModel = AdrSetModel()
                 isNoAdrData = true
             }
+            
         } catch let error as NSError {
           // handle error
             print(error)
@@ -106,6 +110,25 @@ class SetAdressInfoVM: BaseVM {
             self.latitude = adrSetModel!.latitude!
             self.longitude = adrSetModel!.longitude!
             
+        }
+    }
+    
+    func callgetUserIdAPI(){
+        //APIのコール
+        fetchDataFromAPI(url: Const.URL_GET_USER_ID, type: Const.TYPE_GET_USER_ID) { (result: Result<ResponseData, Error>) in
+            switch result {
+            case .success(let responseData):
+                // 成功時の処理
+                print("Status: \(responseData.status)")
+                print("User ID: \(responseData.userId)")
+                print("Message: \(responseData.message)")
+                
+                self.userNo = responseData.userId
+                
+            case .failure(let error):
+                // エラー時の処理
+                print("Error: \(error)")
+            }
         }
     }
     

@@ -7,9 +7,10 @@
 
 import Foundation
 
+//
 class GarbageVM: BaseVM {
     
-    @Published var garbageModel:GarbageModel = GarbageModel()
+//    @Published var garbageModel:GarbageModel = GarbageModel()
     
     func showInit(str:String){
         print(str)

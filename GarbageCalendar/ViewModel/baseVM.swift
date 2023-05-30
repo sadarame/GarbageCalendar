@@ -10,18 +10,16 @@ import Foundation
 class BaseVM: ObservableObject {
     
     @Published var isLoading: Bool = false
-    var requestBody:[String:String]
-    
-    init(){
-        
-    }
 
     //通信用のメソッド（各VMから呼び出す）
     func fetchDataFromAPI<T: Decodable>(url: String, type:String,completion: @escaping (Result<T, Error>) -> Void) {
-        guard let request = URLRequest(url:URL(string: url)!) else {
+        guard let url = URL(string: url) else {
             completion(.failure(APIError.invalidURL))
             return
         }
+        
+        var requestBody:[String:String]
+        var request = URLRequest(url: url)
         
         //TODO:あとでスイッチ分にするかも
         if type == Const.TYPE_GET_USER_ID {

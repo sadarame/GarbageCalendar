@@ -19,6 +19,11 @@ struct SetAdressInfoView: View {
         NavigationStack {
             VStack{
                 HStack{
+                    Text("ユーザID")
+                    Text(vm.userNo)
+                }
+                
+                HStack{
                     Text("郵便番号")
                     TextField("", text: $vm.postalCode)
                 }
@@ -51,15 +56,20 @@ struct SetAdressInfoView: View {
                 
                 HStack{
                     Spacer()
-                    Button("登録",action: {
-                        //住所情報登録
-                        vm.setUserAdrData()
-                        isActive = true
-                    })
+                    if !vm.isLoading {
+                        Button("登録",action: {
+                            //住所情報登録
+                            vm.setUserAdrData()
+                            isActive = true
+                        })
+                    }
                 }
             }.onAppear{
                 //位置情報から住所を設定
                 vm.DispInitValue(locationClient: locationClient)
+                //ユーザーIDを取得
+                vm.callgetUserIdAPI()
+                
             }
         }
         .navigationDestination(isPresented: $isActive) {
