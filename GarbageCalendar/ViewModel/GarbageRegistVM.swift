@@ -20,6 +20,14 @@ class GarbageRegistVM : BaseVM {
         
     }
     
+    //プラスボタン押下時のイベント
+    //リストに構造体を追加
+    func addGarbageInfo(){
+        let newGarbageRegistModel = GarbageRegistModel() // 新しいインスタンスを作成
+        garbageRegistModelList.append(newGarbageRegistModel) // リストに追
+        
+    }
+    
     //登録
     func registData(){
         //ユーザーデフォルトに登録
