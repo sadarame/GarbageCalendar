@@ -13,11 +13,11 @@ class GarbageRegistVM : BaseVM {
     //モデル変数のリスト
     @Published var garbageRegistModelList:[GarbageRegistModel]=[]
     
-    //
+    //初期処理
     func onApperInit(){
         //ユーザデフォルトからモデル変数リストを取得
         
-        
+        //はじめましてだったらリスト作る
     }
     
     //プラスボタン押下時のイベント
@@ -34,8 +34,5 @@ class GarbageRegistVM : BaseVM {
         
         //登録用のAPIを叩く
     }
-    
-    
-    
-    
+ 
 }
