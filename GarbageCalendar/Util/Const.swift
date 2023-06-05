@@ -9,7 +9,7 @@ struct Const {
     static let locationViewMsg3 = "位置の取得が完了しました。"
     
     //APIのリクエスト先
-    static let URL_GET_USER_ID = "https://golira-pochette.com/GarbageAPI.php"
+    static let URL_API_CALL = "https://golira-pochette.com/GarbageAPI.php"
     static let API_KEY = "YOSUKE1227"
     
     //キー情報
@@ -17,8 +17,7 @@ struct Const {
     
     //処理タイプ
     static let TYPE_GET_USER_ID = "1"
-    
-    
+    static let TYPE_REGIST_GARBAGE_INFO = "2"
     
     //画面番号
     static let LocationSetViewCode = "1"

@@ -11,30 +11,21 @@ class BaseVM: ObservableObject {
     
     @Published var isLoading: Bool = false
 
-    //通信用のメソッド（各VMから呼び出す）
-    func fetchDataFromAPI<T: Decodable>(url: String, type:String,completion: @escaping (Result<T, Error>) -> Void) {
+    //引数ありでAPIコールする用のメソッド
+    func fetchDataFromAPI<T: Decodable>(url: String, type:String, jsonData:Data, completion: @escaping (Result<T, Error>) -> Void) {
         guard let url = URL(string: url) else {
             completion(.failure(APIError.invalidURL))
             return
         }
         
-        var requestBody:[String:String]
+        //リクエスト作成
         var request = URLRequest(url: url)
         
-        //TODO:あとでスイッチ分にするかも
-        if type == Const.TYPE_GET_USER_ID {
-            //リクエスト値を設定
-            requestBody = [
-                "TYPE":Const.TYPE_GET_USER_ID,
-                "API_KEY":Const.API_KEY
-            ]
-            
-            request.httpMethod = "POST"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            
-            let jsonData = try? JSONSerialization.data(withJSONObject: requestBody)
-            request.httpBody = jsonData
-        }
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        //引数で受け取ったjsonを設定
+        request.httpBody = jsonData
         
         isLoading = true
         
@@ -74,3 +65,9 @@ struct ResponseData: Codable {
     let userId: String
     let message: String
 }
+
+struct GarbageRegistRes: Codable {
+    let status: String
+    let message: String
+}
+

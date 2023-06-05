@@ -29,4 +29,23 @@ func loadPerson() -> Person? {
     return nil
 }
 
+func saveGarbageRegistModels(_ models: [GarbageRegistModel]) {
+    do {
+        let data = try JSONEncoder().encode(models)
+        UserDefaults.standard.set(data, forKey: "garbageRegistModels")
+    } catch {
+        print("Failed to save garbage regist models: \(error)")
+    }
+}
 
+func loadGarbageRegistModels() -> [GarbageRegistModel] {
+    if let data = UserDefaults.standard.data(forKey: "garbageRegistModels") {
+        do {
+            let models = try JSONDecoder().decode([GarbageRegistModel].self, from: data)
+            return models
+        } catch {
+            print("Failed to load garbage regist models: \(error)")
+        }
+    }
+    return []
+}

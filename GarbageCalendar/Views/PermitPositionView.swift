@@ -49,7 +49,7 @@ struct PermitPositionView: View {
             }
         }
         .navigationDestination(isPresented: $isActive) {
-            SetAdressInfoView(locationClient:locationClient)
+            AddressRegistView(locationClient:locationClient)
         }
     }}
 

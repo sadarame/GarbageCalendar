@@ -8,9 +8,9 @@
 import SwiftUI
 import RealmSwift
 
-struct SetAdressInfoView: View {
+struct AddressRegistView: View {
  
-    @ObservedObject var vm:SetAdressInfoVM = SetAdressInfoVM()
+    @ObservedObject var vm:AddressRegistVM = AddressRegistVM()
     @State var locationClient:LocationClient
     
     @State var isActive = false

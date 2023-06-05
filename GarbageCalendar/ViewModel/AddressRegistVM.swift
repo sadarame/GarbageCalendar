@@ -9,7 +9,7 @@ import SwiftUI
 import RealmSwift
 import Foundation
 
-class SetAdressInfoVM: BaseVM {
+class AddressRegistVM: BaseVM {
     
     //レルムのデータが存在するかのフラグ
     var isNoAdrData = false
@@ -114,8 +114,16 @@ class SetAdressInfoVM: BaseVM {
     }
     
     func callgetUserIdAPI(){
+        //パラメタ作成
+        let requestBody = [
+            "TYPE":Const.TYPE_GET_USER_ID,
+            "API_KEY":Const.API_KEY
+        ]
+        // JSONにデータ変換
+        let jsonRequestBody = try! JSONSerialization.data(withJSONObject: requestBody)
+        
         //APIのコール
-        fetchDataFromAPI(url: Const.URL_GET_USER_ID, type: Const.TYPE_GET_USER_ID) { (result: Result<ResponseData, Error>) in
+        fetchDataFromAPI(url: Const.URL_API_CALL, type: Const.TYPE_GET_USER_ID,jsonData:jsonRequestBody) { (result: Result<ResponseData, Error>) in
             switch result {
             case .success(let responseData):
                 // 成功時の処理
