@@ -10,6 +10,7 @@ struct Const {
     
     //APIのリクエスト先
     static let URL_API_CALL = "https://golira-pochette.com/GarbageAPI.php"
+    static let URL_ZIPCODE_API = "https://zipcloud.ibsnet.co.jp/api/search?zipcode="
     static let API_KEY = "YOSUKE1227"
     
     //キー情報

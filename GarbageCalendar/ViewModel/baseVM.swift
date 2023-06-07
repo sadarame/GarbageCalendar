@@ -7,7 +7,7 @@
 
 import Foundation
 
-class BaseVM: ObservableObject {
+class BaseVM: NSObject, ObservableObject {
     
     @Published var isLoading: Bool = false
 

@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct ScaleEffectProgressView: View {
+struct EffectProgressView: View {
     private let scaleEffect: CGFloat
 
     init(_ scaleEffect: CGFloat) {

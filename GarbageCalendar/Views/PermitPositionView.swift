@@ -42,7 +42,7 @@ struct PermitPositionView: View {
                 }
                 
                 if (locationClient.requesting) {
-                    ScaleEffectProgressView(5)
+                    EffectProgressView(5)
                     Text("位置情報取得中・・")
                 }
                 Spacer()

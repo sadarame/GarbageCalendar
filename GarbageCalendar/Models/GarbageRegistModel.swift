@@ -20,5 +20,6 @@ struct GarbageRegistModel:Identifiable,Codable{
     var date = Date()
     var weekOfMonth:String = "第一"
     var freqWeek:String = "二週に一回"
+    var strDate = ""
     
 }

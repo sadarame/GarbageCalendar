@@ -69,66 +69,37 @@ struct GarbageInfoListView: View {
     
     var body: some View {
         List{
+//        ScrollView{
             ForEach(vm.garbageRegistModelList.indices, id: \.self) { index in
-                VStack {
-                    //ゴミの種類
-                    CreatePickerView(
-                        title: "ゴミの種類",
-                        selecteditem: $vm.garbageRegistModelList[index].garbageType,
-                        items:vm.garbageTypes
-                    )
+                    VStack {
+                        //ゴミの種類
+                        CreatePickerView(
+                            title: "ゴミの種類",
+                            selecteditem: $vm.garbageRegistModelList[index].garbageType,
+                            items:vm.garbageTypes
+                        )
 
-                    //収集日
-                    CreatePickerView(
-                        title: "収集日",
-                        selecteditem: $vm.garbageRegistModelList[index].schedule,
-                        items:vm.schedules
-                    )
-                    
-                    //収集間隔ごとの分岐
-                    switch vm.garbageRegistModelList[index].schedule {
-                    case "毎週":
+                        //収集日
                         CreatePickerView(
-                            title: "曜日",
-                            selecteditem: $vm.garbageRegistModelList[index].yobi,
-                            items: vm.yobis
+                            title: "収集日",
+                            selecteditem: $vm.garbageRegistModelList[index].schedule,
+                            items:vm.schedules
                         )
-                    case "隔週":
-                        //頻度
-                        CreatePickerView(
-                            title: "間隔",
-                            selecteditem: $vm.garbageRegistModelList[index].freqWeek,
-                            items: vm.freqWeeks
-                        )
-                        //曜日
-                        CreatePickerView(
-                            title: "曜日",
-                            selecteditem: $vm.garbageRegistModelList[index].yobi,
-                            items: vm.yobis
-                        )
-                        //日付
-                        DatePicker(selection: $vm.garbageRegistModelList[index].date, displayedComponents: .date) {
-                            Text("直近の収集日")
-                        }
-                        .datePickerStyle(DefaultDatePickerStyle())
-                        .environment(\.locale, Locale(identifier: "ja_JP"))
-
-                    case "毎月":
-                        //毎月が選択されていた場合、日にちを表示する
-                        Picker("日付", selection: $vm.garbageRegistModelList[index].day) {
-                            ForEach(vm.days, id: \.self) { day in
-                                Text(String(day) + "日")
-                                    .tag(day)
-                            }
-                        }
-                        .pickerStyle(MenuPickerStyle())
                         
-                    case "第○曜日":
-                            //第○曜日が選択されていた場合、第○　と　曜日　を表示する
+                        //収集間隔ごとの分岐
+                        switch vm.garbageRegistModelList[index].schedule {
+                        case "毎週":
                             CreatePickerView(
-                                title: "第何週",
-                                selecteditem: $vm.garbageRegistModelList[index].weekOfMonth,
-                                items: vm.weekOfMonths
+                                title: "曜日",
+                                selecteditem: $vm.garbageRegistModelList[index].yobi,
+                                items: vm.yobis
+                            )
+                        case "隔週":
+                            //頻度
+                            CreatePickerView(
+                                title: "間隔",
+                                selecteditem: $vm.garbageRegistModelList[index].freqWeek,
+                                items: vm.freqWeeks
                             )
                             //曜日
                             CreatePickerView(
@@ -136,10 +107,50 @@ struct GarbageInfoListView: View {
                                 selecteditem: $vm.garbageRegistModelList[index].yobi,
                                 items: vm.yobis
                             )
-                    default:
-                        EmptyView()
+                            //日付
+                            DatePicker(selection: $vm.garbageRegistModelList[index].date, displayedComponents: .date) {
+                                Text("直近の収集日")
+                            }
+                            
+                            .datePickerStyle(DefaultDatePickerStyle())
+                            .environment(\.locale, Locale(identifier: "ja_JP"))
+                            .onChange(of: vm.garbageRegistModelList[index].date) { newDate in
+                                // 選択が変更されたときの処理
+                                let dateFormatter = DateFormatter()
+                                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+
+                                // Date型をString型に変換
+                                vm.garbageRegistModelList[index].strDate = dateFormatter.string(from: newDate)
+                                
+                            }
+
+                        case "毎月":
+                            //毎月が選択されていた場合、日にちを表示する
+                            Picker("日付", selection: $vm.garbageRegistModelList[index].day) {
+                                ForEach(vm.days, id: \.self) { day in
+                                    Text(String(day) + "日")
+                                        .tag(day)
+                                }
+                            }
+                            .pickerStyle(MenuPickerStyle())
+                            
+                        case "第○曜日":
+                                //第○曜日が選択されていた場合、第○　と　曜日　を表示する
+                                CreatePickerView(
+                                    title: "第何週",
+                                    selecteditem: $vm.garbageRegistModelList[index].weekOfMonth,
+                                    items: vm.weekOfMonths
+                                )
+                                //曜日
+                                CreatePickerView(
+                                    title: "曜日",
+                                    selecteditem: $vm.garbageRegistModelList[index].yobi,
+                                    items: vm.yobis
+                                )
+                        default:
+                            EmptyView()
+                        }
                     }
-                }
             } .onDelete(perform: delete)
         }
         .navigationBarItems(leading: EditButton())

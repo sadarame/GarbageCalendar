@@ -72,7 +72,7 @@ class GarbageRegistVM : BaseVM {
             switch result {
             case .success(let responseData):
                 //ステータスに登録状況をセット
-                if responseData.status == "OK" {
+                if responseData.status == "succsess" {
                     self.apiResponseStatus = 1
                 }
                 
