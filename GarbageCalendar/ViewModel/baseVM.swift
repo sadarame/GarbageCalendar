@@ -10,6 +10,24 @@ import Foundation
 class BaseVM: NSObject, ObservableObject {
     
     @Published var isLoading: Bool = false
+    
+    //エラーメッセージ
+    @Published var isShowingPopup: Bool = false
+    @Published var popupMessage: String = ""
+    
+    //編集不可フラグ
+    @Published var isDisEditable: Bool = false
+    
+    // ポップアップを表示するメソッド
+    func showPopup(withMessage message: String) {
+        popupMessage = message
+        isShowingPopup = true
+    }
+    
+    // ポップアップを非表示にするメソッド
+    func hidePopup() {
+        isShowingPopup = false
+    }
 
     //引数ありでAPIコールする用のメソッド
     func fetchDataFromAPI<T: Decodable>(url: String, type:String, jsonData:Data, completion: @escaping (Result<T, Error>) -> Void) {
@@ -57,17 +75,5 @@ class BaseVM: NSObject, ObservableObject {
 enum APIError: Error {
     case invalidURL
     case noData
-}
-
-//サーバーからの返却値を定義
-struct ResponseData: Codable {
-    let status: String
-    let userId: String
-    let message: String
-}
-
-struct GarbageRegistRes: Codable {
-    let status: String
-    let message: String
 }
 

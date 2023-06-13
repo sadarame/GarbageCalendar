@@ -8,21 +8,21 @@
 import Foundation
 
 class UserAddressRegistModel:Identifiable,Codable {
-    //命名
-    var UserAddressName = ""
-    //郵便番号
+    //ユーザーID
+    var userId = ""
+    //郵便番号　○
     var postalCode:String = ""
-    //都道府県
+    //都道府県　○
     var administrativeArea: String = ""
     //郡（なくてもよいかも）
     var subAdministrativeArea: String = ""
-    //市区町村
+    //市区町村　○
     var locality: String = ""
     //丁目なしの地名
     var subLocality: String = ""
-    //地名
+    //地名　○
     var thoroughfare: String = ""
-    //番地
+    //番地　○
     var subThoroughfare: String = ""
     //ビル名
     var buildName: String = ""
@@ -30,7 +30,5 @@ class UserAddressRegistModel:Identifiable,Codable {
     var latitude: String = ""
     //経度
     var longitude: String = ""
-    
-    var address: String = ""
     
 }

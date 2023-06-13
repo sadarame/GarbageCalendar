@@ -23,3 +23,20 @@ struct ApiAddress: Codable {
     let prefcode: String
     let zipcode: String
 }
+
+//自前APIの返却値を定義
+struct ResponseData: Codable {
+    let status: String
+    let userId: String
+    let message: String
+}
+
+struct GarbageRegistRes: Codable {
+    let status: String
+    let message: String
+}
+
+struct UserRegistRes: Codable {
+    let status: String
+    let message: String
+}

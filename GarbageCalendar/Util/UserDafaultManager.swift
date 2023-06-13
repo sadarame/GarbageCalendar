@@ -7,26 +7,12 @@
 
 import Foundation
 
-struct Person: Codable {
-    var name: String
-    var age: Int
+func saveUserID(_ userID: String) {
+    UserDefaults.standard.set(userID, forKey: "userID")
 }
 
-func savePerson(_ person: Person) {
-    let encoder = JSONEncoder()
-    if let encodedData = try? encoder.encode(person) {
-        UserDefaults.standard.set(encodedData, forKey: "person")
-    }
-}
-
-func loadPerson() -> Person? {
-    if let savedData = UserDefaults.standard.data(forKey: "person") {
-        let decoder = JSONDecoder()
-        if let loadedPerson = try? decoder.decode(Person.self, from: savedData) {
-            return loadedPerson
-        }
-    }
-    return nil
+func loadUserID() -> String? {
+    return UserDefaults.standard.string(forKey: "userID")
 }
 
 func saveGarbageRegistModels(_ models: [GarbageRegistModel]) {
@@ -48,4 +34,25 @@ func loadGarbageRegistModels() -> [GarbageRegistModel] {
         }
     }
     return []
+}
+
+func saveUserAddressRegistModel(_ model: UserAddressRegistModel) {
+    do {
+        let data = try JSONEncoder().encode(model)
+        UserDefaults.standard.set(data, forKey: "userAddressRegistModel")
+    } catch {
+        print("Failed to save UserAddressRegistModel: \(error)")
+    }
+}
+
+func loadUserAddressRegistModel() -> UserAddressRegistModel? {
+    if let data = UserDefaults.standard.data(forKey: "userAddressRegistModel") {
+        do {
+            let model = try JSONDecoder().decode(UserAddressRegistModel.self, from: data)
+            return model
+        } catch {
+            print("Failed to load UserAddressRegistModel: \(error)")
+        }
+    }
+    return nil
 }

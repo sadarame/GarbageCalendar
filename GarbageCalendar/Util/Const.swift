@@ -19,11 +19,12 @@ struct Const {
     //処理タイプ
     static let TYPE_GET_USER_ID = "1"
     static let TYPE_REGIST_GARBAGE_INFO = "2"
+    static let TYPE_REGIST_USER_INFO = "3"
     
     //画面番号
     static let LocationSetViewCode = "1"
     
-    //UserDefault用キー項目
-    static let uskey_SS = "aaa"
-    
+
+    //画面制御用
+    static let type_NumberPad = "1"
 }

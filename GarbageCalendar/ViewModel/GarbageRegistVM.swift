@@ -11,7 +11,7 @@ class GarbageRegistVM : BaseVM {
     //モデルを変数
     @Published var garbageRegistModel:GarbageRegistModel = GarbageRegistModel()
     //モデル変数のリスト
-    @Published var garbageRegistModelList:[GarbageRegistModel]=[]
+    @Published var garbageRegistModelList:[GarbageRegistModel] = []
     //APIコールの状況（画面遷移の判断に使うかも？）
     @Published var apiResponseStatus = 0
     
@@ -25,14 +25,14 @@ class GarbageRegistVM : BaseVM {
     let days:[Int] = Array(1...31)
     let months:[Int] = Array(1...12)
     
-    //初期処理
-    func onApperInit(){
+    override init() {
+        super.init()
         //ユーザデフォルトからモデル変数リストを取得
         garbageRegistModelList = loadGarbageRegistModels()
         
         //はじめましてだったらリスト作る
         if garbageRegistModelList.isEmpty{
-            garbageRegistModelList.append(GarbageRegistModel())
+            self.addGarbageInfo()
         }
     }
     
@@ -41,6 +41,7 @@ class GarbageRegistVM : BaseVM {
     func addGarbageInfo(){
         let newGarbageRegistModel = GarbageRegistModel() // 新しいインスタンスを作成
         garbageRegistModelList.append(newGarbageRegistModel) // リストに追加
+        saveGarbageRegistModels(garbageRegistModelList)//ユーザデフォルトに保存
     }
     
     //登録ボタン押下時の処理

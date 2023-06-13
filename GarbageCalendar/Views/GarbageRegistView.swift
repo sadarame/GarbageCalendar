@@ -18,16 +18,22 @@ struct GarbageRegistView: View {
             ZStack {
                 //ゴミ情報のリスト
                 VStack{
-                    GarbageInfoListView(vm: vm)
-                    if vm.apiResponseStatus == 1 {
-                        Text("通信成功")
-                    }
+            
+                        //ゴミ情報リスト
+                        GarbageInfoListView(vm: vm)
+                        
+                        
+                    
                 }
                 //フロートボタン
-                FloatButtonView(vm: vm)
+                //次へボタン
+//                ButtonToNextCal(action: vm.registData)
+                    FloatButtonView(vm: vm)
+                  
+                
             }
             //初期処理
-            .onAppear(perform: vm.onApperInit)
+//            .onAppear(perform: vm.onApperInit)
             //ナビゲーション処理
             .navigationBarTitle(Text("ゴミ情報登録"))
             .navigationBarTitleDisplayMode(.inline)
@@ -52,8 +58,9 @@ struct FloatButtonView: View {
         VStack {
             Spacer()
             HStack {
-                Spacer()
-                FloatingActionButton {
+                ButtonToNextCal(action: vm.registData)
+                    .padding()
+                FloatingAddButton {
                     // フロートボタンがタップされた時の処理
                     vm.addGarbageInfo()
                 }
@@ -158,6 +165,7 @@ struct GarbageInfoListView: View {
     }
     private func delete(at offsets: IndexSet) {
         vm.garbageRegistModelList.remove(atOffsets: offsets)
+        saveGarbageRegistModels(vm.garbageRegistModelList)
     }
 }
 
@@ -175,11 +183,29 @@ struct CreatePickerView: View {
                 Text(selection)
             }
         }
-        .onChange(of: selectedOptionIndex) { newValue in
-            // 選択が変更されたときの処理
-            print("Selected option changed to index: \(newValue)")
-        }
+//        .onChange(of: selectedOptionIndex) { newValue in
+//            // 選択が変更されたときの処理
+//            print("Selected option changed to index: \(newValue)")
+//        }
         .pickerStyle(MenuPickerStyle())
+    }
+}
+
+struct ButtonToNextCal : View {
+    
+    var action: () -> Void
+    
+    var body: some View {
+        VStack{
+            Button(action: action) {
+                Text("次へ")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .accentColor(Color.white)
+                    .background(Color.blue)
+                    .cornerRadius(.infinity)
+            }
+        }
     }
 }
 
