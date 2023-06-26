@@ -27,6 +27,7 @@ class GarbageRegistVM : BaseVM {
     
     override init() {
         super.init()
+        
         //ユーザデフォルトからモデル変数リストを取得
         garbageRegistModelList = loadGarbageRegistModels()
         
@@ -46,6 +47,15 @@ class GarbageRegistVM : BaseVM {
     
     //登録ボタン押下時の処理
     func registData(){
+        //重複チェック
+        if checkForDuplicates() {
+            return
+        }
+        
+        //プログレス表示,編集不可
+        isShowProgres = true
+        isDisEditable = true
+        
         //ユーザーデフォルトに登録
         saveGarbageRegistModels(garbageRegistModelList)
         //登録用のAPIを叩く
@@ -69,18 +79,49 @@ class GarbageRegistVM : BaseVM {
         
         //APIのコール
         fetchDataFromAPI(url: Const.URL_API_CALL, type: Const.TYPE_REGIST_GARBAGE_INFO, jsonData: jsonRequestBody) { (result: Result<GarbageRegistRes, Error>) in
-            //        fetchDataFromAPI(url: Const.URL_API_CALL, type: Const.TYPE_REGIST_GARBAGE_INFO) { (result: Result<ResponseData, Error>) in
-            switch result {
-            case .success(let responseData):
-                //ステータスに登録状況をセット
-                if responseData.status == "succsess" {
-                    self.apiResponseStatus = 1
+            //メインスレッドで実行
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let responseData):
+                    //ステータスに登録状況をセット
+                    if responseData.status == "succsess" {
+                        self.apiResponseStatus = 1
+                    }
+                    
+                case .failure(let error):
+                    // エラー時の処理
+                    self.showPopup(withMessage: "ゴミ情報登録でエラーが発生しました。")
+                    print("Error: \(error)")
                 }
-                
-            case .failure(let error):
-                // エラー時の処理
-                print("Error: \(error)")
+                //プログレス表示,編集不可解除
+                self.isShowProgres = false
+                self.isDisEditable = false
             }
         }
     }//ファンクションの括弧
+    
+    //入力チェック
+    func checkForDuplicates() -> Bool {
+        var isError = false
+        var uniqueSet = Set<String>() // 重複をチェックするためのセット
+        
+        for (index, model) in garbageRegistModelList.enumerated() {
+            //前回のエラーをクリア
+            garbageRegistModelList[index].duplicateError = false
+            // UUID以外の項目で重複をチェック
+            let uniqueKey = "\(model.garbageType)-\(model.schedule)-\(model.yobi)-\(model.day)-\(model.weekOfMonth)-\(model.freqWeek)-\(model.strDate)"
+//            print(uniqueKey)
+            if uniqueSet.contains(uniqueKey) {
+                // 重複が見つかった場合は重複要素のエラーを設定
+                garbageRegistModelList[index].duplicateError = true
+                isError = true
+            }
+            uniqueSet.insert(uniqueKey) // ユニークなキーをセットに追加
+        }
+        
+        if isError {
+            showPopup(withMessage: "重複しているデータが存在します。")
+        }
+        return isError
+    }
 }

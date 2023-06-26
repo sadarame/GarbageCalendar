@@ -18,34 +18,26 @@ struct GarbageRegistView: View {
             ZStack {
                 //ゴミ情報のリスト
                 VStack{
-            
-                        //ゴミ情報リスト
-                        GarbageInfoListView(vm: vm)
-                        
-                        
-                    
+                    //ゴミ情報リスト
+                    GarbageInfoListView(vm: vm)
+                    //ボタンエリア
+                    HStack(spacing: 10) {
+                        //次へボタン
+                        ButtonToNextCal(action: vm.registData)
+                            .frame(width: UIScreen.main.bounds.width * 0.7)
+                        //プラスボタン
+                        ButtonToAdd(action: vm.addGarbageInfo)
+                            .frame(width: UIScreen.main.bounds.width * 0.1)
+                    }
                 }
-                //フロートボタン
-                //次へボタン
-//                ButtonToNextCal(action: vm.registData)
-                    FloatButtonView(vm: vm)
-                  
-                
+                //位置情報取得中にプログレスを全面表示する
+                if vm.isShowProgres {EffectProgressView(10)}
             }
-            //初期処理
-//            .onAppear(perform: vm.onApperInit)
+            //エラーメッセージ表示用モディファイア
+            .modifier(CommonViewModifier(vm: vm))
             //ナビゲーション処理
             .navigationBarTitle(Text("ゴミ情報登録"))
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        vm.registData()
-                    }) {
-                        Text("登録")
-                    }
-                }
-            }
         }
     }
 }
@@ -58,8 +50,6 @@ struct FloatButtonView: View {
         VStack {
             Spacer()
             HStack {
-                ButtonToNextCal(action: vm.registData)
-                    .padding()
                 FloatingAddButton {
                     // フロートボタンがタップされた時の処理
                     vm.addGarbageInfo()
@@ -76,93 +66,86 @@ struct GarbageInfoListView: View {
     
     var body: some View {
         List{
-//        ScrollView{
+            //        ScrollView{
             ForEach(vm.garbageRegistModelList.indices, id: \.self) { index in
-                    VStack {
-                        //ゴミの種類
+                VStack {
+                    //ゴミの種類
+                    CreatePickerView(
+                        title: "ゴミの種類",
+                        selecteditem: $vm.garbageRegistModelList[index].garbageType,
+                        items:vm.garbageTypes
+                    )
+                    
+                    //収集日
+                    //発火イベントはModelに記載
+                    CreatePickerView(
+                        title: "収集日",
+                        selecteditem: $vm.garbageRegistModelList[index].schedule,
+                        items:vm.schedules
+                    )
+                    
+                    //収集間隔ごとの分岐
+                    switch vm.garbageRegistModelList[index].schedule {
+                    case "毎週":
                         CreatePickerView(
-                            title: "ゴミの種類",
-                            selecteditem: $vm.garbageRegistModelList[index].garbageType,
-                            items:vm.garbageTypes
+                            title: "曜日",
+                            selecteditem: $vm.garbageRegistModelList[index].yobi,
+                            items: vm.yobis
                         )
-
-                        //収集日
+                    case "隔週":
+                        //頻度
                         CreatePickerView(
-                            title: "収集日",
-                            selecteditem: $vm.garbageRegistModelList[index].schedule,
-                            items:vm.schedules
+                            title: "間隔",
+                            selecteditem: $vm.garbageRegistModelList[index].freqWeek,
+                            items: vm.freqWeeks
                         )
-                        
-                        //収集間隔ごとの分岐
-                        switch vm.garbageRegistModelList[index].schedule {
-                        case "毎週":
-                            CreatePickerView(
-                                title: "曜日",
-                                selecteditem: $vm.garbageRegistModelList[index].yobi,
-                                items: vm.yobis
-                            )
-                        case "隔週":
-                            //頻度
-                            CreatePickerView(
-                                title: "間隔",
-                                selecteditem: $vm.garbageRegistModelList[index].freqWeek,
-                                items: vm.freqWeeks
-                            )
-                            //曜日
-                            CreatePickerView(
-                                title: "曜日",
-                                selecteditem: $vm.garbageRegistModelList[index].yobi,
-                                items: vm.yobis
-                            )
-                            //日付
-                            DatePicker(selection: $vm.garbageRegistModelList[index].date, displayedComponents: .date) {
-                                Text("直近の収集日")
-                            }
-                            
-                            .datePickerStyle(DefaultDatePickerStyle())
-                            .environment(\.locale, Locale(identifier: "ja_JP"))
-                            .onChange(of: vm.garbageRegistModelList[index].date) { newDate in
-                                // 選択が変更されたときの処理
-                                let dateFormatter = DateFormatter()
-                                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-
-                                // Date型をString型に変換
-                                vm.garbageRegistModelList[index].strDate = dateFormatter.string(from: newDate)
-                                
-                            }
-
-                        case "毎月":
-                            //毎月が選択されていた場合、日にちを表示する
-                            Picker("日付", selection: $vm.garbageRegistModelList[index].day) {
-                                ForEach(vm.days, id: \.self) { day in
-                                    Text(String(day) + "日")
-                                        .tag(day)
-                                }
-                            }
-                            .pickerStyle(MenuPickerStyle())
-                            
-                        case "第○曜日":
-                                //第○曜日が選択されていた場合、第○　と　曜日　を表示する
-                                CreatePickerView(
-                                    title: "第何週",
-                                    selecteditem: $vm.garbageRegistModelList[index].weekOfMonth,
-                                    items: vm.weekOfMonths
-                                )
-                                //曜日
-                                CreatePickerView(
-                                    title: "曜日",
-                                    selecteditem: $vm.garbageRegistModelList[index].yobi,
-                                    items: vm.yobis
-                                )
-                        default:
-                            EmptyView()
+                        //曜日
+                        CreatePickerView(
+                            title: "曜日",
+                            selecteditem: $vm.garbageRegistModelList[index].yobi,
+                            items: vm.yobis
+                        )
+                        //日付
+                        DatePicker(selection: $vm.garbageRegistModelList[index].date, displayedComponents: .date) {
+                            Text("直近の収集日")
                         }
+                        
+                        .datePickerStyle(DefaultDatePickerStyle())
+                        .environment(\.locale, Locale(identifier: "ja_JP"))
+                        
+                    case "毎月":
+                        //毎月が選択されていた場合、日にちを表示する
+                        Picker("日付", selection: $vm.garbageRegistModelList[index].day) {
+                            ForEach(vm.days, id: \.self) { day in
+                                Text(String(day) + "日")
+                                    .tag(day)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle())
+                        
+                    case "第○曜日":
+                        //第○曜日が選択されていた場合、第○　と　曜日　を表示する
+                        CreatePickerView(
+                            title: "第何週",
+                            selecteditem: $vm.garbageRegistModelList[index].weekOfMonth,
+                            items: vm.weekOfMonths
+                        )
+                        //曜日
+                        CreatePickerView(
+                            title: "曜日",
+                            selecteditem: $vm.garbageRegistModelList[index].yobi,
+                            items: vm.yobis
+                        )
+                    default:
+                        EmptyView()
                     }
+                }.background(vm.garbageRegistModelList[index].duplicateError ? Color.red : Color.clear) // エラーフラグが立っている場合に背景を赤くする
             } .onDelete(perform: delete)
         }
         .navigationBarItems(leading: EditButton())
-//        .listStyle(InsetGroupedListStyle())
+ 
     }
+    //削除イベント
     private func delete(at offsets: IndexSet) {
         vm.garbageRegistModelList.remove(atOffsets: offsets)
         saveGarbageRegistModels(vm.garbageRegistModelList)
@@ -171,11 +154,22 @@ struct GarbageInfoListView: View {
 
 //PickerViewを作成する汎用的なView
 struct CreatePickerView: View {
+    //タイトル
     let title:String
+    //選択値
     @Binding var selecteditem: String
-    @State private var selectedOptionIndex = 0
+    //選択肢
     let items: [String]
-    let label:String = ""
+    //イベント
+    var selectionChanged: (() -> Void)? = nil
+    
+    
+    init(title: String, selecteditem: Binding<String>, items: [String], selectionChanged: (() -> Void)? = nil) {
+        self.title = title
+        self._selecteditem = selecteditem
+        self.items = items
+        self.selectionChanged = selectionChanged
+    }
     
     var body: some View {
         Picker(title, selection: $selecteditem) {
@@ -183,11 +177,10 @@ struct CreatePickerView: View {
                 Text(selection)
             }
         }
-//        .onChange(of: selectedOptionIndex) { newValue in
-//            // 選択が変更されたときの処理
-//            print("Selected option changed to index: \(newValue)")
-//        }
         .pickerStyle(MenuPickerStyle())
+        .onChange(of: selecteditem) { _ in
+            selectionChanged?()
+        }
     }
 }
 
@@ -199,6 +192,23 @@ struct ButtonToNextCal : View {
         VStack{
             Button(action: action) {
                 Text("次へ")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .accentColor(Color.white)
+                    .background(Color.blue)
+                    .cornerRadius(.infinity)
+            }
+        }
+    }
+}
+struct ButtonToAdd : View {
+    
+    var action: () -> Void
+    
+    var body: some View {
+        VStack{
+            Button(action: action) {
+                Image(systemName: "plus")
                     .padding()
                     .frame(maxWidth: .infinity)
                     .accentColor(Color.white)

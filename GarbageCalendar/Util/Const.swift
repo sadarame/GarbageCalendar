@@ -27,4 +27,12 @@ struct Const {
 
     //画面制御用
     static let type_NumberPad = "1"
+    
+    //APIレスポンス用
+    static let STATUS_SUCCSESS = "succsess"
+    
+    //エラー
+    static let CODE_ERROR = 1
+    static let CODE_NO_ERROR = 0
+    
 }

@@ -11,8 +11,6 @@ import CoreLocation
 class UserAddressRegistVM: BaseVM {
     // モデルを変数
     @Published var model: UserAddressRegistModel = UserAddressRegistModel()
-    //プログレスエフェクト表示制御
-    @Published var isShowProgres = false
     //画面遷移用のフラグ
     @Published var activie:Bool = false
     
@@ -115,7 +113,7 @@ class UserAddressRegistVM: BaseVM {
             switch result {
             case .success(let responseData):
                 // ステータスに登録状況をセット
-                if responseData.status == "succsess" {
+                if responseData.status == Const.STATUS_SUCCSESS {
                     completion(.success(()))
                 } else {
                     completion(.failure(APIError.noData))

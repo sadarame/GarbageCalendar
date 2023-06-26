@@ -13,9 +13,7 @@ struct UserAddressRegistView: View {
     //VM
     @ObservedObject var vm: UserAddressRegistVM = UserAddressRegistVM()
     
-    
     var body: some View {
-        
         //ナビゲーション
         NavigationStack {
             ZStack{
@@ -29,7 +27,9 @@ struct UserAddressRegistView: View {
                     }
                     //次へボタン
                     ButtonToNext(vm: vm)
-                        .disabled(!vm.validateInputFields()) 
+                        //入力チェッククリアしないと非活性
+                        .disabled(!vm.validateInputFields())
+                        .frame(width: UIScreen.main.bounds.width * 0.9)
                 }
                 //位置情報取得中にプログレスを全面表示する
                 if vm.isShowProgres {EffectProgressView(10)}

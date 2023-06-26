@@ -10,7 +10,8 @@ import Foundation
 class BaseVM: NSObject, ObservableObject {
     
     @Published var isLoading: Bool = false
-    
+    //プログレスエフェクト表示制御
+    @Published var isShowProgres = false
     //エラーメッセージ
     @Published var isShowingPopup: Bool = false
     @Published var popupMessage: String = ""
