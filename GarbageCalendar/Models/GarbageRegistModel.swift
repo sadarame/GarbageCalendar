@@ -14,6 +14,8 @@ struct GarbageRegistModel:Identifiable,Codable{
     var id = UUID()
     //ゴミの種類
     var garbageType:String = "燃えるゴミ"
+    
+    var garbageInfoName:String = ""
     //スケジュール
     //この項目が変更になったら他項目に初期値を設定し直す
     var schedule:String = "毎週" {didSet {setDefaultValues()}}

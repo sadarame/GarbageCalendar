@@ -9,7 +9,11 @@ import Foundation
 
 class UserAddressRegistModel:Identifiable,Codable {
     //ユーザーID
-    var userId = ""
+    var userId = "" {
+        didSet{
+            saveUserID(userId)
+        }
+    }
     //郵便番号　○
     var postalCode:String = ""
     //都道府県　○
@@ -30,5 +34,4 @@ class UserAddressRegistModel:Identifiable,Codable {
     var latitude: String = ""
     //経度
     var longitude: String = ""
-    
 }

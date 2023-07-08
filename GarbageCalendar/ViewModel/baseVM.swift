@@ -64,6 +64,7 @@ class BaseVM: NSObject, ObservableObject {
             }
             
             do {
+                logData(data)
                 let decodedData = try JSONDecoder().decode(T.self, from: data)
                 completion(.success(decodedData))
             } catch {
@@ -76,5 +77,13 @@ class BaseVM: NSObject, ObservableObject {
 enum APIError: Error {
     case invalidURL
     case noData
+}
+
+func logData(_ data: Data) {
+    if let jsonString = String(data: data, encoding: .utf8) {
+        print(jsonString)
+    } else {
+        print("Invalid data")
+    }
 }
 

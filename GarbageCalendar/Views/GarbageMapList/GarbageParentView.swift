@@ -9,16 +9,16 @@ import SwiftUI
 
 struct GarbageParentView: View {
     
-    @ObservedObject var vm = GarbageVM()
+    @ObservedObject var vm = GarbageMapVM()
     @State var userAdr:AdrSetModel?
     
     var body: some View {
         VStack{
             Text(userAdr?.postalCode ?? "")
             //マップのVIEW
-            GarbageMapView(vm:vm)
+            GarbageMapView()
             //ゴミのリストのVIEW
-            GarbageListView(vm:vm)
+//            GarbageListView()
             
         }.onAppear{
             vm.showInit(str: "親")

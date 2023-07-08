@@ -187,6 +187,9 @@ class UserAddressRegistVM: BaseVM {
                     self.model.thoroughfare = response.results? .first?.address3 ?? ""
                     //番地までは取れないから空文字で更新
                     self.model.subThoroughfare = ""
+                    self.model.subLocality = ""
+                    self.model.subAdministrativeArea = ""
+                    
                     //名前に丁目を設定
                     //                    self.model.UserAddressName = self.model.thoroughfare
                     //プログレスバー非表示
@@ -228,6 +231,7 @@ class UserAddressRegistVM: BaseVM {
     // 次へボタンが押されたときの処理
     //緯度経度の取得処理と登録処理を呼び出す
     func onNextButtonTapped() {
+    
         //プログレス表示,編集不可
         isShowProgres = true
         isDisEditable = true

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class GarbageRegistVM : BaseVM {
     //モデルを変数
@@ -14,6 +15,8 @@ class GarbageRegistVM : BaseVM {
     @Published var garbageRegistModelList:[GarbageRegistModel] = []
     //APIコールの状況（画面遷移の判断に使うかも？）
     @Published var apiResponseStatus = 0
+    
+    @AppStorage("garbageInfoName") var garbageInfoName: String = ""
     
     //プルダウンの選択肢
     let garbageTypes:[String] = ["燃えるゴミ","燃えないゴミ","プラスチック","ビン・カン",
@@ -72,8 +75,11 @@ class GarbageRegistVM : BaseVM {
         let requestBody = [
             "TYPE": Const.TYPE_REGIST_GARBAGE_INFO,
             "API_KEY": Const.API_KEY,
-            "GARBAGE_INFO": jsonString
+            "USER_ID":loadUserID(),
+            "GARBAGE_INFO": jsonString,
+            "GARBAGE_INFO_NAME": garbageInfoName
         ]
+        
         // JSONにデータ変換
         let jsonRequestBody = try! JSONSerialization.data(withJSONObject: requestBody)
         
@@ -123,5 +129,12 @@ class GarbageRegistVM : BaseVM {
             showPopup(withMessage: "重複しているデータが存在します。")
         }
         return isError
+    }
+    
+    //削除イベント
+    func deleteCard(at index: Int) {
+        garbageRegistModelList.remove(at: index)
+        saveGarbageRegistModels(garbageRegistModelList)
+        apiResponseStatus = 1
     }
 }

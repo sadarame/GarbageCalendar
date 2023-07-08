@@ -11,6 +11,14 @@ func saveUserID(_ userID: String) {
     UserDefaults.standard.set(userID, forKey: "userID")
 }
 
+func loadsaveGarbageInfoName() -> String? {
+    return UserDefaults.standard.string(forKey: "userID")
+}
+
+func saveGarbageInfoName(_ userID: String) {
+    UserDefaults.standard.set(userID, forKey: "userID")
+}
+
 func loadUserID() -> String? {
     return UserDefaults.standard.string(forKey: "userID")
 }

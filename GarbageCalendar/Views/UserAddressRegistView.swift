@@ -160,6 +160,8 @@ struct ButtonToNext : View {
     
     @ObservedObject var vm: UserAddressRegistVM
     
+    @AppStorage("garbageInfoName") var garbageInfoName: String = ""
+    
     var body: some View {
         VStack{
             Button(action: {
@@ -167,6 +169,12 @@ struct ButtonToNext : View {
                 vm.onNextButtonTapped()
                 //入力された情報をユーザデフォルトに保存
                 saveUserAddressRegistModel(vm.model)
+                
+                if vm.model.buildName != "" {
+                    garbageInfoName = vm.model.buildName
+                } else {
+                    garbageInfoName = vm.model.thoroughfare
+                }
             
             }) {
                 Text("次へ")
