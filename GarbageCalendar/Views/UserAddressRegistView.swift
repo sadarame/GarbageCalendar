@@ -36,7 +36,7 @@ struct UserAddressRegistView: View {
             }
             //画面遷移処理
             .navigationDestination(isPresented: $vm.activie, destination: {
-                GarbageRegistView()
+                GarbageMapView()
             })
             //エラーメッセージ表示用モディファイア
             .modifier(CommonViewModifier(vm: vm))
@@ -167,8 +167,6 @@ struct ButtonToNext : View {
             Button(action: {
                 //ボタン押下のイベント
                 vm.onNextButtonTapped()
-                //入力された情報をユーザデフォルトに保存
-                saveUserAddressRegistModel(vm.model)
                 
                 if vm.model.buildName != "" {
                     garbageInfoName = vm.model.buildName
@@ -187,9 +185,6 @@ struct ButtonToNext : View {
         }
     }
 }
-
-
-
 
 struct UserAddressRegistView_Previews: PreviewProvider {
     static var previews: some View {

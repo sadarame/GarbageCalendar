@@ -265,6 +265,8 @@ class UserAddressRegistVM: BaseVM {
                     self.isShowProgres = false
                     self.isDisEditable = false
                 }
+                //入力された情報をユーザデフォルトに保存
+                saveUserAddressRegistModel(self.model)
             }
         }
     }

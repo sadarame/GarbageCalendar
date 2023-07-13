@@ -11,6 +11,7 @@ import SwiftUI
 struct GarbageCalendarApp: App {
     var body: some Scene {
         WindowGroup {
+//            UserAddressRegistView()
             UserAddressRegistView()
         }
     }

@@ -13,8 +13,8 @@ struct GarbageRegistView: View {
     //VM
     @ObservedObject var vm:GarbageRegistVM = GarbageRegistVM()
     
-    var body: some View {
-        NavigationStack{
+    var body: some View {   
+//        NavigationStack{
             ZStack {
                 //ゴミ情報のリスト
                 VStack{
@@ -40,7 +40,7 @@ struct GarbageRegistView: View {
             //ナビゲーション処理
             .navigationBarTitle(Text("ゴミ情報登録"))
             .navigationBarTitleDisplayMode(.inline)
-        }
+//        }
     }
 }
 

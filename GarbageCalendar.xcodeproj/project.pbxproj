@@ -21,7 +21,6 @@
 		1682EF012A3065E500066BC0 /* ApiResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1682EF002A3065E500066BC0 /* ApiResponseModel.swift */; };
 		1682EF032A342A7F00066BC0 /* Modifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1682EF022A342A7F00066BC0 /* Modifier.swift */; };
 		168B48C429DD5B1400AB2BD8 /* ParentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48C029DD5B1400AB2BD8 /* ParentView.swift */; };
-		168B48C529DD5B1400AB2BD8 /* AddressRegistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48C129DD5B1400AB2BD8 /* AddressRegistView.swift */; };
 		168B48C629DD5B1400AB2BD8 /* PermitPositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48C229DD5B1400AB2BD8 /* PermitPositionView.swift */; };
 		168B48C729DD5B1400AB2BD8 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48C329DD5B1400AB2BD8 /* CalendarView.swift */; };
 		168B48CE29DD5B8400AB2BD8 /* Geocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48C929DD5B8400AB2BD8 /* Geocoder.swift */; };
@@ -33,15 +32,12 @@
 		168B48DA29DD5BCB00AB2BD8 /* LocationClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48D729DD5BCB00AB2BD8 /* LocationClient.swift */; };
 		168B48DB29DD5BCB00AB2BD8 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48D829DD5BCB00AB2BD8 /* LocationManager.swift */; };
 		168B48DF29DE73C000AB2BD8 /* EffectProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48DE29DE73C000AB2BD8 /* EffectProgressView.swift */; };
-		168B48E129DF019E00AB2BD8 /* GarbageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48E029DF019E00AB2BD8 /* GarbageListView.swift */; };
 		168B48E329DF026900AB2BD8 /* GarbageRegistModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48E229DF026900AB2BD8 /* GarbageRegistModel.swift */; };
-		168B48E72A0A0BAD00AB2BD8 /* GarbageMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48E62A0A0BAD00AB2BD8 /* GarbageMapView.swift */; };
 		168B48E92A0A0C1100AB2BD8 /* GarbageMapVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48E82A0A0C1100AB2BD8 /* GarbageMapVM.swift */; };
-		168B48EB2A0A421000AB2BD8 /* GarbageParentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48EA2A0A421000AB2BD8 /* GarbageParentView.swift */; };
+		168B48EB2A0A421000AB2BD8 /* GarbageMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48EA2A0A421000AB2BD8 /* GarbageMapView.swift */; };
 		169F8E8F2A22EC900082F330 /* UserDafaultManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169F8E8E2A22EC900082F330 /* UserDafaultManager.swift */; };
 		169F8E912A243A1F0082F330 /* BaseVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169F8E902A243A1F0082F330 /* BaseVM.swift */; };
 		16A4C98E2A55BB80003BE06B /* GarbageAreaConvModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4C98D2A55BB80003BE06B /* GarbageAreaConvModel.swift */; };
-		16B023C92A371828002193AE /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16B023C82A371828002193AE /* Test.swift */; };
 		19ADED0DC469281A6F420C01 /* Pods_GarbageCalendar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AE3E37CCD19876C3BC7E687 /* Pods_GarbageCalendar.framework */; };
 /* End PBXBuildFile section */
 
@@ -62,7 +58,6 @@
 		1682EF002A3065E500066BC0 /* ApiResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResponseModel.swift; sourceTree = "<group>"; };
 		1682EF022A342A7F00066BC0 /* Modifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modifier.swift; sourceTree = "<group>"; };
 		168B48C029DD5B1400AB2BD8 /* ParentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParentView.swift; sourceTree = "<group>"; };
-		168B48C129DD5B1400AB2BD8 /* AddressRegistView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressRegistView.swift; sourceTree = "<group>"; };
 		168B48C229DD5B1400AB2BD8 /* PermitPositionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PermitPositionView.swift; sourceTree = "<group>"; };
 		168B48C329DD5B1400AB2BD8 /* CalendarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		168B48C929DD5B8400AB2BD8 /* Geocoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geocoder.swift; sourceTree = "<group>"; };
@@ -74,15 +69,12 @@
 		168B48D729DD5BCB00AB2BD8 /* LocationClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationClient.swift; sourceTree = "<group>"; };
 		168B48D829DD5BCB00AB2BD8 /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		168B48DE29DE73C000AB2BD8 /* EffectProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectProgressView.swift; sourceTree = "<group>"; };
-		168B48E029DF019E00AB2BD8 /* GarbageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageListView.swift; sourceTree = "<group>"; };
 		168B48E229DF026900AB2BD8 /* GarbageRegistModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageRegistModel.swift; sourceTree = "<group>"; };
-		168B48E62A0A0BAD00AB2BD8 /* GarbageMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageMapView.swift; sourceTree = "<group>"; };
 		168B48E82A0A0C1100AB2BD8 /* GarbageMapVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageMapVM.swift; sourceTree = "<group>"; };
-		168B48EA2A0A421000AB2BD8 /* GarbageParentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageParentView.swift; sourceTree = "<group>"; };
+		168B48EA2A0A421000AB2BD8 /* GarbageMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageMapView.swift; sourceTree = "<group>"; };
 		169F8E8E2A22EC900082F330 /* UserDafaultManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDafaultManager.swift; sourceTree = "<group>"; };
 		169F8E902A243A1F0082F330 /* BaseVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseVM.swift; sourceTree = "<group>"; };
 		16A4C98D2A55BB80003BE06B /* GarbageAreaConvModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageAreaConvModel.swift; sourceTree = "<group>"; };
-		16B023C82A371828002193AE /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		6AE3E37CCD19876C3BC7E687 /* Pods_GarbageCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GarbageCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FCCB095321E5C23B4AB8E78 /* Pods-GarbageCalendar.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GarbageCalendar.debug.xcconfig"; path = "Target Support Files/Pods-GarbageCalendar/Pods-GarbageCalendar.debug.xcconfig"; sourceTree = "<group>"; };
 		CB78471A23B4A4BBBC9B6A85 /* Pods-GarbageCalendar.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GarbageCalendar.release.xcconfig"; path = "Target Support Files/Pods-GarbageCalendar/Pods-GarbageCalendar.release.xcconfig"; sourceTree = "<group>"; };
@@ -162,28 +154,16 @@
 			path = Custom;
 			sourceTree = "<group>";
 		};
-		166DE2F52A55A448005A5822 /* GarbageMapList */ = {
-			isa = PBXGroup;
-			children = (
-				168B48EA2A0A421000AB2BD8 /* GarbageParentView.swift */,
-				168B48E029DF019E00AB2BD8 /* GarbageListView.swift */,
-				168B48E62A0A0BAD00AB2BD8 /* GarbageMapView.swift */,
-			);
-			path = GarbageMapList;
-			sourceTree = "<group>";
-		};
 		168B48BF29DD5B1400AB2BD8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				166DE2F52A55A448005A5822 /* GarbageMapList */,
 				165FD6F82A2600580034ED2F /* Custom */,
 				168B48C029DD5B1400AB2BD8 /* ParentView.swift */,
 				168B48C229DD5B1400AB2BD8 /* PermitPositionView.swift */,
-				168B48C129DD5B1400AB2BD8 /* AddressRegistView.swift */,
 				168B48C329DD5B1400AB2BD8 /* CalendarView.swift */,
-				165FD6F52A25F1A30034ED2F /* GarbageRegistView.swift */,
 				1682EEFE2A2F384800066BC0 /* UserAddressRegistView.swift */,
-				16B023C82A371828002193AE /* Test.swift */,
+				165FD6F52A25F1A30034ED2F /* GarbageRegistView.swift */,
+				168B48EA2A0A421000AB2BD8 /* GarbageMapView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -217,9 +197,9 @@
 			children = (
 				169F8E902A243A1F0082F330 /* BaseVM.swift */,
 				168B48CB29DD5B8400AB2BD8 /* AddressRegistVM.swift */,
-				168B48E82A0A0C1100AB2BD8 /* GarbageMapVM.swift */,
 				165FD6F32A25E3D10034ED2F /* GarbageRegistVM.swift */,
 				1682EEFC2A2F378100066BC0 /* UserAddressRegistVM.swift */,
+				168B48E82A0A0C1100AB2BD8 /* GarbageMapVM.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -356,20 +336,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				168B48EB2A0A421000AB2BD8 /* GarbageParentView.swift in Sources */,
+				168B48EB2A0A421000AB2BD8 /* GarbageMapView.swift in Sources */,
 				168B48C629DD5B1400AB2BD8 /* PermitPositionView.swift in Sources */,
 				168B48CE29DD5B8400AB2BD8 /* Geocoder.swift in Sources */,
 				16A4C98E2A55BB80003BE06B /* GarbageAreaConvModel.swift in Sources */,
 				168B48DF29DE73C000AB2BD8 /* EffectProgressView.swift in Sources */,
 				1682EEFF2A2F384800066BC0 /* UserAddressRegistView.swift in Sources */,
-				16B023C92A371828002193AE /* Test.swift in Sources */,
 				168B48E329DF026900AB2BD8 /* GarbageRegistModel.swift in Sources */,
 				1682EF012A3065E500066BC0 /* ApiResponseModel.swift in Sources */,
 				168B48DB29DD5BCB00AB2BD8 /* LocationManager.swift in Sources */,
 				168B48D229DD5B8400AB2BD8 /* AdrSetModel.swift in Sources */,
 				168B48D129DD5B8400AB2BD8 /* UserDataModel.swift in Sources */,
 				168B48D929DD5BCB00AB2BD8 /* PostDataManager.swift in Sources */,
-				168B48E129DF019E00AB2BD8 /* GarbageListView.swift in Sources */,
 				1682EEFD2A2F378100066BC0 /* UserAddressRegistVM.swift in Sources */,
 				165FD6F62A25F1A30034ED2F /* GarbageRegistView.swift in Sources */,
 				165FD6FA2A2600740034ED2F /* FloatingActionButton.swift in Sources */,
@@ -383,10 +361,8 @@
 				1634FFC329DD53D50054D499 /* GarbageCalendarApp.swift in Sources */,
 				165FD6F42A25E3D10034ED2F /* GarbageRegistVM.swift in Sources */,
 				1682EF032A342A7F00066BC0 /* Modifier.swift in Sources */,
-				168B48C529DD5B1400AB2BD8 /* AddressRegistView.swift in Sources */,
 				1682EEF92A2F30C000066BC0 /* UserAddressRegistModel.swift in Sources */,
 				1682EEF72A2DA9CA00066BC0 /* Extension.swift in Sources */,
-				168B48E72A0A0BAD00AB2BD8 /* GarbageMapView.swift in Sources */,
 				168B48D029DD5B8400AB2BD8 /* AddressRegistVM.swift in Sources */,
 				168B48E92A0A0C1100AB2BD8 /* GarbageMapVM.swift in Sources */,
 			);

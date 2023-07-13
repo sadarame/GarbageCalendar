@@ -40,3 +40,29 @@ struct UserRegistRes: Codable {
     let status: String
     let message: String
 }
+
+struct GarbageAreaRes: Codable {
+    let status: String
+    let result:[GarbageAreaConvModel]
+    let message: String
+}
+
+struct ResultAPI: Codable {
+    let No: String
+    let postalCode: String
+    let administrativeArea: String
+    let locality: String
+    let thoroughfare: String
+    let garbageGroupId: String
+    let officialFlag: String?
+    let usageCount: String
+    let garbageInfoName: String
+    let latitude: String
+    let longitude: String
+}
+
+struct GarbageInfoRes: Codable {
+    let status: String
+    let result:[GarbageRegistModel]
+    let message: String
+}

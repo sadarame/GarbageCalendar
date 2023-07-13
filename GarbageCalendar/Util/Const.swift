@@ -20,11 +20,11 @@ struct Const {
     static let TYPE_GET_USER_ID = "1"
     static let TYPE_REGIST_GARBAGE_INFO = "2"
     static let TYPE_REGIST_USER_INFO = "3"
+    static let TYPE_GET_GARBAGE_AREA = "4"
+    static let TYPE_GET_GARBAGE_INFO = "5"
     
     //画面番号
     static let LocationSetViewCode = "1"
-    
-
     //画面制御用
     static let type_NumberPad = "1"
     
