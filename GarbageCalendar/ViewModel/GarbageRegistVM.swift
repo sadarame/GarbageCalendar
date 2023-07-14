@@ -71,13 +71,17 @@ class GarbageRegistVM : BaseVM {
         let jsonData = try! JSONEncoder().encode(garbageRegistModelList)
         // JSONデータを文字列に変換
         let jsonString = String(data: jsonData, encoding: .utf8)
+        
+        let model = loadGarbageAreaConvModel()
+        
         // リクエストパラメータを作成
         let requestBody = [
             "TYPE": Const.TYPE_REGIST_GARBAGE_INFO,
             "API_KEY": Const.API_KEY,
             "USER_ID":loadUserID(),
             "GARBAGE_INFO": jsonString,
-            "GARBAGE_INFO_NAME": garbageInfoName
+            "GARBAGE_INFO_NAME": model?.garbageInfoName,
+            "CONV_NO": model?.No
         ]
         
         // JSONにデータ変換

@@ -46,7 +46,7 @@ struct MapAreaView : View {
     
     var body: some View {
         ZStack{
-            MapView(region: $vm.region)
+            MapView(region: $vm.region, pinList: $vm.pinList)
             // マップ上の右下にボタンを表示
             VStack {
                 Spacer()
@@ -71,14 +71,22 @@ struct MapAreaView : View {
 
 struct MapView: UIViewRepresentable {
     @Binding var region: MKCoordinateRegion
+    @Binding var pinList: [MKPointAnnotation]
     
     func makeUIView(context: Context) -> MKMapView {
         MKMapView(frame: .zero)
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
-        uiView.setRegion(region, animated: true)
-    }
+           uiView.setRegion(region, animated: true)
+           
+           // 既存のピンを削除
+           let existingAnnotations = uiView.annotations
+           uiView.removeAnnotations(existingAnnotations)
+           
+           // 新しいピンを追加
+           uiView.addAnnotations(pinList)
+       }
 }
 
 struct ListView: View {

@@ -64,3 +64,25 @@ func loadUserAddressRegistModel() -> UserAddressRegistModel? {
     }
     return nil
 }
+
+func saveGarbageAreaConvModel(_ model: GarbageAreaConvModel) {
+    do {
+        let data = try JSONEncoder().encode(model)
+        UserDefaults.standard.set(data, forKey: "garbageAreaConvModel")
+    } catch {
+        print("Failed to save GarbageAreaConvModel: \(error)")
+    }
+}
+
+func loadGarbageAreaConvModel() -> GarbageAreaConvModel? {
+    if let data = UserDefaults.standard.data(forKey: "garbageAreaConvModel") {
+        do {
+            let model = try JSONDecoder().decode(GarbageAreaConvModel.self, from: data)
+            return model
+        } catch {
+            print("Failed to load GarbageAreaConvModel: \(error)")
+        }
+    }
+    return nil
+}
+

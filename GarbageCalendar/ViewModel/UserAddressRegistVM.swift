@@ -48,12 +48,11 @@ class UserAddressRegistVM: BaseVM {
     
     //位置情報取得
     func requestLocation(){
-//        if (locationManager.authorizationStatus == .authorizedWhenInUse) {
             isShowProgres = true
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
             locationManager.delegate = self
             locationManager.requestLocation()
-//        }
+
     }
     
     //緯度情報と住所情報を変換
@@ -78,19 +77,13 @@ class UserAddressRegistVM: BaseVM {
                 self.model.subLocality = placemark.subLocality ?? ""
                 self.model.thoroughfare = placemark.thoroughfare ?? ""
                 self.model.subThoroughfare = placemark.subThoroughfare ?? ""
-                //名前に丁目を設定
-                //                self.model.UserAddressName = self.model.thoroughfare
+
                 //プログレスバーを非表示
                 self.isShowProgres = false
             }
         }
     }
-    
-    //データモデルをUserDefaultとサーバに登録
-    func registUserInfo(){
         
-    }
-    
     // ユーザ情報登録
     func callRegistUserInfoAPI(completion: @escaping (Result<Void, Error>) -> Void) {
         

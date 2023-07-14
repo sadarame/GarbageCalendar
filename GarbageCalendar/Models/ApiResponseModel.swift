@@ -61,8 +61,20 @@ struct ResultAPI: Codable {
     let longitude: String
 }
 
-struct GarbageInfoRes: Codable {
+struct GetGarbageInfoRes: Codable {
     let status: String
-    let result:[GarbageRegistModel]
+    let result: [GarbageItemRes]
     let message: String
+}
+
+struct GarbageItemRes: Codable {
+    let id: String
+    let garbageType: String
+    let schedule: String
+    let yobi: String
+    let day: String?
+    let month: String?
+    let date: String?
+    let weekOfMonth: String?
+    let freqWeek: String?
 }

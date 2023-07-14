@@ -7,6 +7,7 @@
 
 import Foundation
 import MapKit
+import SwiftUI
 
 //
 class GarbageMapVM: BaseVM {
@@ -18,6 +19,10 @@ class GarbageMapVM: BaseVM {
     @Published var toNextPage = false
     //フォーカスする位置情報を定義
     @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002))
+    // 取得してきたピン情報
+    @Published var pinList: [MKPointAnnotation] = []
+    
+//    @AppStorage("garbageInfoName") var garbageInfoName: String = ""
     
     override init() {
         super.init()
@@ -32,6 +37,16 @@ class GarbageMapVM: BaseVM {
         setRequestParam()
         //APIをコール
         callGetGarbageAreaAPI()
+    }
+    
+    // 緯度経度からMapにピンを表示する
+    func addPinToMap(latitude: Double, longitude: Double, title: String, subtitle: String) {
+        let pin = MKPointAnnotation()
+        pin.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        pin.title = title
+        pin.subtitle = title
+        pinList.append(pin)
+        
     }
     
     //緯度経度からMapに表示
@@ -88,8 +103,9 @@ class GarbageMapVM: BaseVM {
                     self.isDisEditable  = false
                     //ユーザーデフォルトに保存
                     self.modelList = responseData.result
-                    
-                    
+                    //マップにPinを指す
+                    self.addPinsFromModelList()
+      
                 case .failure(let error):
                     // エラー時の処理
                     self.showPopup(withMessage: "住所情報が取得できませんでした。")
@@ -105,6 +121,21 @@ class GarbageMapVM: BaseVM {
         }
     }
     
+    func addPinsFromModelList() {
+        for model in self.modelList {
+            if let latitudeString = model.latitude,
+               let longitudeString = model.longitude,
+               let latitude = Double(latitudeString),
+               let longitude = Double(longitudeString) {
+                let title = model.garbageInfoName ?? "" // ピンのタイトル
+                let subtitle = "" // ピンのサブタイトル
+                
+                addPinToMap(latitude: latitude, longitude: longitude, title: title, subtitle: subtitle)
+            }
+        }
+    }
+
+    
     //リストクリックした際のイベント
     func handleElementTap(model:GarbageAreaConvModel){
         //アンラップ
@@ -113,6 +144,10 @@ class GarbageMapVM: BaseVM {
             showPopup(withMessage: "グループIDが取得できませんでした")
             return
         }
+        
+        saveGarbageAreaConvModel(model)
+//        garbageInfoName = model.garbageInfoName ?? ""
+        
         //ゴミ情報取得APIを叩く
         callGetGarbageInfo(id: id)
         
@@ -132,17 +167,16 @@ class GarbageMapVM: BaseVM {
         let jsonRequestBody = try! JSONSerialization.data(withJSONObject: requestBody)
         
         //APIのコール
-        fetchDataFromAPI(url: Const.URL_API_CALL, type: Const.TYPE_GET_GARBAGE_AREA,jsonData:jsonRequestBody) { [self] (result: Result<GarbageInfoRes, Error>) in
+        fetchDataFromAPI(url: Const.URL_API_CALL, type: Const.TYPE_GET_GARBAGE_AREA,jsonData:jsonRequestBody) { [self] (result: Result<GetGarbageInfoRes, Error>) in
             DispatchQueue.main.async {
                 switch result {
                     
                 case .success(let responseData):
                     //編集不可を解除
                     self.isDisEditable  = false
-                    //ユーザーデフォルトに保存
-                    saveGarbageRegistModels(responseData.result)
+                    //レスポンスをデータモデルに変換してユーザーデフォルトに保存
+                    self.assignValues(from: responseData)
   
-                    
                 case .failure(let error):
                     // エラー時の処理
                     self.showPopup(withMessage: "住所情報が取得できませんでした。")
@@ -156,7 +190,42 @@ class GarbageMapVM: BaseVM {
                 self.toNextPage = true
             }
         }
-        
     }
+    func assignValues(from schedule: GetGarbageInfoRes) {
+        var garbageModels: [GarbageRegistModel] = []
+        
+        for garbageItem in schedule.result {
+            var garbageModel = GarbageRegistModel()
+            
+            garbageModel.garbageType = garbageItem.garbageType
+            garbageModel.schedule = garbageItem.schedule
+            garbageModel.yobi = garbageItem.yobi
+            
+            
+            if let day = garbageItem.day {
+                garbageModel.day = Int(day) ?? 1
+            }
+            
+            if let dateString = garbageItem.date {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                
+                if let date = dateFormatter.date(from: dateString) {
+                    garbageModel.date = date
+                }
+            }
+            
+            if let weekOfMonth = garbageItem.weekOfMonth,
+               let freqWeek = garbageItem.freqWeek {
+                garbageModel.weekOfMonth = weekOfMonth
+                garbageModel.freqWeek = freqWeek
+            }
+            
+            garbageModels.append(garbageModel)
+        }
+        
+        saveGarbageRegistModels(garbageModels)
+    }
+
 }
 
