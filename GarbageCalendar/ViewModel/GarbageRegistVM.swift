@@ -16,7 +16,7 @@ class GarbageRegistVM : BaseVM {
     //APIコールの状況（画面遷移の判断に使うかも？）
     @Published var apiResponseStatus = 0
     
-    @AppStorage("garbageInfoName") var garbageInfoName: String = ""
+//    @AppStorage("garbageInfoName") var garbageInfoName: String = ""
     
     //プルダウンの選択肢
     let garbageTypes:[String] = ["燃えるゴミ","燃えないゴミ","プラスチック","ビン・カン",
@@ -31,14 +31,74 @@ class GarbageRegistVM : BaseVM {
     override init() {
         super.init()
         
-        //ユーザデフォルトからモデル変数リストを取得
+//        ユーザデフォルトからモデル変数リストを取得
         garbageRegistModelList = loadGarbageRegistModels()
-        
+
         //はじめましてだったらリスト作る
         if garbageRegistModelList.isEmpty{
             self.addGarbageInfo()
         }
     }
+    
+    //こっちのinitでデータを取得する方法
+    func callGetGarbageInfo(id:String){
+        //LISTを選択した場合
+        
+        //選択しなかった場合
+        guard let convModel = loadGarbageAreaConvModel(),
+              let id = convModel.No else {
+                return
+            }
+        
+        let requestBody = [
+            "TYPE": Const.TYPE_GET_GARBAGE_INFO,
+            "API_KEY": Const.API_KEY,
+            "GROUP_ID": id
+        ]
+        
+        // JSONにデータ変換
+        let jsonRequestBody = try! JSONSerialization.data(withJSONObject: requestBody)
+        
+        
+        guard let url = URL(string: Const.URL_API_CALL) else {
+//            completion(.failure(APIError.invalidURL))
+            return
+        }
+        
+        //リクエスト作成
+        var request = URLRequest(url: url)
+        
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        //引数で受け取ったjsonを設定
+        request.httpBody = jsonRequestBody
+                
+        //APIのコール
+        fetchDataFromAPI(url: Const.URL_API_CALL, type: Const.TYPE_GET_GARBAGE_AREA,jsonData:jsonRequestBody) { [self] (result: Result<GetGarbageInfoRes, Error>) in
+            DispatchQueue.main.async {
+                switch result {
+
+                case .success(let responseData):
+                    //編集不可を解除
+                    self.isDisEditable  = false
+                    //レスポンスをデータモデルに変換してユーザーデフォルトに保存
+                    self.assignValues(from: responseData)
+
+                case .failure(let error):
+                    // エラー時の処理
+                    self.showPopup(withMessage: "住所情報が取得できませんでした。")
+
+                    print("Error: \(error)")
+                }
+                //通信終わりのため、プログレス非表示に
+                self.isShowProgres = false
+                self.isDisEditable = false
+
+            }
+        }
+    }
+
     
     //プラスボタン押下時のイベント
     //リストに構造体を追加
@@ -140,5 +200,41 @@ class GarbageRegistVM : BaseVM {
         garbageRegistModelList.remove(at: index)
         saveGarbageRegistModels(garbageRegistModelList)
         apiResponseStatus = 1
+    }
+    
+    func assignValues(from schedule: GetGarbageInfoRes) {
+        var garbageModels: [GarbageRegistModel] = []
+        
+        for garbageItem in schedule.result {
+            var garbageModel = GarbageRegistModel()
+            
+            garbageModel.garbageType = garbageItem.garbageType
+            garbageModel.schedule = garbageItem.schedule
+            garbageModel.yobi = garbageItem.yobi
+            
+            
+            if let day = garbageItem.day {
+                garbageModel.day = Int(day) ?? 1
+            }
+            
+            if let dateString = garbageItem.date {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                
+                if let date = dateFormatter.date(from: dateString) {
+                    garbageModel.date = date
+                }
+            }
+            
+            if let weekOfMonth = garbageItem.weekOfMonth,
+               let freqWeek = garbageItem.freqWeek {
+                garbageModel.weekOfMonth = weekOfMonth
+                garbageModel.freqWeek = freqWeek
+            }
+            
+            garbageModels.append(garbageModel)
+        }
+        
+        saveGarbageRegistModels(garbageModels)
     }
 }

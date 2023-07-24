@@ -18,11 +18,9 @@ class GarbageMapVM: BaseVM {
     //次ページへの遷移するためのフラグ
     @Published var toNextPage = false
     //フォーカスする位置情報を定義
-    @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002))
+    @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.018, longitudeDelta: 0.018))
     // 取得してきたピン情報
     @Published var pinList: [MKPointAnnotation] = []
-    
-//    @AppStorage("garbageInfoName") var garbageInfoName: String = ""
     
     override init() {
         super.init()
@@ -105,6 +103,8 @@ class GarbageMapVM: BaseVM {
                     self.modelList = responseData.result
                     //マップにPinを指す
                     self.addPinsFromModelList()
+                    //リストから重複を削除
+                    self.removeDuplicatesFromModelList()
       
                 case .failure(let error):
                     // エラー時の処理
@@ -138,6 +138,12 @@ class GarbageMapVM: BaseVM {
     
     //リストクリックした際のイベント
     func handleElementTap(model:GarbageAreaConvModel){
+        
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        isShowProgres = true
+        isDisEditable = true
+        
         //アンラップ
         guard let id = model.garbageGroupId else {
             // optionalValueがnilの場合の処理
@@ -146,16 +152,24 @@ class GarbageMapVM: BaseVM {
         }
         
         saveGarbageAreaConvModel(model)
-//        garbageInfoName = model.garbageInfoName ?? ""
+        
+        if let name = model.garbageInfoName {
+            garbageInfoName = name
+        }
         
         //ゴミ情報取得APIを叩く
-        callGetGarbageInfo(id: id)
+        callGetGarbageInfo(id: id,semaphore:semaphore)
+        
+        semaphore.wait()
+        
+        toNextPage = true
         
     }
     
-    func callGetGarbageInfo(id:String){
-        self.isShowProgres = true
-        self.isDisEditable = true
+    func callGetGarbageInfo(id:String,semaphore:DispatchSemaphore){
+        
+        isShowProgres = true
+        isDisEditable = true
         
         let requestBody = [
             "TYPE": Const.TYPE_GET_GARBAGE_INFO,
@@ -166,30 +180,82 @@ class GarbageMapVM: BaseVM {
         // JSONにデータ変換
         let jsonRequestBody = try! JSONSerialization.data(withJSONObject: requestBody)
         
-        //APIのコール
-        fetchDataFromAPI(url: Const.URL_API_CALL, type: Const.TYPE_GET_GARBAGE_AREA,jsonData:jsonRequestBody) { [self] (result: Result<GetGarbageInfoRes, Error>) in
-            DispatchQueue.main.async {
-                switch result {
-                    
-                case .success(let responseData):
-                    //編集不可を解除
-                    self.isDisEditable  = false
-                    //レスポンスをデータモデルに変換してユーザーデフォルトに保存
-                    self.assignValues(from: responseData)
-  
-                case .failure(let error):
-                    // エラー時の処理
-                    self.showPopup(withMessage: "住所情報が取得できませんでした。")
-                    
-                    print("Error: \(error)")
-                }
-                //通信終わりのため、プログレス非表示に
-                self.isShowProgres = false
-                self.isDisEditable = false
-                //次ページへ遷移する処理
-                self.toNextPage = true
-            }
+        
+        guard let url = URL(string: Const.URL_API_CALL) else {
+//            completion(.failure(APIError.invalidURL))
+            return
         }
+        
+        //リクエスト作成
+        var request = URLRequest(url: url)
+        
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        //引数で受け取ったjsonを設定
+        request.httpBody = jsonRequestBody
+        
+        isLoading = true
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+            
+            if let error = error {
+                self.showPopup(withMessage: "ゴミ情報が取得できませんでした。")
+                return
+            }
+            
+            guard let data = data else {
+                self.showPopup(withMessage: "ゴミ情報が取得できませんでした。")
+                return
+            }
+            
+            do {
+                logData(data)
+                let decodedData = try JSONDecoder().decode(GetGarbageInfoRes.self, from: data)
+                self.assignValues(from: decodedData)
+//                DispatchQueue.main.async {
+//                    self.toNextPage = true
+//                }
+                semaphore.signal()
+         
+            } catch {
+                       self.showPopup(withMessage: "ゴミ情報が取得できませんでした。")
+                return
+            }
+        }.resume()
+        
+        //APIのコール
+//        fetchDataFromAPI(url: Const.URL_API_CALL, type: Const.TYPE_GET_GARBAGE_AREA,jsonData:jsonRequestBody) { [self] (result: Result<GetGarbageInfoRes, Error>) in
+//            DispatchQueue.main.async {
+//                switch result {
+//
+//                case .success(let responseData):
+//                    //編集不可を解除
+//                    self.isDisEditable  = false
+//                    //レスポンスをデータモデルに変換してユーザーデフォルトに保存
+//                    self.assignValues(from: responseData)
+//
+//                    self.toNextPage = true
+//                    semaphore.signal()
+//
+//                case .failure(let error):
+//                    // エラー時の処理
+//                    self.showPopup(withMessage: "住所情報が取得できませんでした。")
+//
+//                    print("Error: \(error)")
+//                }
+//                //通信終わりのため、プログレス非表示に
+//                self.isShowProgres = false
+//                self.isDisEditable = false
+//                //次ページへ遷移する処理、なぜかできない
+//                //遷移と同時にinitが複数回よばれてなかったことにされる？
+////                self.toNextPage = true
+//
+//            }
+//        }
     }
     func assignValues(from schedule: GetGarbageInfoRes) {
         var garbageModels: [GarbageRegistModel] = []
@@ -226,6 +292,24 @@ class GarbageMapVM: BaseVM {
         
         saveGarbageRegistModels(garbageModels)
     }
+    
+    //リストから重複した情報を削除
+    func removeDuplicatesFromModelList() {
+        var seenElements = Set<String>()
+        var uniqueElements = [GarbageAreaConvModel]()
+        
+        for model in modelList {
+            let key = "\(model.garbageGroupId ?? "")-\(model.garbageInfoName ?? "")"
+            
+            if !seenElements.contains(key) {
+                seenElements.insert(key)
+                uniqueElements.append(model)
+            }
+        }
+        
+        modelList = uniqueElements
+    }
+
 
 }
 

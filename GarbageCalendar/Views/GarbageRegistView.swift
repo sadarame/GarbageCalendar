@@ -40,6 +40,7 @@ struct GarbageRegistView: View {
             //ナビゲーション処理
             .navigationBarTitle(Text("ゴミ情報登録"))
             .navigationBarTitleDisplayMode(.inline)
+
 //        }
     }
 }

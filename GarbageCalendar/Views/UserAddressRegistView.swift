@@ -160,8 +160,6 @@ struct ButtonToNext : View {
     
     @ObservedObject var vm: UserAddressRegistVM
     
-    @AppStorage("garbageInfoName") var garbageInfoName: String = ""
-    
     var body: some View {
         VStack{
             Button(action: {
@@ -169,9 +167,9 @@ struct ButtonToNext : View {
                 vm.onNextButtonTapped()
                 
                 if vm.model.buildName != "" {
-                    garbageInfoName = vm.model.buildName
+                    vm.garbageInfoName = vm.model.buildName
                 } else {
-                    garbageInfoName = vm.model.thoroughfare
+                    vm.garbageInfoName = vm.model.thoroughfare
                 }
             
             }) {
