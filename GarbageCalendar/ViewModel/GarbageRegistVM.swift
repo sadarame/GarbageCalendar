@@ -15,8 +15,10 @@ class GarbageRegistVM : BaseVM {
     @Published var garbageRegistModelList:[GarbageRegistModel] = []
     //APIコールの状況（画面遷移の判断に使うかも？）
     @Published var apiResponseStatus = 0
-    
-//    @AppStorage("garbageInfoName") var garbageInfoName: String = ""
+    //ゴミ情報名称
+    @Published var garbageInfoName = ""
+    //画面遷移用のフラグ
+    @Published var toNextPage:Bool = false
     
     //プルダウンの選択肢
     let garbageTypes:[String] = ["燃えるゴミ","燃えないゴミ","プラスチック","ビン・カン",
@@ -28,28 +30,49 @@ class GarbageRegistVM : BaseVM {
     let days:[Int] = Array(1...31)
     let months:[Int] = Array(1...12)
     
+    var count = 0
+    
     override init() {
         super.init()
-        
-//        ユーザデフォルトからモデル変数リストを取得
-        garbageRegistModelList = loadGarbageRegistModels()
-
-        //はじめましてだったらリスト作る
-        if garbageRegistModelList.isEmpty{
-            self.addGarbageInfo()
+        onApperInit()
+    }
+    
+    //画面表示時の処理
+    func onApperInit(){
+        let trigger = loadTriggerFlg()
+        //リストタップで遷移
+        if trigger == Const.TRG_LIST_TAP {
+            //タップされたListをもとに情報を取得する
+            callGetGarbageInfo()
+        //次へボタン押下時
+        } else if trigger == Const.TRG_NEXT_BUTTON  {
+            //ユーザデフォルトからモデル変数リストを取得
+            garbageRegistModelList = loadGarbageRegistModels()
+            //はじめましてだったらリスト作る
+            if garbageRegistModelList.isEmpty{
+                self.addGarbageInfo()
+            }
+            //ゴミ情報名称を設定
+            garbageInfoName = loadGarbageInfoName() ?? ""
+            
+        } else {
+            //なにもしない
         }
     }
     
-    //こっちのinitでデータを取得する方法
-    func callGetGarbageInfo(id:String){
-        //LISTを選択した場合
-        
-        //選択しなかった場合
+    //ゴミ情報取得
+    func callGetGarbageInfo(){
+        //選択した情報を取得し、グループidをアンラップ
         guard let convModel = loadGarbageAreaConvModel(),
-              let id = convModel.No else {
+              let id = convModel.garbageGroupId,
+                let tmpGarbageInfoName = convModel.garbageInfoName
+        else {
                 return
             }
         
+        self.garbageInfoName = tmpGarbageInfoName
+        
+        //リクエスト作成
         let requestBody = [
             "TYPE": Const.TYPE_GET_GARBAGE_INFO,
             "API_KEY": Const.API_KEY,
@@ -58,21 +81,6 @@ class GarbageRegistVM : BaseVM {
         
         // JSONにデータ変換
         let jsonRequestBody = try! JSONSerialization.data(withJSONObject: requestBody)
-        
-        
-        guard let url = URL(string: Const.URL_API_CALL) else {
-//            completion(.failure(APIError.invalidURL))
-            return
-        }
-        
-        //リクエスト作成
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        //引数で受け取ったjsonを設定
-        request.httpBody = jsonRequestBody
                 
         //APIのコール
         fetchDataFromAPI(url: Const.URL_API_CALL, type: Const.TYPE_GET_GARBAGE_AREA,jsonData:jsonRequestBody) { [self] (result: Result<GetGarbageInfoRes, Error>) in
@@ -80,45 +88,33 @@ class GarbageRegistVM : BaseVM {
                 switch result {
 
                 case .success(let responseData):
-                    //編集不可を解除
-                    self.isDisEditable  = false
-                    //レスポンスをデータモデルに変換してユーザーデフォルトに保存
+                    //レスポンスをデータモデルに変換してユーザーデフォルトに保存し、
+                    //クラス変数二セット
                     self.assignValues(from: responseData)
-
                 case .failure(let error):
                     // エラー時の処理
-                    self.showPopup(withMessage: "住所情報が取得できませんでした。")
-
+                    self.showPopup(withMessage: "ゴミ情報が取得できませんでした。")
                     print("Error: \(error)")
                 }
-                //通信終わりのため、プログレス非表示に
-                self.isShowProgres = false
-                self.isDisEditable = false
-
             }
         }
     }
-
     
     //プラスボタン押下時のイベント
     //リストに構造体を追加
     func addGarbageInfo(){
         let newGarbageRegistModel = GarbageRegistModel() // 新しいインスタンスを作成
         garbageRegistModelList.append(newGarbageRegistModel) // リストに追加
-        saveGarbageRegistModels(garbageRegistModelList)//ユーザデフォルトに保存
     }
     
     //登録ボタン押下時の処理
     func registData(){
+        
+        saveGarbageInfoName(garbageInfoName)
         //重複チェック
         if checkForDuplicates() {
             return
         }
-        
-        //プログレス表示,編集不可
-        isShowProgres = true
-        isDisEditable = true
-        
         //ユーザーデフォルトに登録
         saveGarbageRegistModels(garbageRegistModelList)
         //登録用のAPIを叩く
@@ -155,7 +151,9 @@ class GarbageRegistVM : BaseVM {
                 case .success(let responseData):
                     //ステータスに登録状況をセット
                     if responseData.status == "succsess" {
-                        self.apiResponseStatus = 1
+//                        self.apiResponseStatus = 1
+                        //画面遷移
+                        self.toNextPage = true
                     }
                     
                 case .failure(let error):
@@ -163,9 +161,6 @@ class GarbageRegistVM : BaseVM {
                     self.showPopup(withMessage: "ゴミ情報登録でエラーが発生しました。")
                     print("Error: \(error)")
                 }
-                //プログレス表示,編集不可解除
-                self.isShowProgres = false
-                self.isDisEditable = false
             }
         }
     }//ファンクションの括弧
@@ -199,9 +194,10 @@ class GarbageRegistVM : BaseVM {
     func deleteCard(at index: Int) {
         garbageRegistModelList.remove(at: index)
         saveGarbageRegistModels(garbageRegistModelList)
-        apiResponseStatus = 1
+//        apiResponseStatus = 1
     }
     
+    //構造体の詰め込みメソッド
     func assignValues(from schedule: GetGarbageInfoRes) {
         var garbageModels: [GarbageRegistModel] = []
         
@@ -235,6 +231,9 @@ class GarbageRegistVM : BaseVM {
             garbageModels.append(garbageModel)
         }
         
-        saveGarbageRegistModels(garbageModels)
+        self.garbageRegistModelList = garbageModels
+       saveGarbageRegistModels(garbageRegistModelList)
+        
+        
     }
 }

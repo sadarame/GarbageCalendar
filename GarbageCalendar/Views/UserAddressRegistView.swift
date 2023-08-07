@@ -167,9 +167,9 @@ struct ButtonToNext : View {
                 vm.onNextButtonTapped()
                 
                 if vm.model.buildName != "" {
-                    vm.garbageInfoName = vm.model.buildName
+                    saveGarbageInfoName(vm.model.buildName)
                 } else {
-                    vm.garbageInfoName = vm.model.thoroughfare
+                    saveGarbageInfoName(vm.model.thoroughfare)
                 }
             
             }) {

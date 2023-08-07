@@ -1,6 +1,6 @@
 import Foundation
 
-class GarbageAreaConvModel:Identifiable,Codable {
+class GarbageAreaConvModel: Identifiable, Codable, Hashable, Equatable {
     // No
     var No: String?
     // 郵便番号
@@ -14,7 +14,7 @@ class GarbageAreaConvModel:Identifiable,Codable {
     // グループID
     var garbageGroupId: String?
     // 公式フラグ
-    var officialFlag: Bool?
+    var officialFlag: String?
     // 使用回数
     var usageCount: String?
     // ゴミ情報名称
@@ -24,17 +24,33 @@ class GarbageAreaConvModel:Identifiable,Codable {
     //経度
     var longitude: String?
 
-//    init(no: Int?, postalCode: String?, administrativeArea: String?, locality: String?, thoroughfare: String?, garbageGroupId: String?, officialFlag: Bool?, usageCount: Int?, garbageInfoName: String?,latitude: String?,longitude: String?) {
-//        self.no = no
-//        self.postalCode = postalCode
-//        self.administrativeArea = administrativeArea
-//        self.locality = locality
-//        self.thoroughfare = thoroughfare
-//        self.garbageGroupId = garbageGroupId
-//        self.officialFlag = officialFlag
-//        self.usageCount = usageCount
-//        self.garbageInfoName = garbageInfoName
-//        self.latitude = latitude
-//        self.longitude = longitude
-//    }
+    // カスタムの等価性比較を実装します
+    static func == (lhs: GarbageAreaConvModel, rhs: GarbageAreaConvModel) -> Bool {
+        return lhs.No == rhs.No &&
+               lhs.postalCode == rhs.postalCode &&
+               lhs.administrativeArea == rhs.administrativeArea &&
+               lhs.locality == rhs.locality &&
+               lhs.thoroughfare == rhs.thoroughfare &&
+               lhs.garbageGroupId == rhs.garbageGroupId &&
+               lhs.officialFlag == rhs.officialFlag &&
+               lhs.usageCount == rhs.usageCount &&
+               lhs.garbageInfoName == rhs.garbageInfoName &&
+               lhs.latitude == rhs.latitude &&
+               lhs.longitude == rhs.longitude
+    }
+
+    // ハッシュ値を計算するためのメソッドを実装します
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(No)
+        hasher.combine(postalCode)
+        hasher.combine(administrativeArea)
+        hasher.combine(locality)
+        hasher.combine(thoroughfare)
+        hasher.combine(garbageGroupId)
+        hasher.combine(officialFlag)
+        hasher.combine(usageCount)
+        hasher.combine(garbageInfoName)
+        hasher.combine(latitude)
+        hasher.combine(longitude)
+    }
 }

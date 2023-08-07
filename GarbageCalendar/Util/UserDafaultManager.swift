@@ -7,15 +7,16 @@
 
 import Foundation
 
+func saveGarbageInfoName(_ name: String) {
+    UserDefaults.standard.set(name, forKey: "garbageInfoName")
+}
+
+func loadGarbageInfoName() -> String? {
+    return UserDefaults.standard.string(forKey: "garbageInfoName")
+}
+
+
 func saveUserID(_ userID: String) {
-    UserDefaults.standard.set(userID, forKey: "userID")
-}
-
-func loadsaveGarbageInfoName() -> String? {
-    return UserDefaults.standard.string(forKey: "userID")
-}
-
-func saveGarbageInfoName(_ userID: String) {
     UserDefaults.standard.set(userID, forKey: "userID")
 }
 
@@ -85,4 +86,13 @@ func loadGarbageAreaConvModel() -> GarbageAreaConvModel? {
     }
     return nil
 }
+
+func saveTriggerFlg(_ trigger: Int) {
+    UserDefaults.standard.set(trigger, forKey: "triggerFlg")
+}
+
+func loadTriggerFlg() -> Int? {
+    return UserDefaults.standard.integer(forKey: "triggerFlg")
+}
+
 

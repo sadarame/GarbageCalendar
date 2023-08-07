@@ -13,6 +13,10 @@ struct Const {
     static let URL_ZIPCODE_API = "https://zipcloud.ibsnet.co.jp/api/search?zipcode="
     static let API_KEY = "YOSUKE1227"
     
+    //画面遷移トリガー
+    static let TRG_NEXT_BUTTON = 1
+    static let TRG_LIST_TAP = 2
+    
     //キー情報
     
     

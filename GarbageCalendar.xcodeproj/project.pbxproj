@@ -14,17 +14,15 @@
 		165FD6F42A25E3D10034ED2F /* GarbageRegistVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165FD6F32A25E3D10034ED2F /* GarbageRegistVM.swift */; };
 		165FD6F62A25F1A30034ED2F /* GarbageRegistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165FD6F52A25F1A30034ED2F /* GarbageRegistView.swift */; };
 		165FD6FA2A2600740034ED2F /* FloatingActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165FD6F92A2600740034ED2F /* FloatingActionButton.swift */; };
+		16669E122A7CFBE60067E430 /* CalendarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16669E112A7CFBE60067E430 /* CalendarVM.swift */; };
+		16669E1A2A7E20D80067E430 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16669E192A7E20D80067E430 /* CalendarView.swift */; };
 		1682EEF72A2DA9CA00066BC0 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1682EEF62A2DA9CA00066BC0 /* Extension.swift */; };
 		1682EEF92A2F30C000066BC0 /* UserAddressRegistModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1682EEF82A2F30C000066BC0 /* UserAddressRegistModel.swift */; };
 		1682EEFD2A2F378100066BC0 /* UserAddressRegistVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1682EEFC2A2F378100066BC0 /* UserAddressRegistVM.swift */; };
 		1682EEFF2A2F384800066BC0 /* UserAddressRegistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1682EEFE2A2F384800066BC0 /* UserAddressRegistView.swift */; };
 		1682EF012A3065E500066BC0 /* ApiResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1682EF002A3065E500066BC0 /* ApiResponseModel.swift */; };
 		1682EF032A342A7F00066BC0 /* Modifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1682EF022A342A7F00066BC0 /* Modifier.swift */; };
-		168B48C429DD5B1400AB2BD8 /* ParentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48C029DD5B1400AB2BD8 /* ParentView.swift */; };
-		168B48C629DD5B1400AB2BD8 /* PermitPositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48C229DD5B1400AB2BD8 /* PermitPositionView.swift */; };
-		168B48C729DD5B1400AB2BD8 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48C329DD5B1400AB2BD8 /* CalendarView.swift */; };
 		168B48CE29DD5B8400AB2BD8 /* Geocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48C929DD5B8400AB2BD8 /* Geocoder.swift */; };
-		168B48D029DD5B8400AB2BD8 /* AddressRegistVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48CB29DD5B8400AB2BD8 /* AddressRegistVM.swift */; };
 		168B48D129DD5B8400AB2BD8 /* UserDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48CC29DD5B8400AB2BD8 /* UserDataModel.swift */; };
 		168B48D229DD5B8400AB2BD8 /* AdrSetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48CD29DD5B8400AB2BD8 /* AdrSetModel.swift */; };
 		168B48D429DD5BB700AB2BD8 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48D329DD5BB700AB2BD8 /* Const.swift */; };
@@ -51,17 +49,15 @@
 		165FD6F32A25E3D10034ED2F /* GarbageRegistVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageRegistVM.swift; sourceTree = "<group>"; };
 		165FD6F52A25F1A30034ED2F /* GarbageRegistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageRegistView.swift; sourceTree = "<group>"; };
 		165FD6F92A2600740034ED2F /* FloatingActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingActionButton.swift; sourceTree = "<group>"; };
+		16669E112A7CFBE60067E430 /* CalendarVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarVM.swift; sourceTree = "<group>"; };
+		16669E192A7E20D80067E430 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		1682EEF62A2DA9CA00066BC0 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		1682EEF82A2F30C000066BC0 /* UserAddressRegistModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAddressRegistModel.swift; sourceTree = "<group>"; };
 		1682EEFC2A2F378100066BC0 /* UserAddressRegistVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAddressRegistVM.swift; sourceTree = "<group>"; };
 		1682EEFE2A2F384800066BC0 /* UserAddressRegistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAddressRegistView.swift; sourceTree = "<group>"; };
 		1682EF002A3065E500066BC0 /* ApiResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResponseModel.swift; sourceTree = "<group>"; };
 		1682EF022A342A7F00066BC0 /* Modifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modifier.swift; sourceTree = "<group>"; };
-		168B48C029DD5B1400AB2BD8 /* ParentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParentView.swift; sourceTree = "<group>"; };
-		168B48C229DD5B1400AB2BD8 /* PermitPositionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PermitPositionView.swift; sourceTree = "<group>"; };
-		168B48C329DD5B1400AB2BD8 /* CalendarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		168B48C929DD5B8400AB2BD8 /* Geocoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geocoder.swift; sourceTree = "<group>"; };
-		168B48CB29DD5B8400AB2BD8 /* AddressRegistVM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressRegistVM.swift; sourceTree = "<group>"; };
 		168B48CC29DD5B8400AB2BD8 /* UserDataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDataModel.swift; sourceTree = "<group>"; };
 		168B48CD29DD5B8400AB2BD8 /* AdrSetModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdrSetModel.swift; sourceTree = "<group>"; };
 		168B48D329DD5BB700AB2BD8 /* Const.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
@@ -158,12 +154,10 @@
 			isa = PBXGroup;
 			children = (
 				165FD6F82A2600580034ED2F /* Custom */,
-				168B48C029DD5B1400AB2BD8 /* ParentView.swift */,
-				168B48C229DD5B1400AB2BD8 /* PermitPositionView.swift */,
-				168B48C329DD5B1400AB2BD8 /* CalendarView.swift */,
 				1682EEFE2A2F384800066BC0 /* UserAddressRegistView.swift */,
 				165FD6F52A25F1A30034ED2F /* GarbageRegistView.swift */,
 				168B48EA2A0A421000AB2BD8 /* GarbageMapView.swift */,
+				16669E192A7E20D80067E430 /* CalendarView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -196,10 +190,10 @@
 			isa = PBXGroup;
 			children = (
 				169F8E902A243A1F0082F330 /* BaseVM.swift */,
-				168B48CB29DD5B8400AB2BD8 /* AddressRegistVM.swift */,
-				165FD6F32A25E3D10034ED2F /* GarbageRegistVM.swift */,
 				1682EEFC2A2F378100066BC0 /* UserAddressRegistVM.swift */,
 				168B48E82A0A0C1100AB2BD8 /* GarbageMapVM.swift */,
+				165FD6F32A25E3D10034ED2F /* GarbageRegistVM.swift */,
+				16669E112A7CFBE60067E430 /* CalendarVM.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -336,8 +330,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16669E122A7CFBE60067E430 /* CalendarVM.swift in Sources */,
 				168B48EB2A0A421000AB2BD8 /* GarbageMapView.swift in Sources */,
-				168B48C629DD5B1400AB2BD8 /* PermitPositionView.swift in Sources */,
 				168B48CE29DD5B8400AB2BD8 /* Geocoder.swift in Sources */,
 				16A4C98E2A55BB80003BE06B /* GarbageAreaConvModel.swift in Sources */,
 				168B48DF29DE73C000AB2BD8 /* EffectProgressView.swift in Sources */,
@@ -355,15 +349,13 @@
 				168B48D429DD5BB700AB2BD8 /* Const.swift in Sources */,
 				169F8E912A243A1F0082F330 /* BaseVM.swift in Sources */,
 				169F8E8F2A22EC900082F330 /* UserDafaultManager.swift in Sources */,
-				168B48C729DD5B1400AB2BD8 /* CalendarView.swift in Sources */,
-				168B48C429DD5B1400AB2BD8 /* ParentView.swift in Sources */,
 				168B48DA29DD5BCB00AB2BD8 /* LocationClient.swift in Sources */,
 				1634FFC329DD53D50054D499 /* GarbageCalendarApp.swift in Sources */,
 				165FD6F42A25E3D10034ED2F /* GarbageRegistVM.swift in Sources */,
 				1682EF032A342A7F00066BC0 /* Modifier.swift in Sources */,
 				1682EEF92A2F30C000066BC0 /* UserAddressRegistModel.swift in Sources */,
+				16669E1A2A7E20D80067E430 /* CalendarView.swift in Sources */,
 				1682EEF72A2DA9CA00066BC0 /* Extension.swift in Sources */,
-				168B48D029DD5B8400AB2BD8 /* AddressRegistVM.swift in Sources */,
 				168B48E92A0A0C1100AB2BD8 /* GarbageMapVM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

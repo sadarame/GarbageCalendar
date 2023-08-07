@@ -13,13 +13,15 @@ struct GarbageMapView: View {
     @ObservedObject var vm:GarbageMapVM = GarbageMapVM()
     
     var body: some View {
-//        NavigationStack{
             ZStack {
                 VStack(spacing: 0) {
                     //マップエリア
                     MapAreaView(vm:vm)
                     //リストエリア
                     ListView(vm:vm)
+                    //ボタンエリア
+                    ButtonAreaVeiw(vm:vm)
+                        .frame(width: UIScreen.main.bounds.width * 0.9)
                 }
                 //位置情報取得中にプログレスを全面表示する
                 if vm.isShowProgres {EffectProgressView(10)}
@@ -79,6 +81,7 @@ struct MapView: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
+        print("MapView")
             uiView.setRegion(region, animated: true)
             
             // 既存のピンを削除
@@ -93,31 +96,77 @@ struct MapView: UIViewRepresentable {
 struct ListView: View {
     @ObservedObject var vm: GarbageMapVM
     
+   
+    
     var body: some View {
         List {
-            Section(header: Text("近くのゴミ情報")) {
-                ForEach(vm.modelList.indices, id: \.self) { index in
-                    HStack{
-                        Text(vm.modelList[index].garbageInfoName ?? "") // モデルのプロパティを表示
-                        Spacer()
+            //公式フラグがあった場合
+            if vm.modelList.contains { $0.officialFlag == "1" } {
+                //公式用セクション
+                Section(header: Text("公式")) {
+                    ForEach(vm.modelList.filter { $0.officialFlag == "1" }, id: \.self) { model in
+                        
                         HStack{
-                            Text("使用回数:")//あとでアイコン
-                            Text(vm.modelList[index].usageCount ?? "0")
+                            Text(model.garbageInfoName ?? "") // モデルのプロパティを表示
+                            Spacer()
+                            HStack{
+                                Text("使用回数:")//あとでアイコン
+                                Text(model.usageCount ?? "0")
+                            }
                         }
-                        //ToDo公式フラグが立っていたらアイコン表示
-                        if vm.modelList[index].officialFlag ?? false {
-                            Text("公式フラグ:")//あとでアイコン
+                        
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            // 要素がクリックされたときのイベント処理をここに書く
+                            vm.handleElementTap(model: model)
                         }
                     }
+                }
+            }
+            //一般人セクション
+            Section(header: Text("近くのゴミ情報")) {
+                ForEach(vm.modelList.filter { $0.officialFlag != "1" }, id: \.self) { model in
+                    
+                        HStack{
+                            Text(model.garbageInfoName ?? "") // モデルのプロパティを表示
+                            Spacer()
+                            HStack{
+                                Text("使用回数:")//あとでアイコン
+                                Text(model.usageCount ?? "0")
+                            }
+                        }
+                    
                     .contentShape(Rectangle())  
                     .onTapGesture {
                          // 要素がクリックされたときのイベント処理をここに書く
-                        vm.handleElementTap(model: vm.modelList[index])
+                        vm.handleElementTap(model: model)
                      }
                 }
             }
         }
         .listStyle(GroupedListStyle())
+    }
+}
+
+struct ButtonAreaVeiw : View {
+    
+    @ObservedObject var vm: GarbageMapVM
+    
+    var body: some View {
+        VStack{
+            Button(action: {
+                //ボタン押下のイベント
+                vm.tapNextButton()
+            
+            }) {
+                Text("次へ（該当なし）")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .accentColor(Color.white)
+                    .background(Color.blue)
+                    .cornerRadius(.infinity)
+            }
+        }
     }
 }
 

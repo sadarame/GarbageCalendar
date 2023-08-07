@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class BaseVM: NSObject, ObservableObject {
     
@@ -32,6 +33,10 @@ class BaseVM: NSObject, ObservableObject {
 
     //引数ありでAPIコールする用のメソッド
     func fetchDataFromAPI<T: Decodable>(url: String, type:String, jsonData:Data, completion: @escaping (Result<T, Error>) -> Void) {
+        
+        isShowProgres = true
+        isDisEditable = true
+        
         guard let url = URL(string: url) else {
             completion(.failure(APIError.invalidURL))
             return
@@ -51,6 +56,8 @@ class BaseVM: NSObject, ObservableObject {
         URLSession.shared.dataTask(with: request) { (data, response, error) in
             DispatchQueue.main.async {
                 self.isLoading = false
+                self.isShowProgres = false
+                self.isDisEditable = false
             }
             
             if let error = error {

@@ -14,11 +14,8 @@ class UserAddressRegistVM: BaseVM {
     @Published var model: UserAddressRegistModel = UserAddressRegistModel()
     //画面遷移用のフラグ
     @Published var activie:Bool = false
-    
     //住所情報取用のクラス
     private let locationManager = CLLocationManager()
-    
-//    @AppStorage("garbageInfoName") var garbageInfoName: String = ""
     
     //初期処理
     override init() {
@@ -228,10 +225,6 @@ class UserAddressRegistVM: BaseVM {
     //緯度経度の取得処理と登録処理を呼び出す
     func onNextButtonTapped() {
     
-//        //プログレス表示,編集不可
-//        isShowProgres = true
-//        isDisEditable = true
-        
         //緯度経度取得処理
         getCoordinatesFromAddress { result in
             switch result {
@@ -257,9 +250,6 @@ class UserAddressRegistVM: BaseVM {
                         self.showPopup(withMessage: "ユーザ情報登録でエラーが発生しました。")
                         print("ユーザ情報登録エラー: \(error)")
                     }
-                    // プログレス表示、編集不可
-//                    self.isShowProgres = false
-//                    self.isDisEditable = false
                 }
                 //入力された情報をユーザデフォルトに保存
                 saveUserAddressRegistModel(self.model)
@@ -278,7 +268,6 @@ extension UserAddressRegistVM: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         // 位置情報の取得に失敗した場合の処理を記述
         self.showPopup(withMessage: "位置情報を取得できませんでした。")
-//        self.isShowProgres = false
         
     }
 }

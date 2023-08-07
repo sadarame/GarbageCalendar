@@ -13,8 +13,7 @@ struct GarbageRegistView: View {
     //VM
     @ObservedObject var vm:GarbageRegistVM = GarbageRegistVM()
     
-    var body: some View {   
-//        NavigationStack{
+    var body: some View {
             ZStack {
                 //ゴミ情報のリスト
                 VStack{
@@ -35,13 +34,19 @@ struct GarbageRegistView: View {
                 //位置情報取得中にプログレスを全面表示する
                 if vm.isShowProgres {EffectProgressView(10)}
             }
+            .onAppear {
+                vm.onApperInit()
+            }
+            //画面遷移処理
+            .navigationDestination(isPresented: $vm.toNextPage, destination: {
+                CalendarView()
+            })
             //エラーメッセージ表示用モディファイア
             .modifier(CommonViewModifier(vm: vm))
             //ナビゲーション処理
             .navigationBarTitle(Text("ゴミ情報登録"))
             .navigationBarTitleDisplayMode(.inline)
 
-//        }
     }
 }
 
@@ -337,8 +342,4 @@ struct ButtonToAdd : View {
     }
 }
 
-struct GarbageRegistView_Previews: PreviewProvider {
-    static var previews: some View {
-        GarbageRegistView()
-    }
-}
+
