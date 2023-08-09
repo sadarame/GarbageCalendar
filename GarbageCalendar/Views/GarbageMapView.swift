@@ -101,7 +101,7 @@ struct ListView: View {
     var body: some View {
         List {
             //公式フラグがあった場合
-            if vm.modelList.contains { $0.officialFlag == "1" } {
+            if vm.modelList.contains(where: { $0.officialFlag == "1" }) {
                 //公式用セクション
                 Section(header: Text("公式")) {
                     ForEach(vm.modelList.filter { $0.officialFlag == "1" }, id: \.self) { model in
