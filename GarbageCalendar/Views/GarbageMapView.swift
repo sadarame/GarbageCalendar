@@ -38,7 +38,6 @@ struct GarbageMapView: View {
             .onAppear{
                 vm.onAppearInit()
             }
-//        }
     }
 }
 

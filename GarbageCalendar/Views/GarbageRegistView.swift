@@ -14,6 +14,7 @@ struct GarbageRegistView: View {
     @ObservedObject var vm:GarbageRegistVM = GarbageRegistVM()
     
     var body: some View {
+        ScrollViewReader { scrollViewProxy in
             ZStack {
                 //ゴミ情報のリスト
                 VStack{
@@ -46,7 +47,8 @@ struct GarbageRegistView: View {
             //ナビゲーション処理
             .navigationBarTitle(Text("ゴミ情報登録"))
             .navigationBarTitleDisplayMode(.inline)
-
+            
+        }
     }
 }
 
@@ -69,31 +71,40 @@ struct GarbageInfoNameAreaView: View {
     }
 }
 
-//ゴミ情報のリスト
+
+// MARK: - ゴミ情報のScrollView
 struct GarbageInfoListView: View {
     @ObservedObject var vm: GarbageRegistVM
     
     var body: some View {
-        //        List{
-        ScrollView{
-            //モデルリストの件数文繰り返し
-            ForEach(vm.garbageRegistModelList.indices, id: \.self) { index in
-                
-                VStack {
-                    if index < vm.garbageRegistModelList.count {
-                        CardView(vm: vm, index: index)
+        
+        ScrollViewReader { scrollViewProxy in
+            ScrollView{
+                //モデルリストの件数文繰り返し
+                ForEach(vm.garbageRegistModelList.indices, id: \.self) { index in
+                    
+                    VStack {
+                        if index < vm.garbageRegistModelList.count {
+                            CardView(vm: vm, index: index)
+                        }
                     }
+                    //カード形式の外の余白
+                    .padding(.horizontal,16)
+                    .padding(.bottom, 16)
+                    .onAppear {
+                           // Automatically scroll to the bottom when new elements are added
+                           if index == vm.garbageRegistModelList.count - 1 {
+                               scrollViewProxy.scrollTo(index, anchor: .bottom)
+                           }
+                       }
                 }
-                //カード形式の外の余白
-                .padding(.horizontal,16)
-                .padding(.bottom, 16)
-                
             }
+            
         }
     }
 }
 
-//カード形式
+// MARK: - カード形式
 struct CardView: View {
     @ObservedObject var vm: GarbageRegistVM
     

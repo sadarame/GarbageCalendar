@@ -41,11 +41,6 @@ class GarbageMapVM: BaseVM {
     
     // 緯度経度からMapにピンを表示する
     func addPinToMap(latitude: Double, longitude: Double, title: String, subtitle: String) {
-        print("addPinToMap called with:")
-           print("Latitude: \(latitude)")
-           print("Longitude: \(longitude)")
-           print("Title: \(title)")
-           print("Subtitle: \(subtitle)")
         let pin = MKPointAnnotation()
         pin.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         pin.title = title

@@ -96,3 +96,13 @@ func loadTriggerFlg() -> Int? {
 }
 
 
+func saveDestination(_ destination: String) {
+    UserDefaults.standard.set(destination, forKey: "destination")
+}
+
+func loadDestination() -> String? {
+    return UserDefaults.standard.string(forKey: "destination")
+}
+
+
+

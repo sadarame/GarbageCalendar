@@ -28,7 +28,7 @@ struct Const {
     static let TYPE_GET_GARBAGE_INFO = "5"
     
     //画面番号
-    static let LocationSetViewCode = "1"
+    static let view_CalendarView = "1"
     //画面制御用
     static let type_NumberPad = "1"
     

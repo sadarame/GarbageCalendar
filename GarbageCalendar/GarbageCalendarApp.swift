@@ -11,7 +11,11 @@ import SwiftUI
 struct GarbageCalendarApp: App {
     var body: some Scene {
         WindowGroup {
-            CalendarView()
+            if loadDestination() == Const.view_CalendarView {
+                CalendarView()
+            } else {
+                UserAddressRegistView()
+            }
         }
     }
 }

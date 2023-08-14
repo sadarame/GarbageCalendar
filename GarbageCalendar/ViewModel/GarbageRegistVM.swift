@@ -13,8 +13,6 @@ class GarbageRegistVM : BaseVM {
     @Published var garbageRegistModel:GarbageRegistModel = GarbageRegistModel()
     //モデル変数のリスト
     @Published var garbageRegistModelList:[GarbageRegistModel] = []
-    //APIコールの状況（画面遷移の判断に使うかも？）
-    @Published var apiResponseStatus = 0
     //ゴミ情報名称
     @Published var garbageInfoName = ""
     //画面遷移用のフラグ
@@ -151,7 +149,6 @@ class GarbageRegistVM : BaseVM {
                 case .success(let responseData):
                     //ステータスに登録状況をセット
                     if responseData.status == "succsess" {
-//                        self.apiResponseStatus = 1
                         //画面遷移
                         self.toNextPage = true
                     }
@@ -194,7 +191,6 @@ class GarbageRegistVM : BaseVM {
     func deleteCard(at index: Int) {
         garbageRegistModelList.remove(at: index)
         saveGarbageRegistModels(garbageRegistModelList)
-//        apiResponseStatus = 1
     }
     
     //構造体の詰め込みメソッド
@@ -234,6 +230,10 @@ class GarbageRegistVM : BaseVM {
         self.garbageRegistModelList = garbageModels
        saveGarbageRegistModels(garbageRegistModelList)
         
-        
     }
+    
+    func scrollToBottom(scrollViewProxy: ScrollViewProxy) {
+        scrollViewProxy.scrollTo(garbageRegistModelList.indices.last, anchor: .bottom)
+    }
+    
 }

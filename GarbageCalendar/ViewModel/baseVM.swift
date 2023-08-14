@@ -35,7 +35,7 @@ class BaseVM: NSObject, ObservableObject {
     func fetchDataFromAPI<T: Decodable>(url: String, type:String, jsonData:Data, completion: @escaping (Result<T, Error>) -> Void) {
         
         isShowProgres = true
-        isDisEditable = true
+            isDisEditable = true
         
         guard let url = URL(string: url) else {
             completion(.failure(APIError.invalidURL))
@@ -71,7 +71,7 @@ class BaseVM: NSObject, ObservableObject {
             }
             
             do {
-                logData(data)
+//                logData(data)
                 let decodedData = try JSONDecoder().decode(T.self, from: data)
                 completion(.success(decodedData))
             } catch {
