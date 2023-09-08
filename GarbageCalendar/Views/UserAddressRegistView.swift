@@ -30,9 +30,18 @@ struct UserAddressRegistView: View {
                         //入力チェッククリアしないと非活性
                         .disabled(!vm.validateInputFields())
                         .frame(width: UIScreen.main.bounds.width * 0.9)
+                    
+                    //広告エリア
+                    AdMobBannerView().frame(width: 320, height: 50)
+                        .background(Color.clear)
+                    
                 }
                 //位置情報取得中にプログレスを全面表示する
                 if vm.isShowProgres {EffectProgressView(10)}
+                //ナビゲーション
+                if vm.isShowNavigate {
+                    PopupMessageView(vm: vm)
+                }
             }
             //画面遷移処理
             .navigationDestination(isPresented: $vm.activie, destination: {
@@ -42,7 +51,10 @@ struct UserAddressRegistView: View {
             .modifier(CommonViewModifier(vm: vm))
         }
         //初期表示時の初期処理
-        .onAppear(perform: vm.onapperInit)
+        .onAppear{
+            vm.onapperInit()
+        }
+        
     }
     
 }

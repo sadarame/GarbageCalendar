@@ -13,31 +13,38 @@ struct GarbageMapView: View {
     @ObservedObject var vm:GarbageMapVM = GarbageMapVM()
     
     var body: some View {
-            ZStack {
-                VStack(spacing: 0) {
-                    //マップエリア
-                    MapAreaView(vm:vm)
-                    //リストエリア
-                    ListView(vm:vm)
-                    //ボタンエリア
-                    ButtonAreaVeiw(vm:vm)
-                        .frame(width: UIScreen.main.bounds.width * 0.9)
-                }
-                //位置情報取得中にプログレスを全面表示する
-                if vm.isShowProgres {EffectProgressView(10)}
+        ZStack {
+            VStack(spacing: 0) {
+                //マップエリア
+                MapAreaView(vm:vm)
+                //リストエリア
+                ListView(vm:vm)
+                //ボタンエリア
+                ButtonAreaVeiw(vm:vm)
+                    .frame(width: UIScreen.main.bounds.width * 0.9)
+                
+                //広告エリア
+                AdMobBannerView().frame(width: 320, height: 50)
+                //                        .background(Color.clear)
+            }.background(Color.gray.opacity(0.1))
+            //位置情報取得中にプログレスを全面表示する
+            if vm.isShowProgres {EffectProgressView(10)}
+            if vm.isShowNavigate {
+                PopupMessageView(vm:vm)
             }
-            //画面遷移処理
-            .navigationDestination(isPresented: $vm.toNextPage, destination: {
-                GarbageRegistView()
-            })
-            //エラーメッセージ表示用モディファイア
-            .modifier(CommonViewModifier(vm: vm))
-            //ナビゲーション処理
-            .navigationBarTitle(Text("エリア検索"))
-            .navigationBarTitleDisplayMode(.inline)
-            .onAppear{
-                vm.onAppearInit()
-            }
+        }
+        //画面遷移処理
+        .navigationDestination(isPresented: $vm.toNextPage, destination: {
+            GarbageRegistView()
+        })
+        //エラーメッセージ表示用モディファイア
+        .modifier(CommonViewModifier(vm: vm))
+        //ナビゲーション処理
+        .navigationBarTitle(Text("エリア検索"))
+        .navigationBarTitleDisplayMode(.inline)
+        .onAppear{
+            vm.onAppearInit()
+        }
     }
 }
 
@@ -81,21 +88,21 @@ struct MapView: UIViewRepresentable {
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
         print("MapView")
-            uiView.setRegion(region, animated: true)
-            
-            // 既存のピンを削除
-            let existingAnnotations = uiView.annotations
-            uiView.removeAnnotations(existingAnnotations)
-            
-            // 新しいピンを追加
-            uiView.addAnnotations(pinList)
-       }
+        uiView.setRegion(region, animated: true)
+        
+        // 既存のピンを削除
+        let existingAnnotations = uiView.annotations
+        uiView.removeAnnotations(existingAnnotations)
+        
+        // 新しいピンを追加
+        uiView.addAnnotations(pinList)
+    }
 }
 
 struct ListView: View {
     @ObservedObject var vm: GarbageMapVM
     
-   
+    
     
     var body: some View {
         List {
@@ -108,12 +115,16 @@ struct ListView: View {
                         HStack{
                             Text(model.garbageInfoName ?? "") // モデルのプロパティを表示
                             Spacer()
-                            HStack{
-                                Text("使用回数:")//あとでアイコン
-                                Text(model.usageCount ?? "0")
+                            HStack(spacing:0){
+                                Image("Usage")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 25, height: 25)
+                                Text(model.usageCount ?? "1")
+                                    .frame(width: 40, alignment: .trailing)
                             }
                         }
-                        
+
                         .contentShape(Rectangle())
                         .onTapGesture {
                             // 要素がクリックされたときのイベント処理をここに書く
@@ -126,20 +137,24 @@ struct ListView: View {
             Section(header: Text("近くのゴミ情報")) {
                 ForEach(vm.modelList.filter { $0.officialFlag != "1" }, id: \.self) { model in
                     
-                        HStack{
-                            Text(model.garbageInfoName ?? "") // モデルのプロパティを表示
-                            Spacer()
-                            HStack{
-                                Text("使用回数:")//あとでアイコン
-                                Text(model.usageCount ?? "0")
-                            }
+                    HStack{
+                        Text(model.garbageInfoName ?? "") // モデルのプロパティを表示
+                        Spacer()
+                        HStack(spacing:0){
+                            Image("Usage")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 25, height: 25)
+                            Text(model.usageCount ?? "1")
+                                .frame(width: 40, alignment: .trailing)
                         }
+                    }
                     
-                    .contentShape(Rectangle())  
+                    .contentShape(Rectangle())
                     .onTapGesture {
-                         // 要素がクリックされたときのイベント処理をここに書く
+                        // 要素がクリックされたときのイベント処理をここに書く
                         vm.handleElementTap(model: model)
-                     }
+                    }
                 }
             }
         }
@@ -156,7 +171,7 @@ struct ButtonAreaVeiw : View {
             Button(action: {
                 //ボタン押下のイベント
                 vm.tapNextButton()
-            
+                
             }) {
                 Text("次へ（該当なし）")
                     .padding()

@@ -102,7 +102,38 @@ func saveDestination(_ destination: String) {
 
 func loadDestination() -> String? {
     return UserDefaults.standard.string(forKey: "destination")
+    
 }
+
+// FCMトークンを保存するメソッド
+func saveFCMToken(_ token: String) {
+    UserDefaults.standard.set(token, forKey: "fcmToken")
+}
+
+// 保存されたFCMトークンを読み込むメソッド
+func loadFCMToken() -> String? {
+    return UserDefaults.standard.string(forKey: "fcmToken")
+}
+
+func saveIsShowNavigateAddress(_ value: String) {
+    UserDefaults.standard.set(value, forKey: "isShowNavigateAddress")
+}
+
+// UserDefaultsからisShowNavigateAddressを読み込むメソッド（String型）
+func loadIsShowNavigateAddress() -> String? {
+    return UserDefaults.standard.string(forKey: "isShowNavigateAddress")
+}
+
+
+func saveIsShowNavigateMap(_ value: String) {
+    UserDefaults.standard.set(value, forKey: "isShowNavigateMap")
+}
+
+// UserDefaultsからisShowNavigateAddressを読み込むメソッド（String型）
+func loadIsShowNavigateMap() -> String? {
+    return UserDefaults.standard.string(forKey: "isShowNavigateMap")
+}
+
 
 
 

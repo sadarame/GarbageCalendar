@@ -14,6 +14,17 @@ struct CommonViewModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content
+            .alert(isPresented: $vm.isAlertAppStore) {
+                Alert(
+                    title: Text("お知らせ"),
+                    message: Text("最新バージョンがあります"),
+                    dismissButton: .default(Text("ストアへ")){
+                        vm.openAppStore()
+                    }
+                )
+            }
+        
+        
         //エラーメッセージ
             .alert(isPresented: $vm.isShowingPopup) {
                 Alert(title: Text("Error"), message: Text(vm.popupMessage), dismissButton: .default(Text("OK"), action: {

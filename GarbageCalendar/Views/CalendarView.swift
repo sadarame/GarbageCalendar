@@ -1,9 +1,11 @@
 import SwiftUI
+import MessageUI
 
 struct CalendarView: View {
     @StateObject var vm = CalendarVM()
     @State private var isMenuOpen = false // サイドメニューの表示状態
-
+    @State private var isShowingMailView = false // サイドメニューの表示状態
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -12,13 +14,24 @@ struct CalendarView: View {
                     CalendarArea(vm: vm)
                     // リストエリア
                     GarbageListArea(vm: vm)
+                    //広告エリア
+                    AdMobBannerView().frame(width: 320, height: 50)
+                        .background(Color.clear)
                 }
+                //サイドバーの表示制御
+                SideMenuView(vm:vm,isOpen: $isMenuOpen)
+                    .edgesIgnoringSafeArea(.all)
                 // エラーメッセージ表示用モディファイア
-                .modifier(CommonViewModifier(vm: vm))
+                    .modifier(CommonViewModifier(vm: vm))
                 
-                SideMenuView(isOpen: $isMenuOpen)
-                                .edgesIgnoringSafeArea(.all)
             }
+            .sheet(isPresented: $vm.isShowingMailView) {
+                MailView(isShowing: $vm.isShowingMailView)
+                       }
+            
+            .navigationDestination(isPresented: $vm.isGarbageRegistView, destination: {
+                GarbageRegistView()
+            })
             
             .onAppear(perform: vm.onapperInit)
             
@@ -27,7 +40,7 @@ struct CalendarView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
                         // メニューを表示するアクション
-                       isMenuOpen.toggle()
+                        isMenuOpen.toggle()
                     }) {
                         Image(systemName: "line.horizontal.3") // メニューアイコン
                     }
@@ -142,32 +155,77 @@ struct CalendarCell: View {
             HStack {
                 Text(getFormattedDate(date: date, format: "d"))
                     .font(.headline)
-                    .foregroundColor(isDateSunday() ? customLightRed :  isDateSaturday() ? customLightBlue : customLightGray)
+                    .foregroundColor(getDateTextColor())
                     .multilineTextAlignment(.leading)
                 Spacer()
             }
+            
             // eventsをすべて表示
-            VStack(spacing: 0) {
-                VStack(spacing: 0) {
-                    ForEach(0..<2, id: \.self) { row in
-                        HStack(spacing: 4) {
-                            ForEach(0..<2, id: \.self) { column in
-                                let index = row * 2 + column
-                                if index < eventImages.count {
-                                    eventImages[index]
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                } else {
-                                    Color.clear // 空のビューを挿入してスペースを確保
-                                }
-                            }
-                        }
-                    }
-                }
-                Spacer()
+            if eventImages.count == 1 {
+                eventImages[0]
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
             }
+            
+            if eventImages.count == 2 {
+                HStack(spacing: 0) {
+                    eventImages[0]
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                    eventImages[1]
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                    
+                }
+            }
+            if eventImages.count == 3 {
+                
+                HStack(spacing: 0) {
+                    eventImages[0]
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                    eventImages[1]
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                    
+                }
+                HStack(spacing: 0) {
+                    eventImages[2]
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                    
+                }
+                
+            }
+            
+            if eventImages.count > 3 {
+                
+                HStack(spacing: 0) {
+                    eventImages[0]
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                    eventImages[1]
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                    
+                }
+                HStack(spacing: 0) {
+                    eventImages[2]
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                    Image("gomi_mark13_blank")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                }
+            }
+            Spacer()
+            
+            
+            
+            
+            
         }
+        
         .background(isDateSelected() ? customLightBlue1: isDateInCurrentMonth() ? .clear : customLightGrayBack)
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)
@@ -208,23 +266,49 @@ struct CalendarCell: View {
         let weekdaySymbol = vm.getWeekdaySymbol(for: date)
         return weekdaySymbol == "土曜日"
     }
+    
+    func getDateTextColor() -> Color {
+        if isDateSunday() {
+            return customLightRed
+        } else if isDateSaturday() {
+            return customLightBlue
+        } else {
+            return customLightGray
+        }
+    }
+    
 }
 
 // MARK: - Lsitエリア
 struct GarbageListArea: View {
     @ObservedObject var vm: CalendarVM
     @State private var scrollToTop = false
-
+    
     var body: some View {
         ScrollViewReader { scrollProxy in
             List {
                 ForEach(vm.eventsList.keys.sorted(), id: \.self) { date in
-                    if isInSameMonth(date, as: vm.selectedDate) && date >= vm.previousDay {
-                        Section(header: Text(
-                            createSectionLabel(date: date))) {
-                            ForEach(vm.eventsList[date] ?? [], id: \.self) { event in
-                                Text(event)
-                            }
+                    //カレンダーの表示月と今月が一致していた場合
+                    if isInSameMonth(vm.today, as: vm.selectedDate){
+                        //Listの月と今月が一致しているかつ、Listの日付が今日の日付よりあとの場合
+                        if isInSameMonth(date, as: vm.today) && date >= vm.previousDay{
+                            Section(header: Text(
+                                createSectionLabel(date: date))) {
+                                    ForEach(vm.eventsList[date] ?? [], id: \.self) { event in
+                                        Text(event)
+                                    }
+                                }
+                        }
+                        //カレンダーの表示月と今月が一致してない場合
+                    } else {
+                        //カレンダーの表示月とListの日付の月が一致してた場合
+                        if isInSameMonth(date, as: vm.selectedDate) {
+                            Section(header: Text(
+                                createSectionLabel(date: date))) {
+                                    ForEach(vm.eventsList[date] ?? [], id: \.self) { event in
+                                        Text(event)
+                                    }
+                                }
                         }
                     }
                 }
@@ -239,12 +323,13 @@ struct GarbageListArea: View {
     private func createSectionLabel(date:Date)->String{
         var labelStr = vm.getFormattedDate(date: date, format: "yyyy/MM/dd")
         labelStr = labelStr + "(" + (vm.getWeekdaySymbol(for: date) ?? "") + ")"
-
+        
         return labelStr
     }
     
     
     private func isInSameMonth(_ date1: Date, as date2: Date) -> Bool {
+
         let calendar = Calendar.current
         return calendar.isDate(date1, equalTo: date2, toGranularity: .month)
     }
@@ -252,9 +337,10 @@ struct GarbageListArea: View {
 
 // MARK: - サイドバー
 struct SideMenuView: View {
+    @StateObject var vm:CalendarVM
     @Binding var isOpen: Bool
     let width: CGFloat = 270
-
+    
     var body: some View {
         ZStack {
             // リスト部分
@@ -266,15 +352,42 @@ struct SideMenuView: View {
                     NavigationLink(destination: GarbageMapView(), isActive: .constant(false)) {
                         SideMenuContentView(systemName: "mappin", text: "ゴミエリア検索")
                     }
-                    NavigationLink(destination: GarbageRegistView(), isActive: .constant(false)) {
+                    
+                    //ゴミ情報登録
+                    Button(action: {
+                        // ボタンがタップされたときにアクティブにする
+                        saveTriggerFlg(Const.TRG_SIDE_MENU)
+                        isOpen = false
+                        vm.isGarbageRegistView = true
+                        
+                    }) {
                         SideMenuContentView(systemName: "pencil.line", text: "ゴミ情報登録")
                     }
                     
+                    //通知設定
                     Button(action: {
                         // ボタンがタップされたときにアクティブにする
                         
                     }) {
                         SideMenuContentView(systemName: "bell", text: "通知設定（工事中）")
+                    }
+                    
+                    //問い合わせ
+                    Button(action: {
+                        // ボタンがタップされたときにアクティブにする
+                        vm.isShowingMailView = true
+                        
+                    }) {
+                        SideMenuContentView(systemName: "mail.fill", text: "問い合わせ")
+                    }
+                    
+                    //プラポリ
+                    Button(action: {
+                        // ボタンがタップされたときにアクティブにする
+                        vm.openWebsite()
+                        
+                    }) {
+                        SideMenuContentView(systemName: "network", text: "プライバシーポリシー")
                     }
                     Spacer()
                 }
@@ -282,24 +395,33 @@ struct SideMenuView: View {
                 .background(Color(UIColor.systemGray6))
                 .offset(x: self.isOpen ? 0 : -self.width)
                 .animation(.easeIn(duration: 0.25))
+                .gesture(
+                                DragGesture()
+                                    .onEnded { gesture in
+                                        // 左スワイプした場合にメニューバーを非表示にする
+                                        if gesture.translation.width < -50 {
+                                            isOpen = false
+                                        }
+                                    }
+                            )
                 Spacer()
             }
         }
     }
 }
 
-// MARK: - セルのビュー
+// MARK: - サイドバーのビュー
 struct SideMenuContentView: View {
     let topPadding: CGFloat
     let systemName: String
     let text: String
-
+    
     init(topPadding: CGFloat = 30, systemName: String, text: String) {
         self.topPadding = topPadding
         self.systemName = systemName
         self.text = text
     }
-
+    
     var body: some View {
         HStack {
             Image(systemName: systemName)
@@ -316,6 +438,40 @@ struct SideMenuContentView: View {
     }
 }
 
+// MARK: - メールバーのビュー
+
+struct MailView: UIViewControllerRepresentable {
+    @Binding var isShowing: Bool
+
+    func makeUIViewController(context: UIViewControllerRepresentableContext<MailView>) -> UIViewController {
+        let controller = MFMailComposeViewController()
+        controller.mailComposeDelegate = context.coordinator
+        controller.setSubject("【問い合わせ】ゴミ出しカレンダー")
+        controller.setToRecipients(["sadarame@gmail.com"])
+        controller.setMessageBody("", isHTML: false)
+        return controller
+    }
+
+    func makeCoordinator() -> MailView.Coordinator {
+        return Coordinator(parent: self)
+    }
+
+    class Coordinator: NSObject, MFMailComposeViewControllerDelegate, UINavigationControllerDelegate {
+        let parent: MailView
+        init(parent: MailView) {
+            self.parent = parent
+        }
+
+        func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+            // 終了時の処理あれこれ
+
+            self.parent.isShowing = false
+        }
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<MailView>) {
+    }
+}
 
 
 

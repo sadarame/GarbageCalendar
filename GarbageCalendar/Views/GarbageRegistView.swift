@@ -31,6 +31,9 @@ struct GarbageRegistView: View {
                         ButtonToAdd(action: vm.addGarbageInfo)
                             .frame(width: UIScreen.main.bounds.width * 0.1)
                     }
+                    //広告エリア
+                    AdMobBannerView().frame(width: 320, height: 50)
+                        .background(Color.clear)
                 }
                 //位置情報取得中にプログレスを全面表示する
                 if vm.isShowProgres {EffectProgressView(10)}

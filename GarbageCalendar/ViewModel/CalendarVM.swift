@@ -7,6 +7,8 @@
 
 import Foundation
 import SwiftUI
+import MessageUI
+
 
 class CalendarVM: BaseVM {
     //モデル変数のリスト
@@ -15,32 +17,85 @@ class CalendarVM: BaseVM {
     //画面のリスト用変数
     @Published var eventsList: [Date: [String]] = [:]
     @Published var today: Date = Date()
+    //前日
     @Published var previousDay: Date = {
         let currentDate = Date()
         return Calendar.current.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
     }()
     
+    //画面遷移用のフラグ
+    @Published var isGarbageMapView = false
+    @Published var isGarbageRegistView = false
+    @Published var isUserAddresRegistView = false
+    
+    @Published var isShowingMailView:Bool = false
+    
+    
     let calendar: Calendar = Calendar.current
     let customLightGray = Color(red: 0.9, green: 0.9, blue: 0.9)
+    
+    let dateFormatter_yyyyMMdd = DateFormatter()
     
     var currentMonth: String {
         getFormattedDate(date: selectedDate, format: "MM")
     }
-    
     var tmpSectionDate: String = ""
     
-    //初期処理
+    // MARK: 初期処理
     override init() {
+        dateFormatter_yyyyMMdd.dateFormat = "yyyy-MM-dd HH:mm:ss"
         //ゴミ情報のロード
         self.garbageRegistModelList = loadGarbageRegistModels()
     }
     
-    //初期表示時の処理
+    // MARK: 初期表示時の処理
     func onapperInit(){
+        //画面遷移の制御
         saveDestination(Const.view_CalendarView)
+        //トークン更新
+        updateFcmToken()
     }
     
-    //前月に移動
+    // MARK: トークン更新
+    func updateFcmToken() {
+        let userinfoModel = loadUserAddressRegistModel()
+        userinfoModel?.fcm_token = loadFCMToken() ?? ""
+        userinfoModel?.last_updated = dateFormatter_yyyyMMdd.string(from: Date())
+        // ゴミ情報リストをJSONデータに変換
+        let jsonData = try! JSONEncoder().encode(userinfoModel)
+        // JSONデータを文字列に変換
+        let jsonString = String(data: jsonData, encoding: .utf8)
+        // リクエストパラメータを作成
+        let requestBody = [
+            "TYPE": Const.TYPE_REGIST_USER_INFO,
+            "API_KEY": Const.API_KEY,
+            "USER_INFO": jsonString
+        ]
+        // JSONにデータ変換
+        let jsonRequestBody = try! JSONSerialization.data(withJSONObject: requestBody)
+        
+        // APIのコール
+        fetchDataFromAPI(url: Const.URL_API_CALL, type: Const.TYPE_REGIST_GARBAGE_INFO, jsonData: jsonRequestBody) { (result: Result<UserRegistRes, Error>) in
+            
+            switch result {
+            case .success(let responseData):
+                // ステータスに登録状況をセット
+                if responseData.status != Const.STATUS_SUCCSESS {
+                    print(responseData.message)
+                }
+                
+            case .failure(let error):
+                // エラー時の処理
+                print(error)
+             
+            }
+        }
+    }
+    
+    
+   
+    
+    // MARK: 前月に移動
     func toPreviousMonth() {
         print("戻るボタン")
         selectedDate = calendar.date(byAdding: .month, value: -1, to: selectedDate) ?? Date()
@@ -48,21 +103,21 @@ class CalendarVM: BaseVM {
 
     }
     
-    //次月に移動
+    // MARK: 次月に移動
     func toNextMonth() {
         print("次へボタン")
         selectedDate = calendar.date(byAdding: .month, value: 1, to: selectedDate) ?? Date()
     
     }
     
-    //フォーマット変換
+    // MARK: フォーマット変換
     func getFormattedDate(date: Date, format: String) -> String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
         return dateFormatter.string(from: date)
     }
     
-    //５週間分の日付の配列を作って返す
+    // MARK: ５週間分の日付の配列を作って返す
     func getCalendarDays() -> [[Date]] {
         let firstDayOfMonth = calendar.date(from: calendar.dateComponents([.year, .month], from: calendar.startOfDay(for: selectedDate)))
         let startOfWeek = calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: firstDayOfMonth!))
@@ -83,7 +138,7 @@ class CalendarVM: BaseVM {
     }
     
     // MARK: - 日付を引数で受け取って、ゴミの情報を返す
-    // Todo:-戻り値を画像を返す
+    // MARK: -戻り値を画像を返す
     func getGarbageEventImages(date: Date) -> [Image] {
         
         print(date)
@@ -166,6 +221,7 @@ class CalendarVM: BaseVM {
         return events
     }
     
+    // MARK: Lsitエリア作成
     func addEventToEventsList(date: Date, garbageType: String) {
         if var existingGarbageTypes = eventsList[date] {
             if !existingGarbageTypes.contains(garbageType) {
@@ -181,7 +237,7 @@ class CalendarVM: BaseVM {
         eventsList = Dictionary(uniqueKeysWithValues: sortedEventsList)
     }
 
-    
+    // MARK: カレンダー画像変換
     func garbageTypeToImage(garbageType: String) -> Image {
         switch garbageType {
         case "燃えるゴミ":
@@ -202,11 +258,16 @@ class CalendarVM: BaseVM {
             return Image("gomi_mark10_kinzoku")
         case "粗大ごみ":
             return Image("gomi_mark08_sodai")
+        case "危険・有害":
+            return Image("gomi_mark14")
+        case "繊維":
+            return Image("繊維")
         default:
             fatalError("Invalid garbage type: \(garbageType)")
         }
     }
 
+    // MARK: 日付→曜日変換
     func getWeekdaySymbol(for date: Date) -> String? {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.weekday], from: date)
@@ -216,6 +277,7 @@ class CalendarVM: BaseVM {
         return nil
     }
     
+    // MARK: 月内一致
     func isMatchingWeekday(date: Date, week: Int, weekday: Int) -> Bool {
         let calendar = Calendar.current
         let day = calendar.component(.day, from: date)
@@ -237,6 +299,13 @@ class CalendarVM: BaseVM {
         
         return calculatedWeek == week && calculatedWeekday == weekday
     }
+    
+    func openWebsite() {
+        if let url = URL(string: Const.URL_PRIVACY_POLISCY) {
+            UIApplication.shared.open(url)
+        }
+    }
+    
 }
 
 struct GarbageEvent: Hashable,Identifiable {

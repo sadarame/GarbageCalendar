@@ -20,6 +20,53 @@ class BaseVM: NSObject, ObservableObject {
     //編集不可フラグ
     @Published var isDisEditable: Bool = false
     
+    //AppStore更新ありフラグ
+    @Published var isAlertAppStore: Bool = false
+    @Published var currentAppVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+    @Published private var latestAppVersion = ""
+    
+    
+    //ナビゲーション用のフラグ
+    @Published var isShowNavigate:Bool = false
+    var navigateText:String = ""
+    var navigateKey:String = ""
+    
+   
+    //Appストアのバージョン確認
+    func fetchAppStoreVersion(){
+        guard let appStoreURL = URL(string: "https://itunes.apple.com/lookup?id=6459478923") else {
+//            completion(.failure(NSError(domain: "", code: -1, userInfo: nil)))
+            print("エラー")
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: appStoreURL) { data, _, error in
+            if let data = data,
+               let response = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+               let results = response["results"] as? [[String: Any]],
+               let latestAppVersion = results.first?["version"] as? String {
+                
+                if latestAppVersion != self.currentAppVersion {
+                    self.isAlertAppStore = true
+                }
+                
+            } else {
+                print("エラー")
+            }
+        }
+        
+        task.resume()
+    }
+    
+    func openAppStore() {
+        guard let appStoreURL = URL(string: "https://itunes.apple.com/app/6459478923") else {
+            return
+        }
+        UIApplication.shared.open(appStoreURL, options: [:], completionHandler: nil)
+    }
+
+    
+    
     // ポップアップを表示するメソッド
     func showPopup(withMessage message: String) {
         popupMessage = message
@@ -93,4 +140,6 @@ func logData(_ data: Data) {
         print("Invalid data")
     }
 }
+
+
 

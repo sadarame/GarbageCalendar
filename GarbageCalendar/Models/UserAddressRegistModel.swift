@@ -34,4 +34,8 @@ class UserAddressRegistModel:Identifiable,Codable {
     var latitude: String = ""
     //経度
     var longitude: String = ""
+    //FCMトークン
+    var fcm_token:String = ""
+    //最終更新日
+    var last_updated:String = ""
 }

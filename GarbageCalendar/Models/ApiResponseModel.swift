@@ -71,7 +71,7 @@ struct GarbageItemRes: Codable {
     let id: String
     let garbageType: String
     let schedule: String
-    let yobi: String
+    let yobi: String?
     let day: String?
     let month: String?
     let date: String?

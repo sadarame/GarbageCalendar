@@ -8,25 +8,36 @@
 import Foundation
 import CoreLocation
 import SwiftUI
+import FirebaseCore
+import FirebaseMessaging
 
 class UserAddressRegistVM: BaseVM {
     // モデルを変数
     @Published var model: UserAddressRegistModel = UserAddressRegistModel()
     //画面遷移用のフラグ
     @Published var activie:Bool = false
+    
     //住所情報取用のクラス
     private let locationManager = CLLocationManager()
     
-    //初期処理
+    let dateFormatter_yyyyMMdd = DateFormatter()
+    
+    
+    // MARK: 初期処理
     override init() {
+
+        dateFormatter_yyyyMMdd.dateFormat = "yyyy-MM-dd HH:mm:ss"
         //ユーザーデフォルトから住所情報を取得
         if let model = loadUserAddressRegistModel() {
             self.model = model
         }
     }
     
-    //初期表示時の処理
+    // MARK: 初期表示時の処理
     func onapperInit(){
+        setNavigateFlg()
+        
+        fetchAppStoreVersion()
         //ユーザIDが取得できない場合は
         if model.userId == "" {
             //APIコール
@@ -34,7 +45,22 @@ class UserAddressRegistVM: BaseVM {
         }
     }
     
-    //バリデーションチェック
+    func setNavigateFlg() {
+        if let isShowNavigate = loadIsShowNavigateAddress() {
+            if isShowNavigate == Const.show_NavigationView {
+                self.isShowNavigate = true
+            } else {
+                self.isShowNavigate = false
+            }
+        } else {
+            self.isShowNavigate = true
+        }
+        
+        self.navigateKey = "isShowNavigateAddress"
+        self.navigateText = Const.INFO_MESSAGE_1
+    }
+    
+    // MARK: バリデーションチェック
     func validateInputFields() -> Bool {
         let isPostalCodeValid = !model.postalCode.isEmpty
         let isAdministrativeAreaValid = !model.administrativeArea.isEmpty
@@ -46,16 +72,15 @@ class UserAddressRegistVM: BaseVM {
         return isPostalCodeValid && isAdministrativeAreaValid && isLocalityValid && isThoroughfareValid && isSubThoroughfareValid && isBuildNameValid
     }
     
-    //位置情報取得
+    // MARK: 位置情報取得
     func requestLocation(){
             isShowProgres = true
             locationManager.desiredAccuracy = kCLLocationAccuracyBest
             locationManager.delegate = self
             locationManager.requestLocation()
-
     }
     
-    //緯度情報と住所情報を変換
+    // MARK: 緯度情報を住所へ変換
     private func getAddressFromCoordinates() {
         guard let latitude = locationManager.location?.coordinate.latitude,
               let longitude = locationManager.location?.coordinate.longitude else {
@@ -84,7 +109,7 @@ class UserAddressRegistVM: BaseVM {
         }
     }
         
-    // ユーザ情報登録
+    // MARK: ユーザ情報登録
     func callRegistUserInfoAPI(completion: @escaping (Result<Void, Error>) -> Void) {
         
         // ゴミ情報リストをJSONデータに変換
@@ -109,6 +134,7 @@ class UserAddressRegistVM: BaseVM {
                 if responseData.status == Const.STATUS_SUCCSESS {
                     completion(.success(()))
                 } else {
+                    print(responseData.message)
                     completion(.failure(APIError.noData))
                 }
                 
@@ -119,7 +145,7 @@ class UserAddressRegistVM: BaseVM {
         }
     }
     
-    //ユーザID払出し
+    // MARK: - ユーザID払出し
     func callGetUserIDAPI(){
         //プログレス表示
         isShowProgres = true
@@ -158,7 +184,7 @@ class UserAddressRegistVM: BaseVM {
         }
     }
     
-    //郵便番号から住所情報を取得する
+    // MARK: - 郵便番号から住所情報を取得
     func callGetAddressAPI() {
         //プログレスバー表示
         isShowProgres = true
@@ -196,7 +222,7 @@ class UserAddressRegistVM: BaseVM {
         }.resume()
     }
     
-    //手入力された住所を緯度経度に変換
+    // MARK: - 住所を緯度経度に変換
     func getCoordinatesFromAddress(completion: @escaping (Result<(String, String), Error>) -> Void) {
         let address = model.administrativeArea + model.locality + model.thoroughfare + model.subThoroughfare
         let geocoder = CLGeocoder()
@@ -221,9 +247,13 @@ class UserAddressRegistVM: BaseVM {
         }
     }
     
-    // 次へボタンが押されたときの処理
+    // MARK: - 次へボタン押下
     //緯度経度の取得処理と登録処理を呼び出す
     func onNextButtonTapped() {
+        //fcmトークンと最終更新日のセット
+        model.fcm_token = loadFCMToken() ?? ""
+        let today = Date()
+        model.last_updated = dateFormatter_yyyyMMdd.string(from:today)
     
         //緯度経度取得処理
         getCoordinatesFromAddress { result in
@@ -256,7 +286,6 @@ class UserAddressRegistVM: BaseVM {
             }
         }
     }
-    
 }
 
 //デリゲートメソッド（実装必須）
@@ -267,7 +296,7 @@ extension UserAddressRegistVM: CLLocationManagerDelegate {
     }
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         // 位置情報の取得に失敗した場合の処理を記述
-        self.showPopup(withMessage: "位置情報を取得できませんでした。")
+        self.showPopup(withMessage: "位置情報を取得できませんでした。/nもう一度ボタンを押下してください")
         
     }
 }

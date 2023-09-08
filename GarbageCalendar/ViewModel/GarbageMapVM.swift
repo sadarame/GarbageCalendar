@@ -24,13 +24,16 @@ class GarbageMapVM: BaseVM {
     // 取得してきたピン情報
     @Published var pinList: [MKPointAnnotation] = []
     
+    
     override init() {
         super.init()
         onAppearInit()
         
     }
     
+    // MARK: 画面初期表示
     func onAppearInit(){
+        setNavigateFlg()
         //ユーザ情報を取得してMapをFocus
         getUserMapInfo()
         //API叩くときのリクエストパラメタ作成
@@ -39,7 +42,23 @@ class GarbageMapVM: BaseVM {
         callGetGarbageAreaAPI()
     }
     
-    // 緯度経度からMapにピンを表示する
+    // MARK: チュートリアルフラグ取得
+    func setNavigateFlg() {
+        if let isShowNavigate = loadIsShowNavigateMap() {
+            if isShowNavigate == Const.show_NavigationView {
+                self.isShowNavigate = true
+            } else {
+                self.isShowNavigate = false
+            }
+        } else {
+            self.isShowNavigate = true
+        }
+        
+        self.navigateKey = "isShowNavigateMap"
+        self.navigateText = Const.INFO_MESSAGE_2
+    }
+    
+    // MARK:  緯度経度からMapにピンを表示する
     func addPinToMap(latitude: Double, longitude: Double, title: String, subtitle: String) {
         let pin = MKPointAnnotation()
         pin.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
@@ -49,7 +68,7 @@ class GarbageMapVM: BaseVM {
         
     }
     
-    //緯度経度からMapに表示
+    // MARK: 緯度経度からMapに表示
     func getUserMapInfo() {
         let userAdr = loadUserAddressRegistModel()
         
@@ -64,12 +83,12 @@ class GarbageMapVM: BaseVM {
        
     }
     
-    //TODO:　地名までで情報をひきに行く
+    // MARK: 　地名までで情報をひきに行く
     func getgarbageAreaConv(userAdr:AdrSetModel){
         
     }
     
-    //リクエストパラメタを設定
+    // MARK: リクエストパラメタを設定
     func setRequestParam (){
         if let userUnfo = loadUserAddressRegistModel() {
             reqparam.longitude = userUnfo.longitude
@@ -77,7 +96,7 @@ class GarbageMapVM: BaseVM {
         }
     }
     
-    //ゴミ情報取得APIをコールする
+    // MARK: ゴミ情報取得APIをコールする
     func callGetGarbageAreaAPI(){
         // 住所情報の構造体をJSONデータに変換
         let jsonData = try! JSONEncoder().encode(reqparam)
@@ -123,6 +142,7 @@ class GarbageMapVM: BaseVM {
         }
     }
     
+    // MARK: ゴミ情報からマップにピンする
     func addPinsFromModelList() {
         for model in self.modelList {   
             if let latitudeString = model.latitude,
@@ -137,8 +157,7 @@ class GarbageMapVM: BaseVM {
         }
     }
 
-    
-    //リストクリックした際のイベント
+    // MARK: リストクリックした際のイベント
     func handleElementTap(model:GarbageAreaConvModel){
         //モデルの保存
         saveGarbageAreaConvModel(model)
@@ -148,6 +167,7 @@ class GarbageMapVM: BaseVM {
         toNextPage = true
     }
     
+    // MARK: 次へボタン（該当なし）
     func tapNextButton(){
         //フラグセット
         saveTriggerFlg(Const.TRG_NEXT_BUTTON)
@@ -155,7 +175,7 @@ class GarbageMapVM: BaseVM {
         toNextPage = true
     }
     
-    //リストから重複した情報を削除
+    // MARK: リストから重複した情報を削除
     //同一のゴミ情報情報が複数取得されてくる場合がある
     func removeDuplicatesFromModelList() {
         var seenElements = Set<String>()
@@ -172,7 +192,6 @@ class GarbageMapVM: BaseVM {
         
         modelList = uniqueElements
     }
-
 
 }
 
