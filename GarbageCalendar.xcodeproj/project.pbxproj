@@ -10,7 +10,6 @@
 		16145B0B2AAB150F00EFCF46 /* AppVersionMonitorSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 16145B0A2AAB150F00EFCF46 /* AppVersionMonitorSwiftUI */; };
 		16145B0D2AAB157700EFCF46 /* AdMovBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16145B0C2AAB157700EFCF46 /* AdMovBannerView.swift */; };
 		16145B0F2AAB159100EFCF46 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16145B0E2AAB159100EFCF46 /* LaunchScreenView.swift */; };
-		16145B112AAB15CC00EFCF46 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 16145B102AAB15CC00EFCF46 /* GoogleService-Info.plist */; };
 		16145B192AAB15FF00EFCF46 /* PopupMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16145B152AAB15FE00EFCF46 /* PopupMessageView.swift */; };
 		1634FFC329DD53D50054D499 /* GarbageCalendarApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1634FFC229DD53D50054D499 /* GarbageCalendarApp.swift */; };
 		1634FFC529DD53D50054D499 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1634FFC429DD53D50054D499 /* ContentView.swift */; };
@@ -38,6 +37,9 @@
 		168B48E329DF026900AB2BD8 /* GarbageRegistModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48E229DF026900AB2BD8 /* GarbageRegistModel.swift */; };
 		168B48E92A0A0C1100AB2BD8 /* GarbageMapVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48E82A0A0C1100AB2BD8 /* GarbageMapVM.swift */; };
 		168B48EB2A0A421000AB2BD8 /* GarbageMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48EA2A0A421000AB2BD8 /* GarbageMapView.swift */; };
+		1695A9132AAC617200134F06 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1695A9122AAC617200134F06 /* GoogleService-Info.plist */; };
+		1695A9172AADCCAA00134F06 /* NotificationSetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1695A9162AADCCAA00134F06 /* NotificationSetView.swift */; };
+		1695A9192AB4473E00134F06 /* NotificationSetVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1695A9182AB4473D00134F06 /* NotificationSetVM.swift */; };
 		169F8E8F2A22EC900082F330 /* UserDafaultManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169F8E8E2A22EC900082F330 /* UserDafaultManager.swift */; };
 		169F8E912A243A1F0082F330 /* BaseVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169F8E902A243A1F0082F330 /* BaseVM.swift */; };
 		16A4C98E2A55BB80003BE06B /* GarbageAreaConvModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4C98D2A55BB80003BE06B /* GarbageAreaConvModel.swift */; };
@@ -47,7 +49,6 @@
 /* Begin PBXFileReference section */
 		16145B0C2AAB157700EFCF46 /* AdMovBannerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdMovBannerView.swift; sourceTree = "<group>"; };
 		16145B0E2AAB159100EFCF46 /* LaunchScreenView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LaunchScreenView.swift; path = GarbageCalendar/Views/LaunchScreenView.swift; sourceTree = SOURCE_ROOT; };
-		16145B102AAB15CC00EFCF46 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		16145B152AAB15FE00EFCF46 /* PopupMessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupMessageView.swift; sourceTree = "<group>"; };
 		16145B1A2AAB2E6B00EFCF46 /* GarbageCalendar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GarbageCalendar.entitlements; sourceTree = "<group>"; };
 		1634FFBF29DD53D50054D499 /* GarbageCalendar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GarbageCalendar.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,6 +79,10 @@
 		168B48E229DF026900AB2BD8 /* GarbageRegistModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageRegistModel.swift; sourceTree = "<group>"; };
 		168B48E82A0A0C1100AB2BD8 /* GarbageMapVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageMapVM.swift; sourceTree = "<group>"; };
 		168B48EA2A0A421000AB2BD8 /* GarbageMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageMapView.swift; sourceTree = "<group>"; };
+		1695A9122AAC617200134F06 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1695A9152AAD45F900134F06 /* GarbageCalendarRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GarbageCalendarRelease.entitlements; sourceTree = "<group>"; };
+		1695A9162AADCCAA00134F06 /* NotificationSetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSetView.swift; sourceTree = "<group>"; };
+		1695A9182AB4473D00134F06 /* NotificationSetVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSetVM.swift; sourceTree = "<group>"; };
 		169F8E8E2A22EC900082F330 /* UserDafaultManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDafaultManager.swift; sourceTree = "<group>"; };
 		169F8E902A243A1F0082F330 /* BaseVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseVM.swift; sourceTree = "<group>"; };
 		16A4C98D2A55BB80003BE06B /* GarbageAreaConvModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageAreaConvModel.swift; sourceTree = "<group>"; };
@@ -129,8 +134,9 @@
 		1634FFC129DD53D50054D499 /* GarbageCalendar */ = {
 			isa = PBXGroup;
 			children = (
-				16145B102AAB15CC00EFCF46 /* GoogleService-Info.plist */,
+				1695A9122AAC617200134F06 /* GoogleService-Info.plist */,
 				16145B1A2AAB2E6B00EFCF46 /* GarbageCalendar.entitlements */,
+				1695A9152AAD45F900134F06 /* GarbageCalendarRelease.entitlements */,
 				165FD6F22A2477E70034ED2F /* Info.plist */,
 				168B48DD29DE739E00AB2BD8 /* Util */,
 				168B48DC29DE61BF00AB2BD8 /* ViewModel */,
@@ -168,12 +174,13 @@
 			isa = PBXGroup;
 			children = (
 				165FD6F82A2600580034ED2F /* Custom */,
+				16145B0E2AAB159100EFCF46 /* LaunchScreenView.swift */,
 				1682EEFE2A2F384800066BC0 /* UserAddressRegistView.swift */,
 				16145B0C2AAB157700EFCF46 /* AdMovBannerView.swift */,
 				165FD6F52A25F1A30034ED2F /* GarbageRegistView.swift */,
 				168B48EA2A0A421000AB2BD8 /* GarbageMapView.swift */,
 				16669E192A7E20D80067E430 /* CalendarView.swift */,
-				16145B0E2AAB159100EFCF46 /* LaunchScreenView.swift */,
+				1695A9162AADCCAA00134F06 /* NotificationSetView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -210,6 +217,7 @@
 				168B48E82A0A0C1100AB2BD8 /* GarbageMapVM.swift */,
 				165FD6F32A25E3D10034ED2F /* GarbageRegistVM.swift */,
 				16669E112A7CFBE60067E430 /* CalendarVM.swift */,
+				1695A9182AB4473D00134F06 /* NotificationSetVM.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -298,9 +306,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1695A9132AAC617200134F06 /* GoogleService-Info.plist in Resources */,
 				1634FFCA29DD53D60054D499 /* Preview Assets.xcassets in Resources */,
 				1634FFC729DD53D60054D499 /* Assets.xcassets in Resources */,
-				16145B112AAB15CC00EFCF46 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,6 +366,7 @@
 				168B48CE29DD5B8400AB2BD8 /* Geocoder.swift in Sources */,
 				16A4C98E2A55BB80003BE06B /* GarbageAreaConvModel.swift in Sources */,
 				16145B0D2AAB157700EFCF46 /* AdMovBannerView.swift in Sources */,
+				1695A9192AB4473E00134F06 /* NotificationSetVM.swift in Sources */,
 				168B48DF29DE73C000AB2BD8 /* EffectProgressView.swift in Sources */,
 				1682EEFF2A2F384800066BC0 /* UserAddressRegistView.swift in Sources */,
 				168B48E329DF026900AB2BD8 /* GarbageRegistModel.swift in Sources */,
@@ -382,6 +391,7 @@
 				1682EEF92A2F30C000066BC0 /* UserAddressRegistModel.swift in Sources */,
 				16669E1A2A7E20D80067E430 /* CalendarView.swift in Sources */,
 				1682EEF72A2DA9CA00066BC0 /* Extension.swift in Sources */,
+				1695A9172AADCCAA00134F06 /* NotificationSetView.swift in Sources */,
 				168B48E92A0A0C1100AB2BD8 /* GarbageMapVM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -516,6 +526,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GarbageCalendar/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "ゴミカレンダー";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -528,7 +539,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = yosuke.GarbageCalendar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -546,6 +557,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GarbageCalendar/GarbageCalendarRelease.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
@@ -555,6 +567,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GarbageCalendar/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "ゴミカレンダー";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -567,7 +580,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = yosuke.GarbageCalendar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

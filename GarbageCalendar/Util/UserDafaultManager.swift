@@ -134,6 +134,12 @@ func loadIsShowNavigateMap() -> String? {
     return UserDefaults.standard.string(forKey: "isShowNavigateMap")
 }
 
+func saveIsNotificationEnabled(_ value: Bool) {
+    UserDefaults.standard.set(value, forKey: "isNotificationEnabled")
+}
 
+func loadIsNotificationEnabled() -> Bool {
+    return UserDefaults.standard.bool(forKey: "isNotificationEnabled")
+}
 
 

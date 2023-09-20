@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct LaunchScreenView: View {
+    
     @State private var isLoading = true
 
     var body: some View {
