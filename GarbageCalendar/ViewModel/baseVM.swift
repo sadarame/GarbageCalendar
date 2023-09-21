@@ -31,6 +31,12 @@ class BaseVM: NSObject, ObservableObject {
     var navigateText:String = ""
     var navigateKey:String = ""
     
+    func openAppSettings() {
+        if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(settingsURL)
+        }
+    }
+    
    
     //Appストアのバージョン確認
     func fetchAppStoreVersion(){
@@ -139,6 +145,8 @@ func logData(_ data: Data) {
     } else {
         print("Invalid data")
     }
+    
+
 }
 
 

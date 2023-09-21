@@ -14,7 +14,7 @@ class NotificationSetVM: BaseVM {
     @Published var selectedDate = "当日"
     @Published var selectionDate = Date()
     
-    @Published var isAlertPresented = true
+    @Published var isAlertPresented = false
 
     //モデル変数のリスト
     @Published var garbageRegistModelList:[GarbageRegistModel] = []
@@ -25,8 +25,14 @@ class NotificationSetVM: BaseVM {
         garbageRegistModelList = loadGarbageRegistModels()
         // 通知設定をを読み込む
         isNotificationEnabled = loadIsNotificationEnabled()
-        //アラートメッセージの表示
         
+       
+    }
+    
+    func onApperInit(){
+        //アラートメッセージの表示
+        self.navigateKey = Const.KEY_NOTIFICATE
+        self.navigateText = Const.INFO_MESSAGE_3
     }
  
     
@@ -65,7 +71,7 @@ class NotificationSetVM: BaseVM {
                 } else {
                     // ユーザーが拒否またはエラーが発生した場合
                     print("通知が拒否またはエラーが発生しました")
-                    self.isAlertPresented = true
+                    self.isShowNavigate = true
                     self.isNotificationEnabled = false
                     self.saveIsNotificationEnabled(self.isNotificationEnabled)
                     print(self.isAlertPresented )
@@ -77,12 +83,6 @@ class NotificationSetVM: BaseVM {
     // isNotificationEnabledの値を保存する関数
     func saveIsNotificationEnabled(_ value: Bool) {
         UserDefaults.standard.set(value, forKey: "isNotificationEnabled")
-    }
-    
-    func openAppSettings() {
-        if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
-            UIApplication.shared.open(settingsURL)
-        }
     }
 }
 

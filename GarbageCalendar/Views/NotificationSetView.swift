@@ -29,10 +29,11 @@ struct NotificationSetView: View {
                     DatePicker("日時を選択", selection: $vm.selectionDate, displayedComponents: .hourAndMinute)
                 }
                 //ナビゲーション
-                if vm.isAlertPresented {
+                if vm.isShowNavigate {
                     PopupMessageView(vm: vm)
                 }
             }
+            .onAppear(perform: vm.onApperInit)
             .navigationTitle("通知設定") // サイドメニューのタイトル
             .navigationBarTitleDisplayMode(.inline)
         }
