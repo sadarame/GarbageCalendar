@@ -55,8 +55,8 @@ struct GarbageCalendarApp: App {
     
     var body: some Scene {
         WindowGroup {
-//            LaunchScreenView()
-            CalendarView()
+            LaunchScreenView()
+//            CalendarView()
            
              
             }

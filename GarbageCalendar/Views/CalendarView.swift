@@ -65,13 +65,15 @@ struct CalendarView: View {
             // バックボタン非表示
             .navigationBarBackButtonHidden(true)
             
-            .navigationDestination(isPresented: $isSheetPresented, destination: {
-                NotificationSetView(isPresented: $isSheetPresented)
-            })
+//            .navigationDestination(isPresented: $isSheetPresented, destination: {
+//                NotificationSetView(isPresented: $isSheetPresented)
+//            })
+            
+                    .sheet(isPresented: $isSheetPresented) {
+                        NotificationSetView(isPresented: $isSheetPresented)
+                    }
         }
-//        .sheet(isPresented: $isSheetPresented) {
-//            NotificationSetView(isPresented: $isSheetPresented)
-//        }
+
     }
 }
 
@@ -232,11 +234,6 @@ struct CalendarCell: View {
                 }
             }
             Spacer()
-            
-            
-            
-            
-            
         }
         
         .background(isDateSelected() ? customLightBlue1: isDateInCurrentMonth() ? .clear : customLightGrayBack)

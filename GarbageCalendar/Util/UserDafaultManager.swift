@@ -143,3 +143,24 @@ func loadIsNotificationEnabled() -> Bool {
 }
 
 
+func saveNotificateModel(_ model: NotificateModel) {
+    do {
+        let data = try JSONEncoder().encode(model)
+        UserDefaults.standard.set(data, forKey: "NotificateModel")
+    } catch {
+        print("Failed to save GarbageAreaConvModel: \(error)")
+    }
+}
+
+func loadNotificateModel() -> NotificateModel? {
+    if let data = UserDefaults.standard.data(forKey: "NotificateModel") {
+        do {
+            let model = try JSONDecoder().decode(NotificateModel.self, from: data)
+            return model
+        } catch {
+            print("Failed to load NotificateModel: \(error)")
+        }
+    }
+    return nil
+}
+

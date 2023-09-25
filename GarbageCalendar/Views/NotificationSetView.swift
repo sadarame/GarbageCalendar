@@ -18,15 +18,19 @@ struct NotificationSetView: View {
         NavigationStack {
             ZStack{
                 Form {
-                    Toggle("通知を有効にする", isOn: $vm.isNotificationEnabled)
-                        .onChange(of: vm.isNotificationEnabled) { newValue in
+                    Toggle("通知を有効にする", isOn: $vm.model.isNotificationEnabled)
+                        .onChange(of: vm.model.isNotificationEnabled) { newValue in
                             // 通知の有効状態が変更されたら許可ステータスを確認
                             vm.checkNotificationPermission()
                         }
                     
-                    RadioArea()
+                    RadioArea(vm:vm)
                     
-                    DatePicker("日時を選択", selection: $vm.selectionDate, displayedComponents: .hourAndMinute)
+                    DatePicker("日時を選択", selection: $vm.model.selectionDate, displayedComponents: .hourAndMinute)
+                        .onChange(of: vm.model.selectionDate) { newDate in
+                            // 変更内容を保存する
+                            vm.changeNotificateSetting()
+                        }
                 }
                 //ナビゲーション
                 if vm.isShowNavigate {
@@ -40,33 +44,64 @@ struct NotificationSetView: View {
     }
 }
 
+//struct RadioArea: View {
+//
+//    @ObservedObject var vm: NotificationSetVM
+//
+//    private let selectNames = ["当日", "前日"]
+//    @State private var selectedIndex = 0
+//
+//    var body: some View {
+//        HStack() {
+//            Text("通知する日付を選択")
+//            Spacer()
+//
+//            VStack(spacing: 0) {
+//                ForEach(0..<selectNames.count, id: \.self, content: { index in
+//                    HStack {
+//                        Text(selectNames[index])
+//                        // 解説1
+//                        Image(systemName: selectedIndex == index ? "checkmark.circle.fill" : "circle")
+//                        //                                .foregroundColor(.blue)
+//                    }
+//                    .foregroundColor(selectedIndex == index ? .blue : .primary)
+//                    .frame(height: 40)
+//                    // 解説2
+//                    .onTapGesture {
+//                        selectedIndex = index
+//                    }
+//                })
+//
+//            }
+//        }
+//    }
+//}
 struct RadioArea: View {
-    private let selectNames = ["当日", "前日"]
-    @State private var selectedIndex = 0
+
+    @ObservedObject var vm: NotificationSetVM
     
+
     var body: some View {
         HStack() {
             Text("通知する日付を選択")
             Spacer()
-            
+
             VStack(spacing: 0) {
-                ForEach(0..<selectNames.count, id: \.self, content: { index in
+                ForEach(NotificationTiming.allCases, id: \.self) { timing in
                     HStack {
-                        Text(selectNames[index])
-                        // 解説1
-                        Image(systemName: selectedIndex == index ? "checkmark.circle.fill" : "circle")
-                        //                                .foregroundColor(.blue)
+                        Text(timing.rawValue)
+                        Image(systemName: vm.model.selectedDate == timing ? "checkmark.circle.fill" : "circle")
                     }
-                    .foregroundColor(selectedIndex == index ? .blue : .primary)
+                    .foregroundColor(vm.model.selectedDate == timing ? .blue : .primary)
                     .frame(height: 40)
-                    // 解説2
                     .onTapGesture {
-                        selectedIndex = index
+                        vm.model.selectedDate = timing
+                        //設定を保存
+                        vm.changeNotificateSetting()
                     }
-                })
-                
+                }
+
             }
         }
     }
 }
-

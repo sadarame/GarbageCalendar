@@ -40,6 +40,7 @@
 		1695A9132AAC617200134F06 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1695A9122AAC617200134F06 /* GoogleService-Info.plist */; };
 		1695A9172AADCCAA00134F06 /* NotificationSetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1695A9162AADCCAA00134F06 /* NotificationSetView.swift */; };
 		1695A9192AB4473E00134F06 /* NotificationSetVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1695A9182AB4473D00134F06 /* NotificationSetVM.swift */; };
+		1695A91D2ABD32D400134F06 /* NotificateModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1695A91C2ABD32D400134F06 /* NotificateModel.swift */; };
 		169F8E8F2A22EC900082F330 /* UserDafaultManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169F8E8E2A22EC900082F330 /* UserDafaultManager.swift */; };
 		169F8E912A243A1F0082F330 /* BaseVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169F8E902A243A1F0082F330 /* BaseVM.swift */; };
 		16A4C98E2A55BB80003BE06B /* GarbageAreaConvModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4C98D2A55BB80003BE06B /* GarbageAreaConvModel.swift */; };
@@ -83,6 +84,7 @@
 		1695A9152AAD45F900134F06 /* GarbageCalendarRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GarbageCalendarRelease.entitlements; sourceTree = "<group>"; };
 		1695A9162AADCCAA00134F06 /* NotificationSetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSetView.swift; sourceTree = "<group>"; };
 		1695A9182AB4473D00134F06 /* NotificationSetVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSetVM.swift; sourceTree = "<group>"; };
+		1695A91C2ABD32D400134F06 /* NotificateModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificateModel.swift; sourceTree = "<group>"; };
 		169F8E8E2A22EC900082F330 /* UserDafaultManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDafaultManager.swift; sourceTree = "<group>"; };
 		169F8E902A243A1F0082F330 /* BaseVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseVM.swift; sourceTree = "<group>"; };
 		16A4C98D2A55BB80003BE06B /* GarbageAreaConvModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageAreaConvModel.swift; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 				1682EEF82A2F30C000066BC0 /* UserAddressRegistModel.swift */,
 				16A4C98D2A55BB80003BE06B /* GarbageAreaConvModel.swift */,
 				1682EF002A3065E500066BC0 /* ApiResponseModel.swift */,
+				1695A91C2ABD32D400134F06 /* NotificateModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -362,6 +365,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				16669E122A7CFBE60067E430 /* CalendarVM.swift in Sources */,
+				1695A91D2ABD32D400134F06 /* NotificateModel.swift in Sources */,
 				168B48EB2A0A421000AB2BD8 /* GarbageMapView.swift in Sources */,
 				168B48CE29DD5B8400AB2BD8 /* Geocoder.swift in Sources */,
 				16A4C98E2A55BB80003BE06B /* GarbageAreaConvModel.swift in Sources */,
