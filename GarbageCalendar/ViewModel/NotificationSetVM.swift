@@ -177,7 +177,7 @@ class NotificationSetVM: BaseVM {
         guard let weekday = yobiToWeekday(yobi) else {
             print("曜日の変換に失敗しました")
             return
-        }
+        }	
         
         // 通知のトリガーを設定
         var dateComponents = DateComponents()
