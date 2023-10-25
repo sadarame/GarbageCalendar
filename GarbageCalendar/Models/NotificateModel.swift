@@ -9,20 +9,27 @@ import Foundation
 
 class NotificateModel: Identifiable, Codable {
     var id: UUID
-    var isNotificationEnabled: Bool // 通知の有効設定の有無
-    var selectedDate: NotificationTiming // 通知するタイミング（前日か当日か）
-    var selectionDate = Date() // 通知する時間（時分のみ）
+    // 通知の有効設定の有無
+    var isNotificationEnabled: Bool
+    // 通知するタイミング（前日か当日か）
+    var dateType: NotificationTiming
+    // 通知する時間（時分のみ）
+    var notificateTime:Date
+
     
     
 
     init(id: UUID = UUID(),
          isNotificationEnabled: Bool = false,
-         notificationTiming: NotificationTiming = .onTheDay
-         ) {
+         notificationTiming: NotificationTiming = .onTheDay) {
         self.id = id
         self.isNotificationEnabled = isNotificationEnabled
-        self.selectedDate = notificationTiming
-       
+        self.dateType = notificationTiming
+
+        // notificateTimeを7時に設定
+        let calendar = Calendar.current
+        let now = Date()
+        self.notificateTime = calendar.date(bySettingHour: 7, minute: 0, second: 0, of: now) ?? now
     }
 }
 

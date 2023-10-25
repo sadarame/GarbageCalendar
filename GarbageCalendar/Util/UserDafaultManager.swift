@@ -164,3 +164,10 @@ func loadNotificateModel() -> NotificateModel? {
     return nil
 }
 
+func saveIsFisrstOpenCalendar(_ value: Bool) {
+    UserDefaults.standard.set(value, forKey: "isFirstLoadCalendar")
+}
+
+func loadIsFisrstOpenCalendar() -> Bool {
+    return UserDefaults.standard.bool(forKey: "isFirstLoadCalendar")
+}

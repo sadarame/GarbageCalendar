@@ -5,7 +5,7 @@ struct CalendarView: View {
     @ObservedObject var vm = CalendarVM()
     @State private var isMenuOpen = false // サイドメニューの表示状態
     @State private var isShowingMailView = false // サイドメニューの表示状態
-    @State private var isSheetPresented = false
+    
     
     var body: some View {
         NavigationStack {
@@ -46,10 +46,11 @@ struct CalendarView: View {
                         Image(systemName: "line.horizontal.3") // メニューアイコン
                     }
                 }
+                // MARK: - 通知ボタン
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         // 右側のボタンがタップされたときのアクションをここに追加
-                        isSheetPresented.toggle()
+                        vm.isSheetPresented.toggle()
                     }) {
                         Image(systemName: "bell") // 右側のボタンのアイコン
                     }
@@ -65,12 +66,10 @@ struct CalendarView: View {
             // バックボタン非表示
             .navigationBarBackButtonHidden(true)
             
-//            .navigationDestination(isPresented: $isSheetPresented, destination: {
-//                NotificationSetView(isPresented: $isSheetPresented)
-//            })
-            
-                    .sheet(isPresented: $isSheetPresented) {
-                        NotificationSetView(isPresented: $isSheetPresented)
+
+            //通知設定への画面遷移
+            .sheet(isPresented: $vm.isSheetPresented) {
+                NotificationSetView(isPresented: $vm.isSheetPresented)
                     }
         }
 

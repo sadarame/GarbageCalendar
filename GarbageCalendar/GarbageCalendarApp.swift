@@ -57,12 +57,7 @@ struct GarbageCalendarApp: App {
         WindowGroup {
             LaunchScreenView()
 //            CalendarView()
-           
-             
             }
-    
-            
-        
     }
     
 }

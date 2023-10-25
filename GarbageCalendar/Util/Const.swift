@@ -13,6 +13,11 @@ struct Const {
     
     static let INFO_MESSAGE_3 = "通知設定がオフになっています。\n設定画面から通知を有効にしてください。"
     
+    static let INFO_MESSAGE_4 = "位置情報を取得できませんでした。\nもう一度ボタンを押下してください"
+    
+    
+    
+    
     //APIのリクエスト先
     static let URL_API_CALL = "https://golira-pochette.com/GarbageAPI.php"
     static let URL_ZIPCODE_API = "https://zipcloud.ibsnet.co.jp/api/search?zipcode="

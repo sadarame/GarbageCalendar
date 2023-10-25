@@ -26,8 +26,8 @@ struct NotificationSetView: View {
                     
                     RadioArea(vm:vm)
                     
-                    DatePicker("日時を選択", selection: $vm.model.selectionDate, displayedComponents: .hourAndMinute)
-                        .onChange(of: vm.model.selectionDate) { newDate in
+                    DatePicker("日時を選択", selection: $vm.model.notificateTime, displayedComponents: .hourAndMinute)
+                        .onChange(of: vm.model.notificateTime) { newDate in
                             // 変更内容を保存する
                             vm.changeNotificateSetting()
                         }
@@ -90,12 +90,12 @@ struct RadioArea: View {
                 ForEach(NotificationTiming.allCases, id: \.self) { timing in
                     HStack {
                         Text(timing.rawValue)
-                        Image(systemName: vm.model.selectedDate == timing ? "checkmark.circle.fill" : "circle")
+                        Image(systemName: vm.model.dateType == timing ? "checkmark.circle.fill" : "circle")
                     }
-                    .foregroundColor(vm.model.selectedDate == timing ? .blue : .primary)
+                    .foregroundColor(vm.model.dateType == timing ? .blue : .primary)
                     .frame(height: 40)
                     .onTapGesture {
-                        vm.model.selectedDate = timing
+                        vm.model.dateType = timing
                         //設定を保存
                         vm.changeNotificateSetting()
                     }
