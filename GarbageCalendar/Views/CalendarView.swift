@@ -2,9 +2,10 @@ import SwiftUI
 import MessageUI
 
 struct CalendarView: View {
-    @StateObject var vm = CalendarVM()
+    @ObservedObject var vm = CalendarVM()
     @State private var isMenuOpen = false // サイドメニューの表示状態
     @State private var isShowingMailView = false // サイドメニューの表示状態
+    
     
     var body: some View {
         NavigationStack {
@@ -27,7 +28,7 @@ struct CalendarView: View {
             }
             .sheet(isPresented: $vm.isShowingMailView) {
                 MailView(isShowing: $vm.isShowingMailView)
-                       }
+            }
             
             .navigationDestination(isPresented: $vm.isGarbageRegistView, destination: {
                 GarbageRegistView()
@@ -45,6 +46,15 @@ struct CalendarView: View {
                         Image(systemName: "line.horizontal.3") // メニューアイコン
                     }
                 }
+                // MARK: - 通知ボタン
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        // 右側のボタンがタップされたときのアクションをここに追加
+                        vm.isSheetPresented.toggle()
+                    }) {
+                        Image(systemName: "bell") // 右側のボタンのアイコン
+                    }
+                }
             }
             
             // サイドメニュー
@@ -55,12 +65,16 @@ struct CalendarView: View {
             
             // バックボタン非表示
             .navigationBarBackButtonHidden(true)
+            
+
+            //通知設定への画面遷移
+            .sheet(isPresented: $vm.isSheetPresented) {
+                NotificationSetView(isPresented: $vm.isSheetPresented)
+                    }
         }
+
     }
-    
 }
-
-
 
 // MARK: - カレンダーエリア
 struct CalendarArea: View {
@@ -219,11 +233,6 @@ struct CalendarCell: View {
                 }
             }
             Spacer()
-            
-            
-            
-            
-            
         }
         
         .background(isDateSelected() ? customLightBlue1: isDateInCurrentMonth() ? .clear : customLightGrayBack)
@@ -329,7 +338,7 @@ struct GarbageListArea: View {
     
     
     private func isInSameMonth(_ date1: Date, as date2: Date) -> Bool {
-
+        
         let calendar = Calendar.current
         return calendar.isDate(date1, equalTo: date2, toGranularity: .month)
     }
@@ -364,14 +373,6 @@ struct SideMenuView: View {
                         SideMenuContentView(systemName: "pencil.line", text: "ゴミ情報登録")
                     }
                     
-                    //通知設定
-                    Button(action: {
-                        // ボタンがタップされたときにアクティブにする
-                        
-                    }) {
-                        SideMenuContentView(systemName: "bell", text: "通知設定（工事中）")
-                    }
-                    
                     //問い合わせ
                     Button(action: {
                         // ボタンがタップされたときにアクティブにする
@@ -396,14 +397,14 @@ struct SideMenuView: View {
                 .offset(x: self.isOpen ? 0 : -self.width)
                 .animation(.easeIn(duration: 0.25))
                 .gesture(
-                                DragGesture()
-                                    .onEnded { gesture in
-                                        // 左スワイプした場合にメニューバーを非表示にする
-                                        if gesture.translation.width < -50 {
-                                            isOpen = false
-                                        }
-                                    }
-                            )
+                    DragGesture()
+                        .onEnded { gesture in
+                            // 左スワイプした場合にメニューバーを非表示にする
+                            if gesture.translation.width < -50 {
+                                isOpen = false
+                            }
+                        }
+                )
                 Spacer()
             }
         }
@@ -442,7 +443,7 @@ struct SideMenuContentView: View {
 
 struct MailView: UIViewControllerRepresentable {
     @Binding var isShowing: Bool
-
+    
     func makeUIViewController(context: UIViewControllerRepresentableContext<MailView>) -> UIViewController {
         let controller = MFMailComposeViewController()
         controller.mailComposeDelegate = context.coordinator
@@ -451,24 +452,24 @@ struct MailView: UIViewControllerRepresentable {
         controller.setMessageBody("", isHTML: false)
         return controller
     }
-
+    
     func makeCoordinator() -> MailView.Coordinator {
         return Coordinator(parent: self)
     }
-
+    
     class Coordinator: NSObject, MFMailComposeViewControllerDelegate, UINavigationControllerDelegate {
         let parent: MailView
         init(parent: MailView) {
             self.parent = parent
         }
-
+        
         func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
             // 終了時の処理あれこれ
-
+            
             self.parent.isShowing = false
         }
     }
-
+    
     func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<MailView>) {
     }
 }

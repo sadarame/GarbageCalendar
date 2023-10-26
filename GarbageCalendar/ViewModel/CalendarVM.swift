@@ -27,8 +27,8 @@ class CalendarVM: BaseVM {
     @Published var isGarbageMapView = false
     @Published var isGarbageRegistView = false
     @Published var isUserAddresRegistView = false
-    
     @Published var isShowingMailView:Bool = false
+    @Published var isSheetPresented = false
     
     
     let calendar: Calendar = Calendar.current
@@ -54,6 +54,13 @@ class CalendarVM: BaseVM {
         saveDestination(Const.view_CalendarView)
         //トークン更新
         updateFcmToken()
+        
+        //初回遷移の場合、通知設定画面に遷移させる
+        if !loadIsFisrstOpenCalendar(){
+            isSheetPresented  = true
+            saveIsFisrstOpenCalendar(true)
+        }
+        
     }
     
     // MARK: トークン更新
@@ -312,6 +319,7 @@ struct GarbageEvent: Hashable,Identifiable {
     let id = UUID() // ユニークなID
     let date: Date
     let garbageType: String
+    
 }
 
 

@@ -134,6 +134,40 @@ func loadIsShowNavigateMap() -> String? {
     return UserDefaults.standard.string(forKey: "isShowNavigateMap")
 }
 
+func saveIsNotificationEnabled(_ value: Bool) {
+    UserDefaults.standard.set(value, forKey: "isNotificationEnabled")
+}
+
+func loadIsNotificationEnabled() -> Bool {
+    return UserDefaults.standard.bool(forKey: "isNotificationEnabled")
+}
 
 
+func saveNotificateModel(_ model: NotificateModel) {
+    do {
+        let data = try JSONEncoder().encode(model)
+        UserDefaults.standard.set(data, forKey: "NotificateModel")
+    } catch {
+        print("Failed to save GarbageAreaConvModel: \(error)")
+    }
+}
 
+func loadNotificateModel() -> NotificateModel? {
+    if let data = UserDefaults.standard.data(forKey: "NotificateModel") {
+        do {
+            let model = try JSONDecoder().decode(NotificateModel.self, from: data)
+            return model
+        } catch {
+            print("Failed to load NotificateModel: \(error)")
+        }
+    }
+    return nil
+}
+
+func saveIsFisrstOpenCalendar(_ value: Bool) {
+    UserDefaults.standard.set(value, forKey: "isFirstLoadCalendar")
+}
+
+func loadIsFisrstOpenCalendar() -> Bool {
+    return UserDefaults.standard.bool(forKey: "isFirstLoadCalendar")
+}

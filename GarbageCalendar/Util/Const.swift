@@ -11,6 +11,13 @@ struct Const {
     static let INFO_MESSAGE_1 = "本アプリは住所を利用して、\n付近のゴミ情報を取得しにいきます。\n番地は任意です"
     static let INFO_MESSAGE_2 = "付近で使われているゴミ情報が\n使用回数順に表示されています。\n情報は正確ではない場合があるので、地域の情報を確認した上で活用してください。"
     
+    static let INFO_MESSAGE_3 = "通知設定がオフになっています。\n設定画面から通知を有効にしてください。"
+    
+    static let INFO_MESSAGE_4 = "位置情報を取得できませんでした。\nもう一度ボタンを押下してください"
+    
+    
+    
+    
     //APIのリクエスト先
     static let URL_API_CALL = "https://golira-pochette.com/GarbageAPI.php"
     static let URL_ZIPCODE_API = "https://zipcloud.ibsnet.co.jp/api/search?zipcode="
@@ -23,7 +30,8 @@ struct Const {
     static let TRG_LIST_TAP = 2
     static let TRG_SIDE_MENU = 3
     
-    //キー情報
+    //ポップアップ呼び元キー情報
+    static let KEY_NOTIFICATE = "1"
     
     
     //処理タイプ

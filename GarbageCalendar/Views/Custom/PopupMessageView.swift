@@ -60,26 +60,46 @@ struct PopupContentsView: View {
                 .padding()
             Spacer()
             
-            //チェックエリア
-            Toggle(isOn: $isChecked) {
-                Text("次回以降表示しない")
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
-            }
+
             
-            //閉じるボタン
-            Button(action: {
-                vm.isShowNavigate = false
+            if vm.navigateKey == Const.KEY_NOTIFICATE {
+                //閉じるボタン
+                Button(action: {
+                    vm.isShowNavigate = false
+                    vm.openAppSettings()
+                    
+                }, label: {
+                    Text("設定画面へ")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .cornerRadius(12)
+                })
                 
-            }, label: {
-                Text("Close")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(Color.blue)
-                    .cornerRadius(12)
-            })
+                
+            } else {
+                //チェックエリア
+                Toggle(isOn: $isChecked) {
+                    Text("次回以降表示しない")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
+                //閉じるボタン
+                Button(action: {
+                    vm.isShowNavigate = false
+                    
+                }, label: {
+                    Text("Close")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .cornerRadius(12)
+                })
+            }
             
         }
         //VStackのモディファイア

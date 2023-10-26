@@ -296,7 +296,8 @@ extension UserAddressRegistVM: CLLocationManagerDelegate {
     }
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         // 位置情報の取得に失敗した場合の処理を記述
-        self.showPopup(withMessage: "位置情報を取得できませんでした。/nもう一度ボタンを押下してください")
+        self.showPopup(withMessage: Const.INFO_MESSAGE_4)
+        self.isShowProgres = true
         
     }
 }
