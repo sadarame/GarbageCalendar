@@ -82,12 +82,6 @@ class GarbageMapVM: BaseVM {
         }
        
     }
-    
-    // MARK: 　地名までで情報をひきに行く
-    func getgarbageAreaConv(userAdr:AdrSetModel){
-        
-    }
-    
     // MARK: リクエストパラメタを設定
     func setRequestParam (){
         if let userUnfo = loadUserAddressRegistModel() {
