@@ -7,6 +7,8 @@
 
 import Foundation
 
+
+
 func saveGarbageInfoName(_ name: String) {
     UserDefaults.standard.set(name, forKey: "garbageInfoName")
 }
@@ -28,16 +30,17 @@ func saveGarbageRegistModels(_ models: [GarbageRegistModel]) {
     do {
         let data = try JSONEncoder().encode(models)
         UserDefaults.standard.set(data, forKey: "garbageRegistModels")
-        
+    
         //Widget用データの保存
-        if let userDefaults = UserDefaults(suiteName: "group.yosuke.GarbageCalendar.Widget") {
-            userDefaults.set(data, forKey: "garbageRegistModels")
-        }
+        UserDefaults(suiteName: "group.yosuke.garbagecal.widget")?.set(data, forKey: "garbageRegistModels")
+        
         
     } catch {
         print("Failed to save garbage regist models: \(error)")
     }
 }
+
+
 
 func loadGarbageRegistModels() -> [GarbageRegistModel] {
     if let data = UserDefaults.standard.data(forKey: "garbageRegistModels") {

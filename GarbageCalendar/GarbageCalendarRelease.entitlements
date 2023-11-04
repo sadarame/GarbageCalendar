@@ -6,7 +6,7 @@
 	<string>development</string>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.yosuke.GarbageCalendar</string>
+		<string>group.yosuke.garbagecal.widget</string>
 	</array>
 </dict>
 </plist>

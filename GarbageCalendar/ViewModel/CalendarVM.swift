@@ -55,6 +55,9 @@ class CalendarVM: BaseVM {
         //トークン更新
         updateFcmToken()
         
+        //アプリのアプデ用（Widget対策）
+        saveGarbageRegistModels(loadGarbageRegistModels())
+        
         //初回遷移の場合、通知設定画面に遷移させる
         if !loadIsFisrstOpenCalendar(){
             isSheetPresented  = true
