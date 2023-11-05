@@ -44,38 +44,7 @@ struct NotificationSetView: View {
     }
 }
 
-//struct RadioArea: View {
-//
-//    @ObservedObject var vm: NotificationSetVM
-//
-//    private let selectNames = ["当日", "前日"]
-//    @State private var selectedIndex = 0
-//
-//    var body: some View {
-//        HStack() {
-//            Text("通知する日付を選択")
-//            Spacer()
-//
-//            VStack(spacing: 0) {
-//                ForEach(0..<selectNames.count, id: \.self, content: { index in
-//                    HStack {
-//                        Text(selectNames[index])
-//                        // 解説1
-//                        Image(systemName: selectedIndex == index ? "checkmark.circle.fill" : "circle")
-//                        //                                .foregroundColor(.blue)
-//                    }
-//                    .foregroundColor(selectedIndex == index ? .blue : .primary)
-//                    .frame(height: 40)
-//                    // 解説2
-//                    .onTapGesture {
-//                        selectedIndex = index
-//                    }
-//                })
-//
-//            }
-//        }
-//    }
-//}
+
 struct RadioArea: View {
 
     @ObservedObject var vm: NotificationSetVM

@@ -211,34 +211,162 @@ struct ContainerGroupManager {
 }
 
 // MARK: - ビュー
-struct GarbageWidgetEntryView : View {
-    @Environment(\.widgetFamily) var family: WidgetFamily
+struct SmallWidgetView: View {
     var entry: Provider.Entry
 
     var body: some View {
-        switch family {
-        case .systemSmall:
-          HStack {
-              Text(entry.date, style: .time)
-          }
-            
-        case .systemMedium:
-            ZStack {
+        ZStack {
+            VStack(alignment: .leading,spacing: 0){
+                Text("明日")
+                    .fontWeight(.bold)  // 太字
+                    .font(.system(size: 10)) 
                 HStack{
-                    VStack(alignment: .leading) {
-                        // ウィジェットの表示日付（例: 〇〇日）
+                    
+                    
+                    //日付：dd
+                    Text(formatDate(entry.date))
+                        .fontWeight(.bold)  // 太字
+                        .font(.system(size: 30))
+                    
+                    // 縦線を挿入
+                    Divider()
+                        .frame(width: 2, height: 30)
+                    
+                    //日付：曜日
+                    Text(formatDateDay(entry.date))
+                        .fontWeight(.bold)
+                        .foregroundColor(isWeekend(entry.date) ? .red : .black)
+                    
+                    
+                    
+                    Spacer()
+                    
+                    //ロゴ
+                    Image("splash")
+                        .resizable()
+                        .frame(width: 35, height: 35)
+                        .clipShape(Circle()) // 画像を丸くクリップ
+                        .overlay(
+                            Circle() // 白い線の円をオーバーレイ
+                                .stroke(Color.white, lineWidth: 3) // 白い線の設定
+                        )
+                        .padding(.bottom, 4)
+                    
+                    
+                    
+                }
+                //ライン
+                LineView().padding(.bottom)
+                //ゴミの文字列リストエリア
+                Group {
+                    //アンラップ
+                    
+                    if let garbageStrList = entry.garbageStrList, !garbageStrList.isEmpty {
+                        //ゴミ情報の登録件数分繰り返し
+                        ForEach(garbageStrList.indices, id: \.self) { index in
+                            
+                            if index > 2 {
+                                //３つ以上は表示しない
+                            }
+                            
+                            else if index == 2 && garbageStrList.count > 2{
+                                // 3回目のループかつ、３つ以上ゴミの登録がある場合
+                                // 「・・・」を追加する
+                                HStack {
+                                    Text(garbageStrList[index])
+                                        .font(.system(size: 15))
+                                    Text("他")
+                                        .fontWeight(.bold)
+                                }
+                            } else {
+                                Text(garbageStrList[index])
+                                    .font(.system(size: 15))
+                                
+                            }
+                        }
+                    } else {
+                        Text("ゴミの日はありません")
+                            .font(.system(size: 15))
+                    }
+                    
+                    Spacer()
+                }
+            }
+            
+        }
+            
+    }
+}
+
+// MARK: - ミドルビュー
+struct MediumWidgetView: View {
+    var entry: Provider.Entry
+
+    var body: some View {
+        ZStack {
+            HStack {
+                VStack(alignment: .leading,spacing: 0) {
+                    //日付のエリア
+                    HStack{
+                        //日付：dd
                         Text(formatDate(entry.date))
-    //                        .font(.largeTitle) // テキストを大きくする
-    //                        .foregroundColor(.white) //
+                            .fontWeight(.bold)  // 太字
+                            .font(.system(size: 40))
                         
-                        LineView()
+                        // 縦線を挿入
+                        Divider()
+                            .frame(width: 2, height: 30)
+                        
+                        //日付：曜日
+                        Text(formatDateDay(entry.date))
+                            .fontWeight(.bold)
+                            .foregroundColor(isWeekend(entry.date) ? .red : .black)
+                        
+//                        Image("splash")
+//                            .resizable()
+//                            .frame(width: 50, height: 50)
+//                            .border(Color.white, width: 2) 
+                        
+                        Spacer()
+                        
+                        Image("splash")
+                            .resizable()
+                            .frame(width: 40, height: 40)
+                            .clipShape(Circle()) // 画像を丸くクリップ
+                            .overlay(
+                                Circle() // 白い線の円をオーバーレイ
+                                    .stroke(Color.white, lineWidth: 3) // 白い線の設定
+                            )
+                        
+                    }
+                    //ライン
+                    LineView().padding(.bottom)
+                    //ゴミの文字列リストエリア
+                    Group {
+                        //アンラップ
                         
                         if let garbageStrList = entry.garbageStrList, !garbageStrList.isEmpty {
-                            // リスト内のデータを表示するコード
-                            
-                            ForEach(garbageStrList, id: \.self) { model in
-                                Text(model)
+                            //ゴミ情報の登録件数分繰り返し
+                            ForEach(garbageStrList.indices, id: \.self) { index in
                                 
+                                if index > 2 {
+                                    //３つ以上は表示しない
+                                }
+                                
+                                else if index == 2 && garbageStrList.count > 2{
+                                    // 3回目のループかつ、３つ以上ゴミの登録がある場合
+                                    // 「・・・」を追加する
+                                    HStack {
+                                        Text(garbageStrList[index])
+                                            .font(.system(size: 20))
+                                        Text("他")
+                                            .fontWeight(.bold)
+                                    }
+                                } else {
+                                    Text(garbageStrList[index])
+                                        .font(.system(size: 20))
+                                    
+                                }
                             }
                         } else {
                             Text("ゴミの日はありません")
@@ -246,8 +374,9 @@ struct GarbageWidgetEntryView : View {
                         
                         Spacer()
                     }
-                    
-                    
+                }
+                //イメージ画像のエリア
+                Group{
                     if let firstImage = entry.garbageImgList?.first {
                         firstImage
                             .resizable()
@@ -259,34 +388,66 @@ struct GarbageWidgetEntryView : View {
                     }
                 }
             }
+        }
+    }
+}
+
+
+func isWeekend(_ date: Date) -> Bool {
+    let calendar = Calendar.current
+    let dayOfWeek = calendar.component(.weekday, from: date)
+    return dayOfWeek == 1 || dayOfWeek == 7 // 1は日曜日、7は土曜日
+}
+
+
+func formatDate(_ date: Date) -> String {
+    // 日付をフォーマットするロジックを実装
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "d"
+    return dateFormatter.string(from: date)
+}
+
+func formatDateDay(_ date: Date) -> String {
+    // 日付をフォーマットするロジックを実装
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "EE"
+    return dateFormatter.string(from: date)
+}
+
+func formatDateWithDayOfWeek(_ date: Date) -> String {
+    // 年月と曜日をフォーマットするロジックを実装
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "EEEE"
+    return dateFormatter.string(from: date)
+}
+
+struct GarbageWidgetEntryView: View {
+    @Environment(\.widgetFamily) var family: WidgetFamily
+    var entry: Provider.Entry
+
+    var body: some View {
+        switch family {
+        case .systemSmall:
+            SmallWidgetView(entry: entry)
             
+        case .systemMedium:
+            MediumWidgetView(entry: entry)
             
-        default: Text("Default")
-            
+        default:
+            Text("Default")
         }
     }
 
-    func formatDate(_ date: Date) -> String {
-        // 日付をフォーマットするロジックを実装
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM月dd日　EEEE"
-        return dateFormatter.string(from: date)
-    }
-
-    func formatDateWithDayOfWeek(_ date: Date) -> String {
-        // 年月と曜日をフォーマットするロジックを実装
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE"
-        return dateFormatter.string(from: date)
-    }
+    // 以前の formatDate 関数やその他のユーティリティ関数を保持
 }
+
 
 // MARK: - ライン
 struct LineView: View {
     var body: some View {
         Rectangle()
             .frame(height: 1) // 線の高さを調整
-            .foregroundColor(Color.black) // 線の色を指定
+            .background(Color.gray.opacity(0.8))// 線の色を指定
     }
 }
 
