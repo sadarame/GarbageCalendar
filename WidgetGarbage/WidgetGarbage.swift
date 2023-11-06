@@ -1,55 +1,284 @@
 //
-//  GarbageWidget.swift
-//  GarbageWidget
+//  WidgetGarbage.swift
+//  WidgetGarbage
 //
-//  Created by Yosuke Yoshida on 2023/10/30.
+//  Created by Yosuke Yoshida on 2023/11/06.
 //
 
 import WidgetKit
 import SwiftUI
 
-struct Provider: TimelineProvider {
-    
+struct Provider: AppIntentTimelineProvider {
     
     func placeholder(in context: Context) -> SimpleEntry {
-        SimpleEntry(date: Date(), emoji: "placeholder",garbageImgList: nil,garbageStrList: nil)
+        SimpleEntry(date: Date(), configuration: ConfigurationAppIntent(),garbageImgList: nil,garbageStrList: nil, dispCalDate: nil)
     }
 
-    func getSnapshot(in context: Context, completion: @escaping (SimpleEntry) -> ()) {
-        
-        var entry = SimpleEntry(date: Date(), emoji: "placeholder",garbageImgList: nil,garbageStrList: nil)
-        completion(entry)
+    func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
+        SimpleEntry(date: Date(), configuration: configuration,garbageImgList: nil,garbageStrList: nil,dispCalDate: nil)
     }
     
-    // MARK: - タイムラインビュー
-    func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+    func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
         var entries: [SimpleEntry] = []
         
         var manager = ContainerGroupManager()
-            manager.setGarbageModels()
-        manager.getGarbageEventImages(date:Date())
+        manager.setGarbageModels()
         
-
-        // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-        let currentDate = Date()
-        for hourOffset in 0 ..< 5 {
-            let entryDate = Calendar.current.date(byAdding: .hour, value: hourOffset, to: currentDate)!
-            let entry = SimpleEntry(date: entryDate, emoji: "getTimeline",garbageImgList: manager.garbageImgList,garbageStrList: manager.garbageStrList)
-            entries.append(entry)
-            
+        var dispDate = Date()
+        
+        // ウィジェットの設定が明日の場合の分岐
+        if configuration.isSetTomorrow {
+            dispDate = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
+            manager.getGarbageEventImages(date: dispDate)
+        } else {
+            manager.getGarbageEventImages(date: Date())
         }
 
-        let timeline = Timeline(entries: entries, policy: .atEnd)
-        completion(timeline)
+        // タイムラインの生成（1エントリだけ）
+        let currentDate = Date()
+        let entry = SimpleEntry(date: currentDate, configuration: configuration, garbageImgList: manager.garbageImgList, garbageStrList: manager.garbageStrList, dispCalDate: dispDate)
+        
+        entries.append(entry)
+
+        // タイムラインのポリシーを設定して、毎日0時に更新
+        let calendar = Calendar.current
+        let nextMidnight = calendar.startOfDay(for: currentDate).addingTimeInterval(24 * 60 * 60)
+        let refreshDate = calendar.dateComponents([.year, .month, .day], from: nextMidnight)
+        let nextUpdate = calendar.date(from: refreshDate)!
+        
+        return Timeline(entries: entries, policy: .after(nextUpdate))
+    }
+
+}
+
+struct SimpleEntry: TimelineEntry {
+    let date: Date
+    let configuration: ConfigurationAppIntent
+    let garbageImgList:[Image]?
+    let garbageStrList:[String]?
+    let dispCalDate:Date?
+    
+}
+
+// MARK: - メインビュー
+struct WidgetGarbageEntryView : View {
+    @Environment(\.widgetFamily) var family: WidgetFamily
+    var entry: Provider.Entry
+
+    var body: some View {
+        switch family {
+        case .systemSmall:
+            SmallWidgetView(entry: entry)
+            
+        case .systemMedium:
+            MediumWidgetView(entry: entry)
+            
+        default:
+            Text("Default")
+        }
     }
 }
 
-// MARK: - タイムラインのデータモデル
-struct SimpleEntry: TimelineEntry {
-    let date: Date
-    let emoji: String
-    let garbageImgList:[Image]?
-    let garbageStrList:[String]?
+// MARK: - スモールビュー
+struct SmallWidgetView: View {
+    var entry: Provider.Entry
+
+    var body: some View {
+        ZStack {
+            VStack(alignment: .leading,spacing: 0){
+                if entry.configuration.isSetTomorrow {
+                    Text("明日")
+                        .fontWeight(.bold)  // 太字
+                        .font(.system(size: 10))
+                }
+                HStack{
+                    
+                    
+                    //日付：dd
+                    Text(formatDate(entry.dispCalDate ?? Date()))
+                        .fontWeight(.bold)  // 太字
+                        .font(.system(size: 30))
+                    
+                    // 縦線を挿入
+                    Divider()
+                        .frame(width: 2, height: 30)
+                    
+                    //日付：曜日
+                    Text(formatDateDay(entry.dispCalDate ?? Date()))
+                        .fontWeight(.bold)
+                        .foregroundColor(isWeekend(entry.date) ? .red : .black)
+                    
+                    
+                    
+                    Spacer()
+                    
+                    //ロゴ
+                    Image("splash")
+                        .resizable()
+                        .frame(width: 35, height: 35)
+                        .clipShape(Circle()) // 画像を丸くクリップ
+                        .overlay(
+                            Circle() // 白い線の円をオーバーレイ
+                                .stroke(Color.white, lineWidth: 3) // 白い線の設定
+                        )
+                        .padding(.bottom, 4)
+                    
+                    
+                    
+                }
+                //ライン
+                LineView().padding(.bottom)
+                //ゴミの文字列リストエリア
+                Group {
+                    //アンラップ
+                    
+                    if let garbageStrList = entry.garbageStrList, !garbageStrList.isEmpty {
+                        //ゴミ情報の登録件数分繰り返し
+                        ForEach(garbageStrList.indices, id: \.self) { index in
+                            
+                            if index > 2 {
+                                //３つ以上は表示しない
+                            }
+                            
+                            else if index == 2 && garbageStrList.count > 2{
+                                // 3回目のループかつ、３つ以上ゴミの登録がある場合
+                                // 「・・・」を追加する
+                                HStack {
+                                    Text(garbageStrList[index])
+                                        .font(.system(size: 15))
+                                    Text("他")
+                                        .fontWeight(.bold)
+                                }
+                            } else {
+                                Text(garbageStrList[index])
+                                    .font(.system(size: 15))
+                                
+                            }
+                        }
+                    } else {
+                        Text("ゴミの日はありません")
+                            .font(.system(size: 15))
+                    }
+                    
+                    Spacer()
+                }
+            }
+            
+        }
+            
+    }
+}
+
+// MARK: - ミドルビュー
+struct MediumWidgetView: View {
+    var entry: Provider.Entry
+
+    var body: some View {
+        ZStack {
+            HStack {
+                VStack(alignment: .leading,spacing: 0) {
+                    if entry.configuration.isSetTomorrow {
+                        Text("明日")
+                            .fontWeight(.bold)  // 太字
+                            .font(.system(size: 10))
+                    }
+                    //日付のエリア
+                    HStack{
+                        //日付：dd
+                        Text(formatDate(entry.dispCalDate ?? Date()))
+                            .fontWeight(.bold)  // 太字
+                            .font(.system(size: 40))
+                        
+                        // 縦線を挿入
+                        Divider()
+                            .frame(width: 2, height: 30)
+                        
+                        //日付：曜日
+                        Text(formatDateDay(entry.dispCalDate ?? Date()))
+                            .fontWeight(.bold)
+                            .foregroundColor(isWeekend(entry.date) ? .red : .black)
+                        
+                        
+                        Spacer()
+                        
+                        Image("splash")
+                            .resizable()
+                            .frame(width: 40, height: 40)
+                            .clipShape(Circle()) // 画像を丸くクリップ
+                            .overlay(
+                                Circle() // 白い線の円をオーバーレイ
+                                    .stroke(Color.white, lineWidth: 3) // 白い線の設定
+                            )
+                        
+                    }
+                    //ライン
+                    LineView().padding(.bottom)
+                    //ゴミの文字列リストエリア
+                    Group {
+                        //アンラップ
+                        
+                        if let garbageStrList = entry.garbageStrList, !garbageStrList.isEmpty {
+                            //ゴミ情報の登録件数分繰り返し
+                            ForEach(garbageStrList.indices, id: \.self) { index in
+                                
+                                if index > 2 {
+                                    //３つ以上は表示しない
+                                }
+                                
+                                else if index == 2 && garbageStrList.count > 2{
+                                    // 3回目のループかつ、３つ以上ゴミの登録がある場合
+                                    // 「・・・」を追加する
+                                    HStack {
+                                        Text(garbageStrList[index])
+                                            .font(.system(size: 20))
+                                        Text("他")
+                                            .fontWeight(.bold)
+                                    }
+                                } else {
+                                    Text(garbageStrList[index])
+                                        .font(.system(size: 20))
+                                    
+                                }
+                            }
+                        } else {
+                            Text("ゴミの日はありません")
+                        }
+                        
+                        Spacer()
+                    }
+                }
+                //イメージ画像のエリア
+                Group{
+                    if let firstImage = entry.garbageImgList?.first {
+                        firstImage
+                            .resizable()
+                            .frame(width: 100, height: 100)
+                    } else {
+                        Image("gomi_mark13_Nodata")
+                            .resizable()
+                            .frame(width: 100, height: 100)
+                    }
+                    
+                }
+            }
+        }
+    }
+}
+
+// MARK: - 設定
+struct WidgetGarbage: Widget {
+    let kind: String = "ゴミカレンダー"
+
+    var body: some WidgetConfiguration {
+        AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
+            WidgetGarbageEntryView(entry: entry)
+//                .containerBackground(.fill.tertiary, for: .widget)
+                .containerBackground(Color("WidgetBackground"), for: .widget)
+        }
+        .supportedFamilies([.systemSmall, .systemMedium])
+        .configurationDisplayName("ゴミカレンダー")
+        .description("ゴミ情報を表示します。")
+    }
 }
 
 // MARK: - ゴミ情報取得ロジック
@@ -210,195 +439,11 @@ struct ContainerGroupManager {
     }
 }
 
-// MARK: - ビュー
-struct SmallWidgetView: View {
-    var entry: Provider.Entry
-
-    var body: some View {
-        ZStack {
-            VStack(alignment: .leading,spacing: 0){
-                Text("明日")
-                    .fontWeight(.bold)  // 太字
-                    .font(.system(size: 10)) 
-                HStack{
-                    
-                    
-                    //日付：dd
-                    Text(formatDate(entry.date))
-                        .fontWeight(.bold)  // 太字
-                        .font(.system(size: 30))
-                    
-                    // 縦線を挿入
-                    Divider()
-                        .frame(width: 2, height: 30)
-                    
-                    //日付：曜日
-                    Text(formatDateDay(entry.date))
-                        .fontWeight(.bold)
-                        .foregroundColor(isWeekend(entry.date) ? .red : .black)
-                    
-                    
-                    
-                    Spacer()
-                    
-                    //ロゴ
-                    Image("splash")
-                        .resizable()
-                        .frame(width: 35, height: 35)
-                        .clipShape(Circle()) // 画像を丸くクリップ
-                        .overlay(
-                            Circle() // 白い線の円をオーバーレイ
-                                .stroke(Color.white, lineWidth: 3) // 白い線の設定
-                        )
-                        .padding(.bottom, 4)
-                    
-                    
-                    
-                }
-                //ライン
-                LineView().padding(.bottom)
-                //ゴミの文字列リストエリア
-                Group {
-                    //アンラップ
-                    
-                    if let garbageStrList = entry.garbageStrList, !garbageStrList.isEmpty {
-                        //ゴミ情報の登録件数分繰り返し
-                        ForEach(garbageStrList.indices, id: \.self) { index in
-                            
-                            if index > 2 {
-                                //３つ以上は表示しない
-                            }
-                            
-                            else if index == 2 && garbageStrList.count > 2{
-                                // 3回目のループかつ、３つ以上ゴミの登録がある場合
-                                // 「・・・」を追加する
-                                HStack {
-                                    Text(garbageStrList[index])
-                                        .font(.system(size: 15))
-                                    Text("他")
-                                        .fontWeight(.bold)
-                                }
-                            } else {
-                                Text(garbageStrList[index])
-                                    .font(.system(size: 15))
-                                
-                            }
-                        }
-                    } else {
-                        Text("ゴミの日はありません")
-                            .font(.system(size: 15))
-                    }
-                    
-                    Spacer()
-                }
-            }
-            
-        }
-            
-    }
-}
-
-// MARK: - ミドルビュー
-struct MediumWidgetView: View {
-    var entry: Provider.Entry
-
-    var body: some View {
-        ZStack {
-            HStack {
-                VStack(alignment: .leading,spacing: 0) {
-                    //日付のエリア
-                    HStack{
-                        //日付：dd
-                        Text(formatDate(entry.date))
-                            .fontWeight(.bold)  // 太字
-                            .font(.system(size: 40))
-                        
-                        // 縦線を挿入
-                        Divider()
-                            .frame(width: 2, height: 30)
-                        
-                        //日付：曜日
-                        Text(formatDateDay(entry.date))
-                            .fontWeight(.bold)
-                            .foregroundColor(isWeekend(entry.date) ? .red : .black)
-                        
-//                        Image("splash")
-//                            .resizable()
-//                            .frame(width: 50, height: 50)
-//                            .border(Color.white, width: 2) 
-                        
-                        Spacer()
-                        
-                        Image("splash")
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                            .clipShape(Circle()) // 画像を丸くクリップ
-                            .overlay(
-                                Circle() // 白い線の円をオーバーレイ
-                                    .stroke(Color.white, lineWidth: 3) // 白い線の設定
-                            )
-                        
-                    }
-                    //ライン
-                    LineView().padding(.bottom)
-                    //ゴミの文字列リストエリア
-                    Group {
-                        //アンラップ
-                        
-                        if let garbageStrList = entry.garbageStrList, !garbageStrList.isEmpty {
-                            //ゴミ情報の登録件数分繰り返し
-                            ForEach(garbageStrList.indices, id: \.self) { index in
-                                
-                                if index > 2 {
-                                    //３つ以上は表示しない
-                                }
-                                
-                                else if index == 2 && garbageStrList.count > 2{
-                                    // 3回目のループかつ、３つ以上ゴミの登録がある場合
-                                    // 「・・・」を追加する
-                                    HStack {
-                                        Text(garbageStrList[index])
-                                            .font(.system(size: 20))
-                                        Text("他")
-                                            .fontWeight(.bold)
-                                    }
-                                } else {
-                                    Text(garbageStrList[index])
-                                        .font(.system(size: 20))
-                                    
-                                }
-                            }
-                        } else {
-                            Text("ゴミの日はありません")
-                        }
-                        
-                        Spacer()
-                    }
-                }
-                //イメージ画像のエリア
-                Group{
-                    if let firstImage = entry.garbageImgList?.first {
-                        firstImage
-                            .resizable()
-                            .frame(width: 100, height: 100)
-                    } else {
-                        Image("gomi_mark13_Nodata")
-                            .resizable()
-                            .frame(width: 100, height: 100)
-                    }
-                }
-            }
-        }
-    }
-}
-
-
 func isWeekend(_ date: Date) -> Bool {
     let calendar = Calendar.current
     let dayOfWeek = calendar.component(.weekday, from: date)
     return dayOfWeek == 1 || dayOfWeek == 7 // 1は日曜日、7は土曜日
 }
-
 
 func formatDate(_ date: Date) -> String {
     // 日付をフォーマットするロジックを実装
@@ -421,25 +466,7 @@ func formatDateWithDayOfWeek(_ date: Date) -> String {
     return dateFormatter.string(from: date)
 }
 
-struct GarbageWidgetEntryView: View {
-    @Environment(\.widgetFamily) var family: WidgetFamily
-    var entry: Provider.Entry
 
-    var body: some View {
-        switch family {
-        case .systemSmall:
-            SmallWidgetView(entry: entry)
-            
-        case .systemMedium:
-            MediumWidgetView(entry: entry)
-            
-        default:
-            Text("Default")
-        }
-    }
-
-    // 以前の formatDate 関数やその他のユーティリティ関数を保持
-}
 
 
 // MARK: - ライン
@@ -448,30 +475,6 @@ struct LineView: View {
         Rectangle()
             .frame(height: 1) // 線の高さを調整
             .background(Color.gray.opacity(0.8))// 線の色を指定
-    }
-}
-
-// MARK: - 設定っぽい
-struct GarbageWidget: Widget {
-    let kind: String = "GarbageWidget"
-
-    var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: Provider()) { entry in
-            if #available(iOS 17.0, *) {
-                GarbageWidgetEntryView(entry: entry)
-//                    .containerBackground(.fill.tertiary, for: .widget)//ここを
-                    .containerBackground(Color("WidgetBackground"), for: .widget)//こうする
-
-                
-            } else {
-                GarbageWidgetEntryView(entry: entry)
-                    .padding()
-                    .background()
-            }
-        }
-        .configurationDisplayName("My Widget")
-        .description("This is an example widget.")
-        .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
 
@@ -563,9 +566,24 @@ struct GarbageRegistModel:Identifiable,Codable{
     }
 }
 
+
+extension ConfigurationAppIntent {
+    fileprivate static var smiley: ConfigurationAppIntent {
+        let intent = ConfigurationAppIntent()
+        intent.isSetTomorrow = true
+        return intent
+    }
+    
+    fileprivate static var starEyes: ConfigurationAppIntent {
+        let intent = ConfigurationAppIntent()
+        intent.isSetTomorrow = false
+        return intent
+    }
+}
+
 #Preview(as: .systemSmall) {
-    GarbageWidget()
+    WidgetGarbage()
 } timeline: {
-    SimpleEntry(date: .now, emoji: "😀",garbageImgList: nil,garbageStrList: nil)
-    SimpleEntry(date: .now, emoji: "🤩",garbageImgList: nil,garbageStrList: nil)
+    SimpleEntry(date: .now, configuration: .smiley,garbageImgList: nil,garbageStrList: nil, dispCalDate: nil)
+    SimpleEntry(date: .now, configuration: .starEyes,garbageImgList: nil,garbageStrList: nil, dispCalDate: nil)
 }
