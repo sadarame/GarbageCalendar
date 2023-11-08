@@ -90,6 +90,7 @@ struct SmallWidgetView: View {
                     Text("明日")
                         .fontWeight(.bold)  // 太字
                         .font(.system(size: 10))
+                        .foregroundColor(.black)
                 }
                 HStack{
                     
@@ -98,6 +99,7 @@ struct SmallWidgetView: View {
                     Text(formatDate(entry.dispCalDate ?? Date()))
                         .fontWeight(.bold)  // 太字
                         .font(.system(size: 30))
+                        .foregroundColor(.black)
                     
                     // 縦線を挿入
                     Divider()
@@ -122,12 +124,11 @@ struct SmallWidgetView: View {
                                 .stroke(Color.white, lineWidth: 3) // 白い線の設定
                         )
                         .padding(.bottom, 4)
-                    
-                    
-                    
+  
                 }
                 //ライン
                 LineView().padding(.bottom)
+                    .foregroundColor(.black)
                 //ゴミの文字列リストエリア
                 Group {
                     //アンラップ
@@ -146,18 +147,22 @@ struct SmallWidgetView: View {
                                 HStack {
                                     Text(garbageStrList[index])
                                         .font(.system(size: 15))
+                                        .foregroundColor(.black)
                                     Text("他")
                                         .fontWeight(.bold)
+                                        .foregroundColor(.black)
                                 }
                             } else {
                                 Text(garbageStrList[index])
                                     .font(.system(size: 15))
+                                    .foregroundColor(.black)
                                 
                             }
                         }
                     } else {
                         Text("ゴミの日はありません")
                             .font(.system(size: 15))
+                            .foregroundColor(.black)
                     }
                     
                     Spacer()
@@ -181,6 +186,7 @@ struct MediumWidgetView: View {
                         Text("明日")
                             .fontWeight(.bold)  // 太字
                             .font(.system(size: 10))
+                            .foregroundColor(.black)
                     }
                     //日付のエリア
                     HStack{
@@ -188,10 +194,12 @@ struct MediumWidgetView: View {
                         Text(formatDate(entry.dispCalDate ?? Date()))
                             .fontWeight(.bold)  // 太字
                             .font(.system(size: 40))
+                            .foregroundColor(.black)
                         
                         // 縦線を挿入
                         Divider()
                             .frame(width: 2, height: 30)
+                            .foregroundColor(.black)
                         
                         //日付：曜日
                         Text(formatDateDay(entry.dispCalDate ?? Date()))
@@ -231,17 +239,21 @@ struct MediumWidgetView: View {
                                     HStack {
                                         Text(garbageStrList[index])
                                             .font(.system(size: 20))
+                                            .foregroundColor(.black)
                                         Text("他")
                                             .fontWeight(.bold)
+                                            .foregroundColor(.black)
                                     }
                                 } else {
                                     Text(garbageStrList[index])
                                         .font(.system(size: 20))
+                                        .foregroundColor(.black)
                                     
                                 }
                             }
                         } else {
                             Text("ゴミの日はありません")
+                                .foregroundColor(.black)
                         }
                         
                         Spacer()
@@ -455,7 +467,7 @@ func formatDate(_ date: Date) -> String {
 func formatDateDay(_ date: Date) -> String {
     // 日付をフォーマットするロジックを実装
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "EE"
+    dateFormatter.dateFormat = "EEE"
     return dateFormatter.string(from: date)
 }
 
@@ -465,9 +477,6 @@ func formatDateWithDayOfWeek(_ date: Date) -> String {
     dateFormatter.dateFormat = "EEEE"
     return dateFormatter.string(from: date)
 }
-
-
-
 
 // MARK: - ライン
 struct LineView: View {
