@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 import MessageUI
+import WidgetKit
+
 
 
 class CalendarVM: BaseVM {
@@ -54,6 +56,12 @@ class CalendarVM: BaseVM {
         saveDestination(Const.view_CalendarView)
         //トークン更新
         updateFcmToken()
+        
+        //アプリのアプデ用（Widget対策）
+        saveGarbageRegistModels(loadGarbageRegistModels())
+        
+        //Widget更新
+        WidgetCenter.shared.reloadAllTimelines()
         
         //初回遷移の場合、通知設定画面に遷移させる
         if !loadIsFisrstOpenCalendar(){

@@ -20,6 +20,13 @@
 		165FD6FA2A2600740034ED2F /* FloatingActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 165FD6F92A2600740034ED2F /* FloatingActionButton.swift */; };
 		16669E122A7CFBE60067E430 /* CalendarVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16669E112A7CFBE60067E430 /* CalendarVM.swift */; };
 		16669E1A2A7E20D80067E430 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16669E192A7E20D80067E430 /* CalendarView.swift */; };
+		167FA8B82AF8CD4B006926E0 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168AC34D2AEF804E00D7F9F7 /* WidgetKit.framework */; };
+		167FA8B92AF8CD4B006926E0 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168AC34F2AEF804F00D7F9F7 /* SwiftUI.framework */; };
+		167FA8BC2AF8CD4B006926E0 /* WidgetGarbageBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167FA8BB2AF8CD4B006926E0 /* WidgetGarbageBundle.swift */; };
+		167FA8BE2AF8CD4B006926E0 /* WidgetGarbage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167FA8BD2AF8CD4B006926E0 /* WidgetGarbage.swift */; };
+		167FA8C02AF8CD4B006926E0 /* AppIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167FA8BF2AF8CD4B006926E0 /* AppIntent.swift */; };
+		167FA8C22AF8CD4D006926E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 167FA8C12AF8CD4D006926E0 /* Assets.xcassets */; };
+		167FA8C62AF8CD4D006926E0 /* WidgetGarbageExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 167FA8B72AF8CD4B006926E0 /* WidgetGarbageExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1682EEF72A2DA9CA00066BC0 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1682EEF62A2DA9CA00066BC0 /* Extension.swift */; };
 		1682EEF92A2F30C000066BC0 /* UserAddressRegistModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1682EEF82A2F30C000066BC0 /* UserAddressRegistModel.swift */; };
 		1682EEFD2A2F378100066BC0 /* UserAddressRegistVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1682EEFC2A2F378100066BC0 /* UserAddressRegistVM.swift */; };
@@ -27,8 +34,6 @@
 		1682EF012A3065E500066BC0 /* ApiResponseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1682EF002A3065E500066BC0 /* ApiResponseModel.swift */; };
 		1682EF032A342A7F00066BC0 /* Modifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1682EF022A342A7F00066BC0 /* Modifier.swift */; };
 		168B48CE29DD5B8400AB2BD8 /* Geocoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48C929DD5B8400AB2BD8 /* Geocoder.swift */; };
-		168B48D129DD5B8400AB2BD8 /* UserDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48CC29DD5B8400AB2BD8 /* UserDataModel.swift */; };
-		168B48D229DD5B8400AB2BD8 /* AdrSetModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48CD29DD5B8400AB2BD8 /* AdrSetModel.swift */; };
 		168B48D429DD5BB700AB2BD8 /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48D329DD5BB700AB2BD8 /* Const.swift */; };
 		168B48D929DD5BCB00AB2BD8 /* PostDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48D629DD5BCB00AB2BD8 /* PostDataManager.swift */; };
 		168B48DA29DD5BCB00AB2BD8 /* LocationClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 168B48D729DD5BCB00AB2BD8 /* LocationClient.swift */; };
@@ -47,6 +52,30 @@
 		19ADED0DC469281A6F420C01 /* Pods_GarbageCalendar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AE3E37CCD19876C3BC7E687 /* Pods_GarbageCalendar.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		167FA8C42AF8CD4D006926E0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1634FFB729DD53D50054D499 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 167FA8B62AF8CD4B006926E0;
+			remoteInfo = WidgetGarbageExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		168AC35F2AEF805100D7F9F7 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				167FA8C62AF8CD4D006926E0 /* WidgetGarbageExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		16145B0C2AAB157700EFCF46 /* AdMovBannerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdMovBannerView.swift; sourceTree = "<group>"; };
 		16145B0E2AAB159100EFCF46 /* LaunchScreenView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LaunchScreenView.swift; path = GarbageCalendar/Views/LaunchScreenView.swift; sourceTree = SOURCE_ROOT; };
@@ -63,15 +92,23 @@
 		165FD6F92A2600740034ED2F /* FloatingActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingActionButton.swift; sourceTree = "<group>"; };
 		16669E112A7CFBE60067E430 /* CalendarVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarVM.swift; sourceTree = "<group>"; };
 		16669E192A7E20D80067E430 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		167FA8A72AF8CAE6006926E0 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
+		167FA8B72AF8CD4B006926E0 /* WidgetGarbageExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = WidgetGarbageExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		167FA8BB2AF8CD4B006926E0 /* WidgetGarbageBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGarbageBundle.swift; sourceTree = "<group>"; };
+		167FA8BD2AF8CD4B006926E0 /* WidgetGarbage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGarbage.swift; sourceTree = "<group>"; };
+		167FA8BF2AF8CD4B006926E0 /* AppIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntent.swift; sourceTree = "<group>"; };
+		167FA8C12AF8CD4D006926E0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		167FA8C32AF8CD4D006926E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		167FA8CA2AF91F69006926E0 /* WidgetGarbageExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WidgetGarbageExtension.entitlements; sourceTree = "<group>"; };
 		1682EEF62A2DA9CA00066BC0 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		1682EEF82A2F30C000066BC0 /* UserAddressRegistModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAddressRegistModel.swift; sourceTree = "<group>"; };
 		1682EEFC2A2F378100066BC0 /* UserAddressRegistVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAddressRegistVM.swift; sourceTree = "<group>"; };
 		1682EEFE2A2F384800066BC0 /* UserAddressRegistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAddressRegistView.swift; sourceTree = "<group>"; };
 		1682EF002A3065E500066BC0 /* ApiResponseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResponseModel.swift; sourceTree = "<group>"; };
 		1682EF022A342A7F00066BC0 /* Modifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Modifier.swift; sourceTree = "<group>"; };
+		168AC34D2AEF804E00D7F9F7 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		168AC34F2AEF804F00D7F9F7 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		168B48C929DD5B8400AB2BD8 /* Geocoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geocoder.swift; sourceTree = "<group>"; };
-		168B48CC29DD5B8400AB2BD8 /* UserDataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDataModel.swift; sourceTree = "<group>"; };
-		168B48CD29DD5B8400AB2BD8 /* AdrSetModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdrSetModel.swift; sourceTree = "<group>"; };
 		168B48D329DD5BB700AB2BD8 /* Const.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
 		168B48D629DD5BCB00AB2BD8 /* PostDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostDataManager.swift; sourceTree = "<group>"; };
 		168B48D729DD5BCB00AB2BD8 /* LocationClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationClient.swift; sourceTree = "<group>"; };
@@ -103,6 +140,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		167FA8B42AF8CD4B006926E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				167FA8B92AF8CD4B006926E0 /* SwiftUI.framework in Frameworks */,
+				167FA8B82AF8CD4B006926E0 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -118,7 +164,9 @@
 		1634FFB629DD53D50054D499 = {
 			isa = PBXGroup;
 			children = (
+				167FA8CA2AF91F69006926E0 /* WidgetGarbageExtension.entitlements */,
 				1634FFC129DD53D50054D499 /* GarbageCalendar */,
+				167FA8BA2AF8CD4B006926E0 /* WidgetGarbage */,
 				1634FFC029DD53D50054D499 /* Products */,
 				00F79D767BD2BA5C4A82E279 /* Pods */,
 				68526BBEDD76454A39A7D828 /* Frameworks */,
@@ -129,6 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				1634FFBF29DD53D50054D499 /* GarbageCalendar.app */,
+				167FA8B72AF8CD4B006926E0 /* WidgetGarbageExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -172,6 +221,18 @@
 			path = Custom;
 			sourceTree = "<group>";
 		};
+		167FA8BA2AF8CD4B006926E0 /* WidgetGarbage */ = {
+			isa = PBXGroup;
+			children = (
+				167FA8BB2AF8CD4B006926E0 /* WidgetGarbageBundle.swift */,
+				167FA8BD2AF8CD4B006926E0 /* WidgetGarbage.swift */,
+				167FA8BF2AF8CD4B006926E0 /* AppIntent.swift */,
+				167FA8C12AF8CD4D006926E0 /* Assets.xcassets */,
+				167FA8C32AF8CD4D006926E0 /* Info.plist */,
+			);
+			path = WidgetGarbage;
+			sourceTree = "<group>";
+		};
 		168B48BF29DD5B1400AB2BD8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -191,9 +252,7 @@
 			isa = PBXGroup;
 			children = (
 				168B48C929DD5B8400AB2BD8 /* Geocoder.swift */,
-				168B48CC29DD5B8400AB2BD8 /* UserDataModel.swift */,
 				168B48E229DF026900AB2BD8 /* GarbageRegistModel.swift */,
-				168B48CD29DD5B8400AB2BD8 /* AdrSetModel.swift */,
 				1682EEF82A2F30C000066BC0 /* UserAddressRegistModel.swift */,
 				16A4C98D2A55BB80003BE06B /* GarbageAreaConvModel.swift */,
 				1682EF002A3065E500066BC0 /* ApiResponseModel.swift */,
@@ -239,6 +298,9 @@
 			isa = PBXGroup;
 			children = (
 				6AE3E37CCD19876C3BC7E687 /* Pods_GarbageCalendar.framework */,
+				168AC34D2AEF804E00D7F9F7 /* WidgetKit.framework */,
+				168AC34F2AEF804F00D7F9F7 /* SwiftUI.framework */,
+				167FA8A72AF8CAE6006926E0 /* Intents.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -255,10 +317,12 @@
 				1634FFBC29DD53D50054D499 /* Frameworks */,
 				1634FFBD29DD53D50054D499 /* Resources */,
 				10B476574B93CCB637FB6204 /* [CP] Embed Pods Frameworks */,
+				168AC35F2AEF805100D7F9F7 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				167FA8C52AF8CD4D006926E0 /* PBXTargetDependency */,
 			);
 			name = GarbageCalendar;
 			packageProductDependencies = (
@@ -268,6 +332,23 @@
 			productReference = 1634FFBF29DD53D50054D499 /* GarbageCalendar.app */;
 			productType = "com.apple.product-type.application";
 		};
+		167FA8B62AF8CD4B006926E0 /* WidgetGarbageExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 167FA8C72AF8CD4D006926E0 /* Build configuration list for PBXNativeTarget "WidgetGarbageExtension" */;
+			buildPhases = (
+				167FA8B32AF8CD4B006926E0 /* Sources */,
+				167FA8B42AF8CD4B006926E0 /* Frameworks */,
+				167FA8B52AF8CD4B006926E0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WidgetGarbageExtension;
+			productName = WidgetGarbageExtension;
+			productReference = 167FA8B72AF8CD4B006926E0 /* WidgetGarbageExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -275,21 +356,25 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1430;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					1634FFBE29DD53D50054D499 = {
 						CreatedOnToolsVersion = 14.3;
+					};
+					167FA8B62AF8CD4B006926E0 = {
+						CreatedOnToolsVersion = 15.0.1;
 					};
 				};
 			};
 			buildConfigurationList = 1634FFBA29DD53D50054D499 /* Build configuration list for PBXProject "GarbageCalendar" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
+			developmentRegion = ja;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				ja,
 			);
 			mainGroup = 1634FFB629DD53D50054D499;
 			packageReferences = (
@@ -300,6 +385,7 @@
 			projectRoot = "";
 			targets = (
 				1634FFBE29DD53D50054D499 /* GarbageCalendar */,
+				167FA8B62AF8CD4B006926E0 /* WidgetGarbageExtension */,
 			);
 		};
 /* End PBXProject section */
@@ -312,6 +398,14 @@
 				1695A9132AAC617200134F06 /* GoogleService-Info.plist in Resources */,
 				1634FFCA29DD53D60054D499 /* Preview Assets.xcassets in Resources */,
 				1634FFC729DD53D60054D499 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		167FA8B52AF8CD4B006926E0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				167FA8C22AF8CD4D006926E0 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,8 +471,6 @@
 				1682EF012A3065E500066BC0 /* ApiResponseModel.swift in Sources */,
 				168B48DB29DD5BCB00AB2BD8 /* LocationManager.swift in Sources */,
 				16145B0F2AAB159100EFCF46 /* LaunchScreenView.swift in Sources */,
-				168B48D229DD5B8400AB2BD8 /* AdrSetModel.swift in Sources */,
-				168B48D129DD5B8400AB2BD8 /* UserDataModel.swift in Sources */,
 				168B48D929DD5BCB00AB2BD8 /* PostDataManager.swift in Sources */,
 				1682EEFD2A2F378100066BC0 /* UserAddressRegistVM.swift in Sources */,
 				165FD6F62A25F1A30034ED2F /* GarbageRegistView.swift in Sources */,
@@ -400,13 +492,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		167FA8B32AF8CD4B006926E0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				167FA8BC2AF8CD4B006926E0 /* WidgetGarbageBundle.swift in Sources */,
+				167FA8BE2AF8CD4B006926E0 /* WidgetGarbage.swift in Sources */,
+				167FA8C02AF8CD4B006926E0 /* AppIntent.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		167FA8C52AF8CD4D006926E0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 167FA8B62AF8CD4B006926E0 /* WidgetGarbageExtension */;
+			targetProxy = 167FA8C42AF8CD4D006926E0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		1634FFCB29DD53D60054D499 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -439,6 +550,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -453,7 +565,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -467,6 +579,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -499,6 +612,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -507,7 +621,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -521,13 +635,19 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7FCCB095321E5C23B4AB8E78 /* Pods-GarbageCalendar.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_ENTITLEMENTS = GarbageCalendar/GarbageCalendar.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"GarbageCalendar/Preview Content\"";
-				DEVELOPMENT_TEAM = 27PDE49Z62;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 27PDE49Z62;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GarbageCalendar/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "ゴミカレンダー";
@@ -543,9 +663,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = yosuke.GarbageCalendar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = DistributeGarbageCalendar;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -559,9 +681,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CB78471A23B4A4BBBC9B6A85 /* Pods-GarbageCalendar.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = GarbageCalendar/GarbageCalendarRelease.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
@@ -569,6 +693,7 @@
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 27PDE49Z62;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = GarbageCalendar/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "ゴミカレンダー";
@@ -584,7 +709,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = yosuke.GarbageCalendar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -595,6 +720,78 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		167FA8C82AF8CD4D006926E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = WidgetGarbageExtension.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 27PDE49Z62;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WidgetGarbage/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WidgetGarbage;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = yosuke.GarbageCalendar.WidgetGarbage;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = GarbageCalendarWidget;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		167FA8C92AF8CD4D006926E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = WidgetGarbageExtension.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 27PDE49Z62;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = WidgetGarbage/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = WidgetGarbage;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = yosuke.GarbageCalendar.WidgetGarbage;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = GarbageCalendarWidget;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -615,6 +812,15 @@
 			buildConfigurations = (
 				1634FFCE29DD53D60054D499 /* Debug */,
 				1634FFCF29DD53D60054D499 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		167FA8C72AF8CD4D006926E0 /* Build configuration list for PBXNativeTarget "WidgetGarbageExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				167FA8C82AF8CD4D006926E0 /* Debug */,
+				167FA8C92AF8CD4D006926E0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
