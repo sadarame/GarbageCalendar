@@ -1,0 +1,15 @@
+{
+  "captured_on": "2026-10-18",
+  "device": "iPhone 17 Pro / iOS 26.5 Simulator",
+  "build": "current workspace, Debug, xcodebuild BUILD SUCCEEDED",
+  "screenshots": [
+    "dist/assets/calendar-current.png",
+    "dist/assets/notification-current.png"
+  ],
+  "notes": [
+    "Unmodified simulator screenshots",
+    "Existing sample schedules; test advertisement visible",
+    "Notification setting is off; delivery not tested",
+    "A server-save error appeared after launch; dismissed before capture"
+  ]
+}
