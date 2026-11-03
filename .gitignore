@@ -1,0 +1,8 @@
+.DS_Store
+__pycache__/
+*-debug.log
+firepit-log.txt
+landing-page-deploy.tar.gz
+/GarbageCalendar/
+/GarbageCalendarAPI/
+/landing-page/

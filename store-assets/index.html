@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ゴミ出しカレンダー｜ストア画像制作</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#e6e8df;font-family:"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;color:#30432a}header{padding:30px 36px}h1{font-size:24px;margin:0 0 12px}header p{font-size:14px;margin:0;line-height:1.8}main{display:flex;gap:24px;padding:0 36px 36px;overflow-x:auto}.tile{flex:none;width:315px;height:684px;position:relative}.poster{width:1260px;height:2736px;transform:scale(.25);transform-origin:top left;position:relative;overflow:hidden;background:#f7f7ee;padding:140px 100px}.poster:after{content:"";width:1500px;height:1500px;position:absolute;top:1580px;left:-120px;background:#e3eacb;border-radius:50%;z-index:0}.eyebrow{font-size:29px;letter-spacing:6px;font-weight:700;margin-bottom:68px}.title{font-size:103px;line-height:1.35;font-weight:800;letter-spacing:-5px;margin:0}.subtitle{font-size:36px;line-height:1.7;margin:40px 0 0;letter-spacing:0}.phone{position:absolute;left:130px;top:770px;width:1000px;height:2172px;background:white;border:14px solid #293125;border-radius:105px;overflow:hidden;box-shadow:0 35px 90px #30432a24;z-index:1}.phone img{width:100%;height:100%;object-fit:contain;object-position:top;display:block}.placeholder{display:flex;height:100%;align-items:flex-start;justify-content:center;padding:300px 65px;background:#f0f1eb;text-align:center;font-size:44px;line-height:1.8;color:#65705c}.note{position:absolute;z-index:2;bottom:50px;left:60px;right:60px;font-size:26px;text-align:center;background:#f7f7eef5;padding:20px;border-radius:20px}.number{position:absolute;right:100px;top:143px;font-size:29px}.pending{position:absolute;top:0;left:0;right:0;padding:14px;background:#715a31;color:white;text-align:center;font-size:25px;z-index:5}body.export header{display:none}body.export main{padding:0;display:block;overflow:visible}body.export .tile{width:1260px;height:2736px}body.export .poster{transform:none}body.export .tile:not(.selected){display:none}
+</style>
+<header><h1>ゴミ出しカレンダー — ストア画像</h1><p>5枚のレイアウトと掲載コピー。現行ビルドの実画面を撮影後、各枠に配置します。撮影待ちの画像は掲載用ではありません。<br>出力サイズ：1260 × 2736 px ／ <a href="store-copy.txt">掲載文言を開く</a></p></header><main id="gallery"></main>
+<script>
+const items=[
+['CALENDAR','明日のゴミ、<br>もう迷わない。','わが家の収集日を、カレンダーでひと目に。','01-calendar.png','月間カレンダー'],
+['WIDGET','アプリを開かず、<br>さっと確認。','今日・明日の収集日をウィジェットに。','02-widget.png','ホーム画面のウィジェット'],
+['REMINDER','出し忘れる前に、<br>お知らせ。','前日でも、当日でも。好きな時刻に通知。','03-notification.png','通知設定'],
+['NEAR YOU','近くの予定で、<br>かんたん設定。','ほかの人が登録した収集予定を使えます。','04-region.png','地域の収集予定'],
+['YOUR SCHEDULE','わが家の収集日に、<br>ぴったり。','ゴミの種類と収集日を、自分で登録・編集。','05-edit.png','収集日の設定']
+];
+items.forEach((a,i)=>{const tile=document.createElement('section');tile.className='tile';tile.id='slide-'+(i+1);tile.innerHTML=`<article class="poster"><div class="pending">実画面の撮影待ち・未完成</div><div class="eyebrow">${a[0]}</div><span class="number">0${i+1} / 05</span><h2 class="title">${a[1]}</h2><p class="subtitle">${a[2]}</p><div class="phone"><img src="raw/${a[3]}" alt="${a[4]}"></div>${i===3?'<p class="note">地域の収集案内と照らし合わせてご利用ください。</p>':''}</article>`;const img=tile.querySelector('img');img.onload=()=>tile.querySelector('.pending').remove();img.onerror=()=>{img.outerHTML=`<div class="placeholder">${a[4]}<br>実画面の撮影待ち</div>`};document.getElementById('gallery').append(tile)});
+const n=new URLSearchParams(location.search).get('slide');if(n&&document.getElementById('slide-'+n)){document.body.classList.add('export');document.getElementById('slide-'+n).classList.add('selected')}
+</script></html>

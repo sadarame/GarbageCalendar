@@ -1,0 +1,45 @@
+{
+  "TB_GARBAGE_AREA_CONV": {
+    "schema": [
+      "CREATE TABLE `TB_GARBAGE_AREA_CONV` (\n  `No` int(11) NOT NULL,\n  `postalCode` varchar(10) DEFAULT NULL,\n  `administrativeArea` varchar(255) DEFAULT NULL,\n  `locality` varchar(255) DEFAULT NULL,\n  `thoroughfare` varchar(255) DEFAULT NULL,\n  `garbageGroupId` varchar(255) NOT NULL,\n  `officialFlag` int(11) DEFAULT NULL,\n  `usageCount` int(11) DEFAULT '1',\n  `garbageInfoName` varchar(255) DEFAULT NULL,\n  `latitude` decimal(9,6) DEFAULT NULL,\n  `longitude` decimal(9,6) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
+      "ALTER TABLE `TB_GARBAGE_AREA_CONV`\n  ADD PRIMARY KEY (`No`);",
+      "ALTER TABLE `TB_GARBAGE_AREA_CONV`\n  MODIFY `No` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3934;"
+    ],
+    "containsData": true
+  },
+  "TB_GARBAGE_INFO": {
+    "schema": [
+      "CREATE TABLE `TB_GARBAGE_INFO` (\n  `id` int(11) NOT NULL,\n  `garbageType` varchar(255) DEFAULT NULL,\n  `schedule` varchar(255) DEFAULT NULL,\n  `yobi` varchar(255) DEFAULT NULL,\n  `day` int(11) DEFAULT NULL,\n  `month` int(11) DEFAULT NULL,\n  `date` datetime DEFAULT NULL,\n  `weekOfMonth` varchar(255) DEFAULT NULL,\n  `freqWeek` varchar(255) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
+      "ALTER TABLE `TB_GARBAGE_INFO`\n  ADD PRIMARY KEY (`id`);",
+      "ALTER TABLE `TB_GARBAGE_INFO`\n  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1172;"
+    ],
+    "containsData": true
+  },
+  "TB_USER_INFO": {
+    "schema": [
+      "CREATE TABLE `TB_USER_INFO` (\n  `user_id` varchar(255) NOT NULL,\n  `garbage_group_id` varchar(255) NOT NULL,\n  `postal_code` varchar(10) NOT NULL,\n  `administrative_area` varchar(255) NOT NULL,\n  `sub_administrative_area` varchar(255) DEFAULT NULL,\n  `locality` varchar(255) NOT NULL,\n  `sub_locality` varchar(255) NOT NULL,\n  `thoroughfare` varchar(255) NOT NULL,\n  `sub_thoroughfare` varchar(255) NOT NULL,\n  `build_name` varchar(255) DEFAULT NULL,\n  `latitude` decimal(9,6) DEFAULT NULL,\n  `longitude` decimal(9,6) DEFAULT NULL,\n  `fcm_token` varchar(255) DEFAULT NULL,\n  `last_updated` varchar(255) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
+      "ALTER TABLE `TB_USER_INFO`\n  ADD PRIMARY KEY (`user_id`);"
+    ],
+    "containsData": true
+  },
+  "sequence": {
+    "schema": [
+      "CREATE TABLE `sequence` (\n  `id` int(11) NOT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"
+    ],
+    "containsData": true
+  },
+  "ad_address": {
+    "schema": [
+      "CREATE TABLE `ad_address` (\n  `id` int(9) NOT NULL DEFAULT '0',\n  `ken_id` int(2) DEFAULT NULL,\n  `city_id` int(5) DEFAULT NULL,\n  `town_id` int(9) DEFAULT NULL,\n  `zip` varchar(8) DEFAULT NULL,\n  `office_flg` tinyint(1) DEFAULT NULL,\n  `delete_flg` tinyint(1) DEFAULT NULL,\n  `ken_name` varchar(8) DEFAULT NULL,\n  `ken_furi` varchar(8) DEFAULT NULL,\n  `city_name` varchar(24) DEFAULT NULL,\n  `city_furi` varchar(24) DEFAULT NULL,\n  `town_name` varchar(32) DEFAULT NULL,\n  `town_furi` varchar(32) DEFAULT NULL,\n  `town_memo` varchar(16) DEFAULT NULL,\n  `kyoto_street` varchar(32) DEFAULT NULL,\n  `block_name` varchar(64) DEFAULT NULL,\n  `block_furi` varchar(64) DEFAULT NULL,\n  `memo` varchar(255) DEFAULT NULL,\n  `office_name` varchar(255) DEFAULT NULL,\n  `office_furi` varchar(255) DEFAULT NULL,\n  `office_address` varchar(255) DEFAULT NULL,\n  `new_id` int(11) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=utf8;",
+      "ALTER TABLE `ad_address`\n  ADD PRIMARY KEY (`id`);"
+    ],
+    "containsData": true
+  },
+  "TB_GARBAGE_GROUP": {
+    "schema": [
+      "CREATE TABLE `TB_GARBAGE_GROUP` (\n  `garbageGroupId` int(11) NOT NULL,\n  `garbageId` int(11) NOT NULL,\n  `updateDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;",
+      "ALTER TABLE `TB_GARBAGE_GROUP`\n  ADD PRIMARY KEY (`garbageGroupId`,`garbageId`);"
+    ],
+    "containsData": true
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "status": "v2 APIs deployed; imported candidates pending review; app release pending",
+  "confirmedByUser": {
+    "publicApp": true,
+    "reuseFirebase": true,
+    "scheduledJobs": false,
+    "legacyCredentialsLikelyActive": true
+  },
+  "routing": {
+    "releasedApp": "existing PHP API and MySQL; unchanged",
+    "newApp": "Firebase Functions v2 and Firestore; dedicated versioned endpoint",
+    "legacyRedirect": false,
+    "automaticFallbackToLegacy": false,
+    "legacyShutdown": false
+  },
+  "data": {
+    "initialImport": "snapshot; non-destructive to MySQL",
+    "continuousSync": "not enabled; old and new submissions diverge after snapshot",
+    "upgrade": "preserve device-local schedules; authenticate with new Firebase UID",
+    "legacyUserOwnership": "never trust legacy numeric ID as proof of ownership",
+    "privateUserImport": "not automatic; require explicit ownership and data-minimization design",
+    "missingRequired": [],
+    "missingOptional": [
+      "sequence_groupid"
+    ],
+    "addressMaster": "ad_address exists; no usage found in inspected PHP; assess separately",
+    "missingReferencePolicy": "Quarantine all 9 incomplete groups; never invent missing rules or publish truncated schedules",
+    "validation": {
+      "validSchedules": 1186,
+      "quarantinedMissingReferences": 9,
+      "semanticValidation": "passed for all 1186 candidates",
+      "deployed": true,
+      "sharedAreaCandidates": 3693,
+      "excludedAreas": 142,
+      "areaPublicationStatus": "all pending-review",
+      "publicationReview": {
+        "ambiguousDistrictLabels": 694,
+        "affectedAreas": 2403,
+        "redundantAreas": 75,
+        "approvedForPublication": 0
+      }
+    },
+    "importTool": "functions/scripts/migrate.js; immutable manifest; pending-review only; resumable; edited documents protected during rollback"
+  },
+  "validation": [
+    "same source group yields equivalent rules",
+    "new app network calls never reach old API",
+    "old API remains functional",
+    "upgrade preserves local settings",
+    "no raw SQL or credentials committed"
+  ],
+  "nextStep": "Physical-device acceptance for notifications, App Attest, upgrade and Widget; municipality-source review before publishing imported schedules",
+  "notifications": {
+    "mode": "server",
+    "scheduler": "every minute; query due subscriptions",
+    "settings": "enabled, previousDay, hour, minute, Asia/Tokyo",
+    "delivery": "FCM alert via APNs",
+    "localMigration": "remove legacy reservations after successful server acknowledgement; no new local reservations",
+    "oldApp": "unchanged",
+    "status": "deployed; production settings API verified; real-device push not tested"
+  },
+  "sharedSchedules": {
+    "collection": "v2SharedSchedules",
+    "schemaVersion": 2,
+    "authorization": "Firebase Auth and App Check; owner-only updates/withdrawal",
+    "ownership": "one user-{uid} contribution; imported legacy-area-{No} cannot be claimed by numeric legacy user ID",
+    "sharing": "explicit opt-in; local saves do not update existing public contribution; explicit withdrawal available",
+    "privateAddress": "device only",
+    "publicCoordinates": "rounded to 0.01 degree",
+    "legacyNames": "district label only; free-text names not copied",
+    "verification": "all shared candidates displayed as unverified; legacy official flag not trusted",
+    "search": "Japan, maximum 5 km, 3x3 0.1 degree cells, 501 read cap, 50 result cap, truncation shown",
+    "oldPHPCalls": "removed from new client; no old service modifications"
+  }
+}

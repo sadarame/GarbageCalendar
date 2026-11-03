@@ -1,0 +1,86 @@
+{
+  "checkedDate": "2026-10-10",
+  "projectId": "garbagecalendar-1923d",
+  "readOnly": true,
+  "checks": {
+    "project": {
+      "httpStatus": 200,
+      "projectId": "garbagecalendar-1923d",
+      "projectNumber": "949074036020",
+      "state": "ACTIVE"
+    },
+    "billing": {
+      "httpStatus": 200,
+      "billingEnabled": true
+    },
+    "databases": {
+      "httpStatus": 200,
+      "databases": [
+        {
+          "name": "projects/garbagecalendar-1923d/databases/(default)",
+          "locationId": "asia-northeast1",
+          "type": "FIRESTORE_NATIVE",
+          "deleteProtectionState": "DELETE_PROTECTION_DISABLED"
+        }
+      ]
+    },
+    "auth": {
+      "httpStatus": 200,
+      "anonymousEnabled": true
+    },
+    "appAttest": {
+      "httpStatus": 200,
+      "name": "projects/949074036020/apps/1:949074036020:ios:56cf288529d665d62e5161/appAttestConfig",
+      "tokenTtl": "3600s"
+    },
+    "deviceCheck": {
+      "httpStatus": 200,
+      "name": "projects/949074036020/apps/1:949074036020:ios:56cf288529d665d62e5161/deviceCheckConfig",
+      "tokenTtl": "3600s"
+    },
+    "rules": {
+      "httpStatus": 200,
+      "releases": [
+        {
+          "name": "projects/garbagecalendar-1923d/releases/cloud.firestore",
+          "rulesetName": "projects/garbagecalendar-1923d/rulesets/ba34ec4d-6dd6-4d27-b3ee-e7ba039ed161"
+        }
+      ]
+    },
+    "functions": {
+      "httpStatus": 200,
+      "functions": [
+        {
+          "name": "projects/garbagecalendar-1923d/locations/asia-northeast1/functions/saveNotificationSettingsV2",
+          "state": "ACTIVE",
+          "environment": "GEN_2"
+        },
+        {
+          "name": "projects/garbagecalendar-1923d/locations/asia-northeast1/functions/dispatchGarbageNotificationsV2",
+          "state": "ACTIVE",
+          "environment": "GEN_2"
+        },
+        {
+          "name": "projects/garbagecalendar-1923d/locations/asia-northeast1/functions/unpublishSharedScheduleV2",
+          "state": "ACTIVE",
+          "environment": "GEN_2"
+        },
+        {
+          "name": "projects/garbagecalendar-1923d/locations/asia-northeast1/functions/getSharedScheduleV2",
+          "state": "ACTIVE",
+          "environment": "GEN_2"
+        },
+        {
+          "name": "projects/garbagecalendar-1923d/locations/asia-northeast1/functions/searchSharedSchedulesV2",
+          "state": "ACTIVE",
+          "environment": "GEN_2"
+        },
+        {
+          "name": "projects/garbagecalendar-1923d/locations/asia-northeast1/functions/saveSharedScheduleV2",
+          "state": "ACTIVE",
+          "environment": "GEN_2"
+        }
+      ]
+    }
+  }
+}

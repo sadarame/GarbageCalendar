@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-11",
+  "simulator": "iPhone 17 Pro / iOS 26.5",
+  "verified": [
+    "original calendar-first layout and existing waste illustrations displayed",
+    "date selection updates collection detail",
+    "original app icon selected in asset catalog",
+    "schedule regression checks passed",
+    "review-policy regression checks passed"
+  ],
+  "build": "app and Widget simulator build succeeded",
+  "backendTests": {
+    "unit": 19,
+    "emulator": 10,
+    "productionSmoke": 12
+  },
+  "notVerified": [
+    "physical-device App Attest and APNs",
+    "Widget visual rendering",
+    "dark appearance",
+    "App Store release"
+  ],
+  "designDirection": "2026-10-11 user correction: preserve original calendar-first layout, existing illustrations and original app icon; only readability and interaction improvements",
+  "preview": "calendar-inherited.png"
+}

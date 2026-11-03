@@ -1,0 +1,18 @@
+{
+  "unitTests": 31,
+  "firestoreIntegrationTests": 8,
+  "iosSimulatorBuild": "passed",
+  "counting": "one selected schedule per Firebase anonymous UID; recorded on successful save",
+  "checks": [
+    "repeat save",
+    "concurrent saves",
+    "switch schedule",
+    "invalid selection rollback",
+    "reset retry",
+    "preserve other users across contribution owner reset"
+  ],
+  "existingSelections": "Not reconstructed; requires save with updated app",
+  "backendDeployment": "completed: searchSharedSchedulesV2, saveSharedScheduleV2, resetUserDataV2",
+  "appDistribution": "signed Release build installed on connected Yosuke iPhone",
+  "deviceBuild": "passed"
+}

@@ -1,0 +1,22 @@
+{
+  "project": "garbagecalendar-1923d",
+  "checks": {
+    "temporaryAppCheckRegistration": true,
+    "appCheckTokenExchange": true,
+    "anonymousAuthentication": true,
+    "missingCredentialsRejected": true,
+    "missingAuthRejected": true,
+    "authenticatedSearchHidesPendingImports": true,
+    "pendingDocumentNotReadable": true,
+    "invalidSharedWriteRejected": true,
+    "withdrawAbsentContributionIsSafe": true,
+    "notificationOffAccepted": true,
+    "exceptionDatesPersisted": true,
+    "directFirestoreReadDenied": true
+  },
+  "cleanup": {
+    "testSubscriptionRemoved": true,
+    "testAuthUserRemoved": true,
+    "temporaryAppCheckTokenRemoved": true
+  }
+}

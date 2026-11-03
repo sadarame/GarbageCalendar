@@ -1,0 +1,7 @@
+{
+  "mode": "built-in image_gen",
+  "prompt": "Use case: logo-brand. Asset type: a production iOS app icon for a Japanese household waste collection calendar. Generate ONE square 1024x1024 icon, full bleed opaque deep forest green background (#194A3D), with a large centered warm ivory calendar silhouette incorporating a single elegantly curved mint green leaf in its center. Two short rounded binding tabs at top of the calendar. Minimal, warm, clean, confident, softly rounded geometric shapes, flat color, exceptionally crisp silhouette, ample safe margin, highly recognizable at 40 pixels. The symbol should occupy about 65 percent of canvas width. No text, no letters, no numbers, no tiny date grid, no recycling arrows, no decorative details, no mockup, no device, no outer rounded corners or border (iOS will apply the icon mask), no drop shadows, no gradients, no 3D. Solid opaque background to all four edges.",
+  "source": "/Users/yosuke/.codex/generated_images/01a10e7e-a9cb-77b1-8b50-64b1e352bc95/exec-934517b3-3ef0-4bb3-9798-9fe15c859316.png",
+  "asset": "GarbageCalendar/GarbageCalendar/Assets.xcassets/AppIcon.appiconset/calendar-leaf-v2.png",
+  "technicalConversion": "1254x1254 to required 1024x1024 via sips; opaque RGB; artwork unchanged"
+}

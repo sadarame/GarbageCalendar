@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-20",
+  "mode": "image_gen native image generation; sips dimension export",
+  "note": "Prompt summaries retained below; exact generation request text was not retained in this manifest.",
+  "assets": [
+    {
+      "file": "header-3840x1646.png",
+      "size": [
+        3840,
+        1646
+      ],
+      "promptSummary": "Japanese App Store creative header for garbage collection calendar. Ivory and lime paper-cut illustration with calendar, tidy garbage bag, bottle, can, notification bell and neighborhood. Center-safe composition. Headline: ゴミの日が、ひと目で。 Subtitle: カレンダーと通知で、毎日をすっきり。 No fake app UI.",
+      "uploaded": true,
+      "previewVerified": true
+    },
+    {
+      "file": "search-1920x1280.png",
+      "size": [
+        1920,
+        1280
+      ],
+      "promptSummary": "Matching App Store search-results creative in ivory and lime paper-cut style. Calendar and recycling objects. Headline: ゴミ出し予定を、ひと目で。 Subtitle: カレンダー・ウィジェット・通知. No fake app UI.",
+      "uploaded": true,
+      "previewVerified": true,
+      "replacedInVersion": true
+    },
+    {
+      "file": "search-real-ui-1920x1280.png",
+      "size": [
+        1920,
+        1280
+      ],
+      "promptFile": "search-real-ui-prompt.txt",
+      "mode": "image_gen reference composition, sips size export",
+      "sourceScreenshots": [
+        "landing-page/dist/assets/calendar-20261018-v2.png",
+        "landing-page/dist/assets/widget-home-current.png"
+      ],
+      "note": "Generated composition based on real app captures; visually checked dates, labels and layout. Not a pixel-exact screenshot composite.",
+      "uploaded": true,
+      "previewVerified": true
+    }
+  ]
+}
