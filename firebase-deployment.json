@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-18",
+  "project": "garbagecalendar-1923d",
+  "site": "garbagecalendar-app",
+  "url": "https://garbagecalendar-app.web.app",
+  "version": "ed930d2bb0f7dc55",
+  "checks": [
+    {
+      "path": "/",
+      "verified": true
+    },
+    {
+      "path": "/privacy/",
+      "verified": true
+    },
+    {
+      "path": "/support/",
+      "verified": true
+    },
+    {
+      "path": "/usage/",
+      "verified": true
+    }
+  ],
+  "screenshotRefresh": "2026-10-18; both published images match latest local captures",
+  "latest_update": {
+    "date": "2026-10-18",
+    "version": "126b6e1cb15ed42e",
+    "changes": "Correct app icon; prominent widget feature with actual simulator screenshot"
+  }
+}

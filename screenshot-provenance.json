@@ -1,15 +1,26 @@
 {
   "captured_on": "2026-10-18",
   "device": "iPhone 17 Pro / iOS 26.5 Simulator",
-  "build": "current workspace, Debug, xcodebuild BUILD SUCCEEDED",
+  "build": "Current workspace rebuilt successfully on 2026-10-18, Debug 2.1 (1), iPhone 17 Pro / iOS 26.5",
   "screenshots": [
-    "dist/assets/calendar-current.png",
-    "dist/assets/notification-current.png"
+    "dist/assets/calendar-20261018-v2.png",
+    "dist/assets/notification-20261018-v2.png",
+    "dist/assets/widget-home-current.png"
   ],
   "notes": [
     "Unmodified simulator screenshots",
     "Existing sample schedules; test advertisement visible",
     "Notification setting is off; delivery not tested",
-    "A server-save error appeared after launch; dismissed before capture"
-  ]
+    "A server-save error appeared after launch; dismissed before capture",
+    "Widget: unmodified actual medium widget, tomorrow enabled; existing sample schedules refreshed by launching the app after simulator reboot."
+  ],
+  "sha256": {
+    "dist/assets/calendar-20261018-v2.png": "32c0d62a93373f6d1b85730b93f1921c97890c83e7cd19ef1dd50bfe84c0f005",
+    "dist/assets/notification-20261018-v2.png": "834e978be6ed2a92d235dd10044fae85d8a55a91955196cdda25185d639af489",
+    "dist/assets/widget-home-current.png": "ed66c4cd84582c3e57e8f24a7c377ffaed5ddab48c55d20f427ca8157c3422ab"
+  },
+  "icon": {
+    "asset": "dist/assets/app-icon-current.png",
+    "source": "GarbageCalendar/GarbageCalendar/Assets.xcassets/AppIcon.appiconset/splash.png"
+  }
 }
