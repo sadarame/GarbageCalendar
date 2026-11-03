@@ -1,0 +1,11 @@
+公開先: Firebase Hosting
+Project: garbagecalendar-1923d
+Site: garbagecalendar-app
+URL: https://garbagecalendar-app.web.app
+
+更新方法（このディレクトリ内）:
+firebase deploy --only hosting:garbagecalendar-app --project garbagecalendar-1923d
+
+配信対象はdistのみ。地域管理サイトgarbagecalendar-region-adminとは別サイト。
+.openai/hosting.jsonは以前のSites用の履歴。現在の公開先はfirebase.jsonで管理する。
+以前のChatGPT Sitesは本移行で削除していない。今後のストア掲載にはFirebaseのURLを使う。
