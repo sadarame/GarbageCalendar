@@ -1,0 +1,43 @@
+{
+  "preparedDate": "2026-10-10",
+  "projectId": "garbagecalendar-1923d",
+  "state": "Backend deployed and pending-review snapshot imported; App Store release not performed",
+  "confirmed": {
+    "projectActive": true,
+    "billingEnabled": true,
+    "firestoreApi": "enabled",
+    "cloudFunctionsApi": "enabled",
+    "appCheckApi": "enabled",
+    "authConfig": "anonymous enabled",
+    "databaseLocation": "asia-northeast1",
+    "v2Functions": 6,
+    "rulesAndIndexesDeployed": true,
+    "importedPendingReview": 3693,
+    "productionSmokeChecksPassed": 12
+  },
+  "gates": [
+    "Resolve district ambiguities and record source evidence before any publication",
+    "Validate upgrade, notifications, sharing and withdrawal on real device",
+    "Owner makes release decision; existing PHP/MySQL remain online"
+  ],
+  "importProcedure": {
+    "build": "npm --prefix GarbageCalendarAPI/firebase/functions run build",
+    "plan": "node GarbageCalendarAPI/firebase/functions/scripts/migrate.js plan migration/prepared/shared-candidates.json garbagecalendar-1923d > migration/prepared/import-manifest.json",
+    "review": "Review manifest project, collection, batch, document count and sha256; keep immutable manifest outside source control",
+    "executeTemplate": "node GarbageCalendarAPI/firebase/functions/scripts/migrate.js import migration/prepared/import-manifest.json garbagecalendar-1923d <manifest.sha256>",
+    "credentials": "An explicitly configured Admin SDK credential for this project is required; never put credentials in the manifest or command line",
+    "resumption": "Re-run same manifest; exact matches are skipped, conflicts are reported with exit code 2 and never overwritten",
+    "visibility": "All imported documents remain pending-review and are absent from public search"
+  },
+  "rollbackProcedure": {
+    "commandTemplate": "node GarbageCalendarAPI/firebase/functions/scripts/migrate.js rollback migration/prepared/import-manifest.json garbagecalendar-1923d <manifest.sha256>",
+    "scope": "Delete only documents that still exactly match the manifest, including pending-review status and migration batch",
+    "conflicts": "Edited or published documents remain untouched and require separate review",
+    "failure": "Operations are per-document transactions; interrupted imports/rollbacks may be partial and can safely resume with the same manifest",
+    "excluded": "Does not reverse published content, app rollout, notification settings, billing or API enablement; preserve their own recovery plans"
+  },
+  "sources": [
+    "https://firebase.google.com/docs/functions/get-started",
+    "https://docs.cloud.google.com/firestore/docs/locations"
+  ]
+}

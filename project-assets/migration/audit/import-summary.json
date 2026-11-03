@@ -1,0 +1,9 @@
+{
+  "project": "garbagecalendar-1923d",
+  "batch": "snapshot-8db5f326184b917cf83d4210",
+  "collection": "v2SharedSchedules",
+  "sha256": "90bfe2a0806791130d39948f35f9b824c32cc4520e7bdf9b8d0d4c2509e0198a",
+  "documentCount": 3693,
+  "status": "pending-review only",
+  "productionWrites": false
+}

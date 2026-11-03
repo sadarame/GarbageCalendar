@@ -1,0 +1,47 @@
+{
+  "rowCounts": {
+    "TB_GARBAGE_AREA_CONV": 3835,
+    "TB_GARBAGE_GROUP": 7510,
+    "TB_GARBAGE_INFO": 831,
+    "TB_USER_INFO": 3126
+  },
+  "distinctGroups": 1195,
+  "missingRuleIds": [
+    "48",
+    "50",
+    "51"
+  ],
+  "missingAreaGroupIds": [],
+  "missingUserGroupIds": [],
+  "scheduleCounts": {
+    "隔週": 394,
+    "毎週": 137,
+    "毎月": 32,
+    "第○曜日": 268
+  },
+  "readyForRelationshipImport": false,
+  "privateUserImport": false,
+  "productionWrites": false,
+  "note": "Relationship validation only; rule semantics and privacy review remain. User row count is not active-user count.",
+  "affectedGroups": [
+    "14",
+    "2",
+    "3",
+    "32",
+    "41",
+    "42",
+    "43",
+    "45",
+    "47"
+  ],
+  "affectedAreaRows": 45,
+  "affectedUserRows": 27,
+  "liveDatabaseVerification": {
+    "method": "phpMyAdmin read-only SELECT via browser",
+    "date": "2026-10-05",
+    "query": "SELECT COUNT(*) AS total_rows, SUM(id IN (48,50,51)) AS referenced_ids_present FROM TB_GARBAGE_INFO;",
+    "total_rows": 831,
+    "referenced_ids_present": 0,
+    "conclusion": "export count matches live database; missing rule references exist in source database"
+  }
+}

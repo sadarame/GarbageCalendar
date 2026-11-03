@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-18",
+  "project": "garbagecalendar-1923d",
+  "change": "Existing Saitama legacy registration classification to admin",
+  "saitamaLegacyMetadataCount": 400,
+  "changedMetadataCount": 343,
+  "changedLiveCount": 327,
+  "otherPrefecturesUnchanged": true,
+  "usageCountsUnchanged": true,
+  "liveSaitamaTotal": 1302,
+  "liveSaitamaAdminDocuments": 918,
+  "liveSaitamaLegacyDocuments": 384,
+  "testsPassed": 31,
+  "deployment": {
+    "function": "searchSharedSchedulesV2",
+    "status": "successful",
+    "log": "/private/tmp/garbage-saitama-deploy.log"
+  }
+}
