@@ -1,0 +1,232 @@
+{
+  "date": "2026-10-23",
+  "appStoreID": "6459478923",
+  "bundleID": "yosuke.GarbageCalendar",
+  "version": "2.1",
+  "status": "2.1 (5): resubmitted, Waiting for Review",
+  "whatsNew": "・収集カレンダーの文字や操作性を改善しました。\n・収集日の休止・追加・振替を設定できるようになりました。\n・通知機能と地域の予定の検索・共有機能を更新しました。\n・各種不具合を修正しました。",
+  "pending": [
+    "Apple App Review"
+  ],
+  "legacyServices": "unchanged; imported shared schedules remain pending-review",
+  "signingErrors": [],
+  "prepared": [
+    "automatic signing configuration",
+    "production push and App Attest entitlements",
+    "matching app and Widget marketing version 2.0",
+    "export options and release notes"
+  ],
+  "releaseCompilation": "signed Release archive succeeded",
+  "unsignedArchive": "/private/tmp/GarbageCalendar-unsigned.xcarchive",
+  "distributionReady": false,
+  "existingStoreVersion": "2.0",
+  "storeLogin": "confirmed 2026-10-23",
+  "storeDraftCreated": true,
+  "storeMetadataSaved": true,
+  "storeURL": "https://appstoreconnect.apple.com/apps/6459478923/distribution/ios/version/inflight",
+  "uploadCompleted": true,
+  "submittedForReview": true,
+  "blockingAction": [],
+  "signedArchive": "/private/tmp/GarbageCalendar-release-20261023-b4.xcarchive",
+  "archiveVersion": "2.1",
+  "archiveBuild": "4",
+  "checks20261018": [
+    "7 legacy fixtures passed",
+    "26057 calendar checks passed",
+    "review request policy passed",
+    "shared schedule mapping passed in 3 time zones",
+    "git diff --check passed",
+    "development and production APNs key registration confirmed",
+    "2.1 (1) processing completed; export compliance answered; build attached and saved",
+    "Developer agreement acceptance reported by user"
+  ],
+  "distributionCertificate": "Apple Distribution: Yosuke Yoshida (27PDE49Z62), valid identity confirmed 2026-10-18",
+  "buildProcessingCompleted": true,
+  "exportComplianceAnswered": true,
+  "buildAttachedToDraft": true,
+  "developerAgreementUserConfirmed": true,
+  "reviewContactSaved": true,
+  "privacyURLPreference": "New landing page privacy policy; awaiting URL from user",
+  "latestAttempt": {
+    "version": "2.1",
+    "build": "5",
+    "status": "Waiting for Review",
+    "submittedAt": "2026-10-23T01:21:00+09:00",
+    "releaseMode": "Automatic after approval",
+    "published": false
+  },
+  "previousAttempt": {
+    "date": "2026-10-19",
+    "version": "2.1",
+    "build": "2",
+    "status": "2.1 (2) processed, export compliance answered, attached and saved; creative header/search uploaded; privacy implementation decision pending",
+    "archive": "/private/tmp/GarbageCalendar-release-20261019-b2.xcarchive",
+    "exportDirectory": "/private/tmp/GarbageCalendar-export-20261019-b2",
+    "uploadCompleted": true,
+    "submittedForReview": false,
+    "checks": [
+      "26057 calendar checks",
+      "collection icons",
+      "registration categories",
+      "review request policy",
+      "shared mapping in 3 time zones",
+      "7 upgrade fixtures",
+      "git diff --check"
+    ],
+    "blocker": "Ads initialize and load without app consent flow; AdMob GDPR message is draft. User asked whether to retain ads and implement consent or disable ads/analytics for this release. App Privacy remains no data collected.",
+    "uploadLog": "/private/tmp/GarbageCalendar-upload-20261019-b2.log",
+    "uploadedVia": "Xcode Organizer",
+    "privacyPolicyURLSaved": "https://garbagecalendar-app.web.app/privacy/",
+    "supportURLSaved": "https://garbagecalendar-app.web.app/support/",
+    "marketingURLSaved": "https://garbagecalendar-app.web.app/",
+    "buildProcessingCompleted": true,
+    "exportComplianceAnswered": true,
+    "buildAttachedToDraft": true,
+    "creativeAssets": {
+      "date": "2026-10-20",
+      "header": "store-assets/creative-20261020/header-3840x1646.png",
+      "search": "store-assets/creative-20261020/search-1920x1280.png",
+      "uploaded": true,
+      "previewVerified": true
+    }
+  },
+  "attempt20261020": {
+    "date": "2026-10-20",
+    "version": "2.1",
+    "build": "3",
+    "status": "Mac unlocked; signing still fails because private-key authentication is denied",
+    "archive": "/private/tmp/GarbageCalendar-release-20261020-b3.xcarchive",
+    "exportDirectory": "/private/tmp/GarbageCalendar-export-20261020-b3",
+    "uploadCompleted": false,
+    "submittedForReview": false,
+    "changes": [
+      "UMP consent gates ads; errors prevent requests",
+      "ATT before advertising; denied tracking uses npa",
+      "Analytics opt-in defaults off; Analytics IDFA and personalization disabled",
+      "Privacy settings and UMP options entry point",
+      "Sharing and reset retention notices"
+    ],
+    "checks": [
+      "Debug simulator build succeeded",
+      "Release signed archive succeeded",
+      "IPA export succeeded",
+      "review request eligibility regression passed",
+      "git diff --check for changed source files passed"
+    ],
+    "pending": [
+      "User reauthentication of login keychain",
+      "Upload build 3 and submit for review"
+    ],
+    "completed20261020": [
+      "Dedicated AdMob GDPR message published for this app, English and Japanese, reject enabled",
+      "App Privacy: eight data types configured and published",
+      "New real-UI search creative uploaded and preview verified",
+      "Privacy policy hosting deployed",
+      "Review notes saved",
+      "ATT system prompt observed and denied in simulator"
+    ],
+    "uploadErrors": [
+      "Organizer codesign FBLPromises.framework errSecInternalComponent",
+      "xcodebuild upload Failed to Use Accounts"
+    ],
+    "diagnosis": "codesign SecKeyCreateSignature failed -25293 CSSMERR_CSP_OPERATION_AUTH_DENIED; certificate valid through 2027-10-18 and existing access list includes Xcode/codesign/productbuild. No key access settings changed."
+  },
+  "attempt20261022": {
+    "date": "2026-10-22",
+    "version": "2.1",
+    "build": "4",
+    "status": "Unsigned Release archive succeeded; signed archive blocked by errSecInternalComponent at widget signing; App Store Connect login required",
+    "unsignedArchive": "/private/tmp/GarbageCalendar-unsigned-20261022-b4.xcarchive",
+    "signedArchiveAttempt": "/private/tmp/GarbageCalendar-release-20261022-b4.xcarchive",
+    "uploadCompleted": false,
+    "submittedForReview": false,
+    "checks": [
+      "26065 production schedule checks",
+      "10 registration category cases",
+      "7 legacy compatibility fixtures",
+      "review request policy",
+      "collection icons",
+      "shared mapping in 3 time zones",
+      "git diff --check",
+      "unsigned Release archive succeeded"
+    ],
+    "changes": [
+      "Simplified collection settings with reference-site text link and add action below rules",
+      "Unified today and monthly collection cards"
+    ],
+    "pending": [
+      "Unlock login keychain and retry signed archive/export",
+      "Sign into App Store Connect",
+      "Upload build 4, verify processing and attach to 2.1",
+      "Verify production notifications and submit for review"
+    ],
+    "log": "/private/tmp/garbage-release-20261022-b4.log"
+  },
+  "releaseMode": "AFTER_APPROVAL",
+  "invalidBinaryReportCheck": {
+    "date": "2026-10-23",
+    "userReported": "Invalid binary",
+    "observedBuild": "2.1 (4)",
+    "observedBinaryStatus": "確認済み (metadata page does not reflect version rejection)",
+    "observedReviewStatus": "却下済み / 未解決の問題",
+    "pending": "Read Apple error email at sadarame@icloud.com; login required",
+    "changesMade": true,
+    "observedAppVersionStatus": "バイナリが無効"
+  },
+  "privacyManifestAudit": {
+    "archiveBuild": "4",
+    "missingSDKManifests": [
+      "GoogleDataTransport",
+      "FBLPromises",
+      "FirebaseCoreInternal",
+      "FirebaseCore",
+      "GoogleUtilities",
+      "FirebaseAuth",
+      "FirebaseMessaging",
+      "nanopb",
+      "FirebaseInstallations"
+    ],
+    "missingAppManifests": [
+      "GarbageCalendar.app",
+      "WidgetGarbageExtension.appex"
+    ],
+    "appleErrorCodeConfirmed": false,
+    "remediation": "Updating SDKs and adding app/Widget UserDefaults declarations"
+  },
+  "build5Remediation": {
+    "version": "2.1",
+    "build": "5",
+    "status": "Resubmitted; Waiting for Review",
+    "unsignedArchive": "/private/tmp/GarbageCalendar-unsigned-20261023-b5.xcarchive",
+    "sdkUpdates": {
+      "Firebase": "10.29.0",
+      "GoogleMobileAds": "11.13.0",
+      "UserMessagingPlatform": "3.1.0"
+    },
+    "changes": [
+      "Updated SDKs to include privacy manifests",
+      "Added app and Widget UserDefaults privacy manifests to resource phases",
+      "Migrated UMP Swift API names",
+      "Incremented app and Widget build to 5"
+    ],
+    "validation": [
+      "Release unsigned archive succeeded",
+      "15 privacy manifests validated in actual archive; required embedded SDK manifests present",
+      "App and Widget version 2.1 build 5 verified",
+      "Calendar 26065 checks and registration, review, icons, mapping, upgrade regression checks passed",
+      "git diff --check passed",
+      "Signed Release archive and IPA export succeeded",
+      "codesign --verify --deep --strict passed on archive and exported app",
+      "15 manifests validated inside exported IPA"
+    ],
+    "blockers": [],
+    "uploaded": true,
+    "resubmitted": true,
+    "signedArchive": "/private/tmp/GarbageCalendar-release-20261023-b5.xcarchive",
+    "ipa": "/private/tmp/GarbageCalendar-export-20261023-b5/GarbageCalendar.ipa",
+    "submittedAt": "2026-10-23T01:21:00+09:00",
+    "buildId": "5a207ddd-03a0-4902-8476-5ef64e97d8a4",
+    "submissionId": "6f51e080-0232-432c-a779-4456e20d7104",
+    "proof": "release/resubmitted-20261023-b5.png"
+  }
+}

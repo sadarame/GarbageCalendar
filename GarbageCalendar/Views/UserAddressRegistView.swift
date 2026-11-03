@@ -1,203 +1,110 @@
-//
-//  UserAddressRegistView.swift
-//  GarbageCalendar
-//
-//  Created by Yosuke Yoshida on 2023/06/06.
-//
-
 import SwiftUI
-import _CoreLocationUI_SwiftUI
 
 struct UserAddressRegistView: View {
-    
-    //VM
-    @ObservedObject var vm: UserAddressRegistVM = UserAddressRegistVM()
-    
+    @StateObject var vm = UserAddressRegistVM()
+    var onAreaSelected: (() -> Void)? = nil
+    @FocusState private var inputFocused: Bool
     var body: some View {
-        //ナビゲーション
-        NavigationStack {
-            ZStack{
-                VStack{
-                    //現在地情報取得ボタンのエリア
-                    LocationButtonArea(vm: vm)
-                    //メインエリア
-                    ScrollView{
-                        //ユーザからの入力を受け付けるエリア
-                        UserInputArea(vm: vm)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                VStack(alignment: .leading, spacing: 16) {
+                    Image(systemName: "map.fill")
+                        .font(.system(size: 32)).foregroundStyle(CollectionStyle.forest)
+                    Text("収集日を探す")
+                        .font(.system(size: 28, weight: .bold, design: .rounded))
+                }.padding(.top, 12)
+
+                VStack(alignment: .leading, spacing: 16) {
+                    Label("現在地から取得", systemImage: "location.fill").font(.headline)
+                    Text("今いる場所の近くから、収集日を探します。")
+                        .font(.subheadline).foregroundStyle(.secondary)
+                    Button {
+                        inputFocused = false
+                        vm.requestLocation()
+                    } label: {
+                        Text("現在地を取得する").font(.headline)
+                            .frame(maxWidth: .infinity).padding(.vertical, 16)
+                    }.buttonStyle(SearchActionStyle())
+                    if vm.permissionDenied {
+                        Button("位置情報の設定を開く", action: vm.openAppSettings)
+                            .buttonStyle(.bordered).controlSize(.large)
                     }
-                    //次へボタン
-                    ButtonToNext(vm: vm)
-                        //入力チェッククリアしないと非活性
-                        .disabled(!vm.validateInputFields())
-                        .frame(width: UIScreen.main.bounds.width * 0.9)
-                    
-                    //広告エリア
-                    AdMobBannerView().frame(width: 320, height: 50)
-                        .background(Color.clear)
-                    
-                }
-                //位置情報取得中にプログレスを全面表示する
-                if vm.isShowProgres {EffectProgressView(10)}
-                //ナビゲーション
-                if vm.isShowNavigate {
-                    PopupMessageView(vm: vm)
-                }
-            }
-            //画面遷移処理
-            .navigationDestination(isPresented: $vm.activie, destination: {
-                GarbageMapView()
-            })
-            //エラーメッセージ表示用モディファイア
-            .modifier(CommonViewModifier(vm: vm))
-        }
-        //初期表示時の初期処理
-        .onAppear{
-            vm.onapperInit()
-        }
-        
-    }
-    
-}
+                }.padding(20)
+                    .background(CollectionStyle.surface, in: RoundedRectangle(cornerRadius: 24))
 
-//ユーザ入力エリア
-struct UserInputArea : View {
-    
-    @ObservedObject var vm: UserAddressRegistVM
-    
-    var body: some View {
-        //入力フィールドの作成
-        VStack(alignment: .leading, spacing: 10.0) {
-            InputLabelView(labelName: "郵便番号")
-            InputFieldView(text: $vm.model.postalCode,type: Const.type_NumberPad,vm:vm)
-                .onSubmit(vm.callGetAddressAPI)
-            
-            HStack{
-                VStack(alignment: .leading){
-                    InputLabelView(labelName: "都道府県")
-                    InputFieldView(text: $vm.model.administrativeArea)
+                VStack(alignment: .leading, spacing: 16) {
+                    Label("郵便番号から指定", systemImage: "mappin.and.ellipse").font(.headline)
+                    Text("郵便番号を入力して、地域の収集日を探します。")
+                        .font(.subheadline).foregroundStyle(.secondary)
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("郵便番号").font(.subheadline.weight(.semibold))
+                        TextField("例：336-0911", text: $vm.postalQuery)
+                            .accessibilityLabel("郵便番号")
+                            .focused($inputFocused)
+                            .keyboardType(.numbersAndPunctuation)
+                            .submitLabel(.search).onSubmit(search)
+                            .padding(.horizontal, 14).frame(minHeight: 56)
+                            .background(Color(uiColor: .systemBackground), in: RoundedRectangle(cornerRadius: 10))
+                            .overlay(RoundedRectangle(cornerRadius: 10)
+                                .stroke(inputFocused ? CollectionStyle.forest : Color(uiColor: .separator), lineWidth: inputFocused ? 2 : 1))
+                    }
+                    Button(action: search) {
+                        Text("この郵便番号で探す").font(.headline)
+                            .frame(maxWidth: .infinity).padding(.vertical, 16)
+                    }.buttonStyle(SearchActionStyle()).disabled(!canSearch)
+                }.padding(20)
+                    .background(CollectionStyle.surface, in: RoundedRectangle(cornerRadius: 24))
+                if vm.isShowProgres {
+                    ProgressView("検索中…").frame(maxWidth: .infinity)
                 }
-                VStack(alignment: .leading) {
-                    InputLabelView(labelName: "市区町村")
-                    InputFieldView(text: $vm.model.locality)
-                }
-            }
-            
-            InputLabelView(labelName: "丁目")
-            InputFieldView(text: $vm.model.thoroughfare)
-            
-            InputLabelView(labelName: "番地")
-            InputFieldView(text: $vm.model.subThoroughfare,placeHolder:"任意")
-            
-            InputLabelView(labelName: "建物名")
-            InputFieldView(text: $vm.model.buildName,placeHolder:"任意")
+            }.padding(.horizontal, 24).padding(.bottom, 24)
         }
-        .padding(.horizontal,15)
-        //ナビゲーション処理
-        .navigationBarTitle(Text("住所情報入力"))
-        .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-//入力フィールドのラベル
-struct InputLabelView : View {
-    let labelName:String
-    
-    var body: some View {
-        Text(labelName).font(.headline)
-    }
-}
-//入力フィールド
-struct InputFieldView: View {
-    @Binding var text: String
-    let placeHolder: String?
-    let type: String?
-    let vm: UserAddressRegistVM?
-    
-    init(text: Binding<String>, placeHolder: String? = nil, type: String? = nil, vm: UserAddressRegistVM? = nil) {
-        self._text = text
-        self.placeHolder = placeHolder
-        self.type = type
-        self.vm = vm
-    }
-    
-    @FocusState private var isTextFieldFocused: Bool
-    
-    var body: some View {
-        VStack{
-            let textField = TextField(placeHolder ?? "", text: $text)
-                .padding(.all)
-                .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                .background(Color(red: 239.0/255.0, green: 243.0/255, blue: 244.0/255.0, opacity:1.0))
-                .textFieldStyle(.plain)
-            
-            if type == Const.type_NumberPad {
-                textField
-                    .keyboardType(.numberPad)
-                    .focused($isTextFieldFocused)
-            } else {
-                textField
-                    .keyboardType(.default)
+        .scrollDismissesKeyboard(.interactively)
+        .background(CollectionStyle.background.ignoresSafeArea())
+        .disabled(vm.isShowProgres)
+        .tint(CollectionStyle.accent)
+        .navigationTitle("").navigationBarTitleDisplayMode(.inline)
+        .modifier(CommonViewModifier(vm: vm))
+        .navigationDestination(isPresented: Binding(get: { vm.activie && onAreaSelected == nil }, set: { vm.activie = $0 })) { GarbageMapView() }
+        .sheet(isPresented: $vm.showPostalCandidates) {
+            NavigationStack {
+                List(Array(vm.postalCandidates.enumerated()), id: \.offset) { _, address in
+                    Button(address.displayAddress) { vm.selectPostalAddress(address) }
+                }
+                .navigationTitle("住所を選択")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("キャンセル") { vm.showPostalCandidates = false }
+                    }
+                }
+                .tint(CollectionStyle.accent)
             }
         }
-        .onChange(of: isTextFieldFocused) { isFocused in
-             if !isFocused {
-                 // フォーカスが外れたときの処理
-                 vm?.callGetAddressAPI()
-             }
-         }
-    }
-}
-
-struct LocationButtonArea : View {
-    
-    @ObservedObject var vm: UserAddressRegistVM
-    
-    var body: some View {
-        HStack{
-            Text("位置情報から住所情報を入力")
-            LocationButton{
-                //位置情報取得
-                vm.requestLocation()
-            }
-            .labelStyle(.iconOnly)
-            .foregroundColor(.white)
-            .cornerRadius(30)
-            .symbolVariant(.fill)
-            .tint(.blue)
+        .onChange(of: vm.activie) { ready in
+            if ready, let onAreaSelected { vm.activie = false; onAreaSelected() }
         }
     }
-}
-
-struct ButtonToNext : View {
-    
-    @ObservedObject var vm: UserAddressRegistVM
-    
-    var body: some View {
-        VStack{
-            Button(action: {
-                //ボタン押下のイベント
-                vm.onNextButtonTapped()
-                
-                if vm.model.buildName != "" {
-                    saveGarbageInfoName(vm.model.buildName)
-                } else {
-                    saveGarbageInfoName(vm.model.thoroughfare)
-                }
-            
-            }) {
-                Text("次へ")
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .accentColor(Color.white)
-                    .background(Color.blue)
-                    .cornerRadius(.infinity)
-            }
-        }
+    private var canSearch: Bool {
+        !vm.postalQuery
+            .trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
+
+    private func search() {
+        inputFocused = false
+        vm.searchPostalCode()
+    }
+
 }
 
-struct UserAddressRegistView_Previews: PreviewProvider {
-    static var previews: some View {
-        UserAddressRegistView()
+private struct SearchActionStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(isEnabled ? Color.white : Color(uiColor: .secondaryLabel))
+            .background(isEnabled ? CollectionStyle.forest : Color(uiColor: .systemGray4),
+                        in: RoundedRectangle(cornerRadius: 14))
+            .opacity(configuration.isPressed ? 0.75 : 1)
     }
 }

@@ -1,0 +1,67 @@
+{
+  "date": "2026-10-18",
+  "publishedDeclaration": "No data collected — inconsistent with current implementation",
+  "status": "audit in progress; not published",
+  "confirmedData": [
+    {
+      "type": "user identifiers",
+      "source": "Firebase anonymous Auth UID and server notification/share ownership",
+      "purpose": "app functionality"
+    },
+    {
+      "type": "device identifiers",
+      "source": "FCM/APNs token and Firebase installation identifiers",
+      "purpose": "notifications"
+    },
+    {
+      "type": "coarse location",
+      "source": "shared.ts stores shared schedule coordinates rounded to two decimal places",
+      "purpose": "nearby shared schedule search"
+    },
+    {
+      "type": "other user content",
+      "source": "shared schedule names and collection rules",
+      "purpose": "schedule sharing"
+    },
+    {
+      "type": "usage and SDK data",
+      "source": "Firebase Analytics 10.16.0 and Google Mobile Ads enabled",
+      "purpose": "analytics and advertising; exact linkage/tracking assessment pending"
+    }
+  ],
+  "pending": [
+    "Review advertising SDK collection and actual tracking behavior/settings",
+    "Review Analytics data-sharing settings",
+    "Verify published privacy policy covers current notification and schedule-sharing storage",
+    "Configure App Store data types, purposes, linkage and tracking consistently"
+  ],
+  "sources": [
+    "https://developers.google.com/admob/ios/privacy/data-disclosure",
+    "https://firebase.google.com/docs/ios/app-store-data-collection",
+    "https://support.google.com/analytics/answer/10285841"
+  ],
+  "checks20261019": {
+    "storeDeclaration": "Verified in App Store Connect: no data collected",
+    "privacyPolicyURL": "https://garbagecalendar-app.web.app/privacy/",
+    "privacyPolicyURLSaved": true,
+    "SDKDisclosureSourcesChecked": [
+      "https://developers.google.com/admob/ios/privacy/data-disclosure",
+      "https://firebase.google.com/docs/ios/app-store-data-collection"
+    ],
+    "pendingConfigurationAccess": "Requested user login for AdMob and Firebase Analytics to determine actual tracking and data-sharing configuration"
+  },
+  "checks20261020": {
+    "analyticsActive": true,
+    "googleSignalsEnabled": false,
+    "granularLocationDeviceCollectionEnabled": true,
+    "adsPersonalizationRegions": "307/307 allowed",
+    "googleAdsLinks": 0,
+    "adMobLinked": true,
+    "adMobAppID": "ca-app-pub-5529798279445729~3104020613",
+    "adMobGDPRMessage": "one draft, not published; displayed count 0",
+    "adMobIDFAExplanation": "not configured",
+    "code": "GADMobileAds starts at launch; banner loads GADRequest immediately; no UMP/ATT consent flow found",
+    "storeDeclaration": "No data collected, correction pending implementation decision",
+    "settingsChanged": false
+  }
+}

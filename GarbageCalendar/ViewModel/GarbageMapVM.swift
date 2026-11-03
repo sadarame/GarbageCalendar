@@ -10,9 +10,17 @@ import MapKit
 import SwiftUI
 
 //
+final class ScheduleMapAnnotation: MKPointAnnotation {
+    var models: [GarbageAreaConvModel] = []
+}
+
 class GarbageMapVM: BaseVM {
+    @Published var selectedPin: ScheduleMapAnnotation?
+    var visibleModels: [GarbageAreaConvModel] { selectedPin?.models ?? modelList }
+
     //リクエストパラメタ
     @Published var reqparam:GarbageAreaConvModel = GarbageAreaConvModel()
+    @Published var searchMessage = ""
     //取得してきたゴミデータ
     @Published var modelList:[GarbageAreaConvModel] = []
     //次ページへの遷移するためのフラグ
@@ -20,20 +28,19 @@ class GarbageMapVM: BaseVM {
     //遷移先に渡すフラグ（なんのイベントで遷移したか）
     @Published var triggerFlg = 0
     //フォーカスする位置情報を定義
-    @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.009, longitudeDelta: 0.009))
+    @Published var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 0, longitude: 0), span: MKCoordinateSpan(latitudeDelta: 0.04, longitudeDelta: 0.048))
     // 取得してきたピン情報
     @Published var pinList: [MKPointAnnotation] = []
     
     
     override init() {
         super.init()
-        onAppearInit()
         
     }
     
     // MARK: 画面初期表示
     func onAppearInit(){
-        setNavigateFlg()
+        isShowNavigate = false
         //ユーザ情報を取得してMapをFocus
         getUserMapInfo()
         //API叩くときのリクエストパラメタ作成
@@ -63,7 +70,7 @@ class GarbageMapVM: BaseVM {
         let pin = MKPointAnnotation()
         pin.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         pin.title = title
-        pin.subtitle = title
+        pin.subtitle = subtitle
         pinList.append(pin)
         
     }
@@ -92,63 +99,59 @@ class GarbageMapVM: BaseVM {
     
     // MARK: ゴミ情報取得APIをコールする
     func callGetGarbageAreaAPI(){
-        // 住所情報の構造体をJSONデータに変換
-        let jsonData = try! JSONEncoder().encode(reqparam)
-        // JSONデータを文字列に変換
-        let jsonString = String(data: jsonData, encoding: .utf8)
-        // リクエストパラメータを作成
-        let requestBody = [
-            "TYPE": Const.TYPE_GET_GARBAGE_AREA,
-            "API_KEY": Const.API_KEY,
-            "GARBAGE_ADRRESS": jsonString,
-        ]
-        
-        // JSONにデータ変換
-        let jsonRequestBody = try! JSONSerialization.data(withJSONObject: requestBody)
-        
-        //APIのコール
-        fetchDataFromAPI(url: Const.URL_API_CALL, type: Const.TYPE_GET_GARBAGE_AREA,jsonData:jsonRequestBody) { [self] (result: Result<GarbageAreaRes, Error>) in
-            DispatchQueue.main.async {
-                switch result {
-                    
-                case .success(let responseData):
-                    //編集不可を解除
-                    self.isDisEditable  = false
-                    //ユーザーデフォルトに保存
-                    self.modelList = responseData.result
-                    //マップにPinを指す
-                    self.addPinsFromModelList()
-                    //リストから重複を削除
-                    self.removeDuplicatesFromModelList()
-      
-                case .failure(let error):
-                    // エラー時の処理
-                    self.showPopup(withMessage: "住所情報が取得できませんでした。")
-                    
-                    //次ページへ遷移する処理
-                    self.toNextPage = true
-                    
-                    print("Error: \(error)")
-                }
-                //通信終わりのため、プログレス非表示に
-                self.isShowProgres = false
+        guard !isShowProgres else { return }
+        reqparam.latitude = String(region.center.latitude)
+        reqparam.longitude = String(region.center.longitude)
+        guard let latitude = Double(reqparam.latitude ?? ""),
+              let longitude = Double(reqparam.longitude ?? "") else {
+            searchMessage = "地域の位置を取得できませんでした。戻って現在地か地域名で検索してください。"
+            return
+        }
+        selectedPin = nil
+        isShowProgres = true
+        searchMessage = "近くの収集情報を検索中…"
+        Task { @MainActor in
+            defer { self.isShowProgres = false; self.isDisEditable = false }
+            do {
+                let response: SharedSearchResponse = try await CollectionAPI.shared.call(
+                    "searchSharedSchedulesV2", data: ["latitude": latitude, "longitude": longitude, "radiusKm": 2.0])
+                self.modelList = response.result
+                self.pinList = []
+                self.addPinsFromModelList()
+                self.searchMessage = response.result.isEmpty
+                    ? "近くに共有情報がありません。手動で登録できます。"
+                    : ""
+            } catch {
+                self.modelList = []
+                self.pinList = []
+                print("Shared schedule search failed: \(error)")
+                self.searchMessage = "検索できませんでした。再試行するか、手動で登録してください。"
             }
         }
     }
-    
+
     // MARK: ゴミ情報からマップにピンする
     func addPinsFromModelList() {
-        for model in self.modelList {   
-            if let latitudeString = model.latitude,
-               let longitudeString = model.longitude,
-               let latitude = Double(latitudeString),
-               let longitude = Double(longitudeString) {
-                let title = model.garbageInfoName ?? "" // ピンのタイトル
-                let subtitle = "" // ピンのサブタイトル
-                
-                addPinToMap(latitude: latitude, longitude: longitude, title: title, subtitle: subtitle)
+        var pins: [ScheduleMapAnnotation] = []
+        for model in modelList {
+            guard let latitude = Double(model.latitude ?? ""),
+                  let longitude = Double(model.longitude ?? "") else { continue }
+            if let existing = pins.first(where: {
+                abs($0.coordinate.latitude - latitude) < 0.000001 &&
+                abs($0.coordinate.longitude - longitude) < 0.000001
+            }) {
+                existing.models.append(model)
+                existing.title = "この場所の収集情報（\(existing.models.count)件）"
+            } else {
+                let pin = ScheduleMapAnnotation()
+                pin.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                pin.models = [model]
+                pin.title = model.garbageInfoName ?? "収集情報"
+                pin.subtitle = "下の一覧から収集日を確認できます"
+                pins.append(pin)
             }
         }
+        pinList = pins
     }
 
     // MARK: リストクリックした際のイベント

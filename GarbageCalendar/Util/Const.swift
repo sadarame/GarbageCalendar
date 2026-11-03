@@ -19,11 +19,9 @@ struct Const {
     
     
     //APIのリクエスト先
-    static let URL_API_CALL = "https://golira-pochette.com/GarbageAPI.php"
     static let URL_ZIPCODE_API = "https://zipcloud.ibsnet.co.jp/api/search?zipcode="
-    static let API_KEY = "YOSUKE1227"
     
-    static let URL_PRIVACY_POLISCY = "https://golira-pochette.com/%e5%85%a8%e5%9b%bd%e3%82%b4%e3%83%9f%e5%87%ba%e3%81%97%e3%82%ab%e3%83%ac%e3%83%b3%e3%83%80%e3%83%bc%e3%83%97%e3%83%a9%e3%82%a4%e3%83%90%e3%82%b7%e3%83%bc%e3%83%9d%e3%83%aa%e3%82%b7%e3%83%bc/"
+    static let URL_PRIVACY_POLISCY = "https://garbagecalendar-app.web.app/privacy/"
     
     //画面遷移トリガー
     static let TRG_NEXT_BUTTON = 1

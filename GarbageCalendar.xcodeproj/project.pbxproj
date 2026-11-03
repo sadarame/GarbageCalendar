@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		038AFB73643E8579AF6AB3D8 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = EA90F7174F1F320996A8A395 /* PrivacyInfo.xcprivacy */; };
+		16049821C982D77D71DE0948 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1B13FE35B8A33DA9C3367652 /* PrivacyInfo.xcprivacy */; };
 		16145B0B2AAB150F00EFCF46 /* AppVersionMonitorSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 16145B0A2AAB150F00EFCF46 /* AppVersionMonitorSwiftUI */; };
 		16145B0D2AAB157700EFCF46 /* AdMovBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16145B0C2AAB157700EFCF46 /* AdMovBannerView.swift */; };
 		16145B0F2AAB159100EFCF46 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16145B0E2AAB159100EFCF46 /* LaunchScreenView.swift */; };
@@ -50,6 +52,10 @@
 		169F8E912A243A1F0082F330 /* BaseVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169F8E902A243A1F0082F330 /* BaseVM.swift */; };
 		16A4C98E2A55BB80003BE06B /* GarbageAreaConvModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16A4C98D2A55BB80003BE06B /* GarbageAreaConvModel.swift */; };
 		19ADED0DC469281A6F420C01 /* Pods_GarbageCalendar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6AE3E37CCD19876C3BC7E687 /* Pods_GarbageCalendar.framework */; };
+		ABCDEF012345678900000001 /* ScheduleEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF012345678900000003 /* ScheduleEngine.swift */; };
+		ABCDEF012345678900000002 /* ScheduleEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF012345678900000003 /* ScheduleEngine.swift */; };
+		ABCDEF012345678900000011 /* CollectionStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF012345678900000013 /* CollectionStyle.swift */; };
+		ABCDEF012345678900000012 /* CollectionStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABCDEF012345678900000013 /* CollectionStyle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -125,9 +131,13 @@
 		169F8E8E2A22EC900082F330 /* UserDafaultManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDafaultManager.swift; sourceTree = "<group>"; };
 		169F8E902A243A1F0082F330 /* BaseVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseVM.swift; sourceTree = "<group>"; };
 		16A4C98D2A55BB80003BE06B /* GarbageAreaConvModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GarbageAreaConvModel.swift; sourceTree = "<group>"; };
+		1B13FE35B8A33DA9C3367652 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		6AE3E37CCD19876C3BC7E687 /* Pods_GarbageCalendar.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GarbageCalendar.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FCCB095321E5C23B4AB8E78 /* Pods-GarbageCalendar.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GarbageCalendar.debug.xcconfig"; path = "Target Support Files/Pods-GarbageCalendar/Pods-GarbageCalendar.debug.xcconfig"; sourceTree = "<group>"; };
+		ABCDEF012345678900000003 /* ScheduleEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/ScheduleEngine.swift; sourceTree = SOURCE_ROOT; };
+		ABCDEF012345678900000013 /* CollectionStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared/CollectionStyle.swift; sourceTree = SOURCE_ROOT; };
 		CB78471A23B4A4BBBC9B6A85 /* Pods-GarbageCalendar.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GarbageCalendar.release.xcconfig"; path = "Target Support Files/Pods-GarbageCalendar/Pods-GarbageCalendar.release.xcconfig"; sourceTree = "<group>"; };
+		EA90F7174F1F320996A8A395 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -198,6 +208,7 @@
 				1634FFC429DD53D50054D499 /* ContentView.swift */,
 				1634FFC629DD53D60054D499 /* Assets.xcassets */,
 				1634FFC829DD53D60054D499 /* Preview Content */,
+				1B13FE35B8A33DA9C3367652 /* PrivacyInfo.xcprivacy */,
 			);
 			path = GarbageCalendar;
 			sourceTree = "<group>";
@@ -229,6 +240,7 @@
 				167FA8BF2AF8CD4B006926E0 /* AppIntent.swift */,
 				167FA8C12AF8CD4D006926E0 /* Assets.xcassets */,
 				167FA8C32AF8CD4D006926E0 /* Info.plist */,
+				EA90F7174F1F320996A8A395 /* PrivacyInfo.xcprivacy */,
 			);
 			path = WidgetGarbage;
 			sourceTree = "<group>";
@@ -253,6 +265,8 @@
 			children = (
 				168B48C929DD5B8400AB2BD8 /* Geocoder.swift */,
 				168B48E229DF026900AB2BD8 /* GarbageRegistModel.swift */,
+				ABCDEF012345678900000003 /* ScheduleEngine.swift */,
+				ABCDEF012345678900000013 /* CollectionStyle.swift */,
 				1682EEF82A2F30C000066BC0 /* UserAddressRegistModel.swift */,
 				16A4C98D2A55BB80003BE06B /* GarbageAreaConvModel.swift */,
 				1682EF002A3065E500066BC0 /* ApiResponseModel.swift */,
@@ -318,6 +332,7 @@
 				1634FFBD29DD53D50054D499 /* Resources */,
 				10B476574B93CCB637FB6204 /* [CP] Embed Pods Frameworks */,
 				168AC35F2AEF805100D7F9F7 /* Embed Foundation Extensions */,
+				BF80972581AE502928B8D650 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -398,6 +413,7 @@
 				1695A9132AAC617200134F06 /* GoogleService-Info.plist in Resources */,
 				1634FFCA29DD53D60054D499 /* Preview Assets.xcassets in Resources */,
 				1634FFC729DD53D60054D499 /* Assets.xcassets in Resources */,
+				16049821C982D77D71DE0948 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,6 +422,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				167FA8C22AF8CD4D006926E0 /* Assets.xcassets in Resources */,
+				038AFB73643E8579AF6AB3D8 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,6 +444,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GarbageCalendar/Pods-GarbageCalendar-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BF80972581AE502928B8D650 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-GarbageCalendar/Pods-GarbageCalendar-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-GarbageCalendar/Pods-GarbageCalendar-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GarbageCalendar/Pods-GarbageCalendar-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C00A3242A5A01C9D5E9B624C /* [CP] Check Pods Manifest.lock */ = {
@@ -459,6 +493,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				16669E122A7CFBE60067E430 /* CalendarVM.swift in Sources */,
+				ABCDEF012345678900000001 /* ScheduleEngine.swift in Sources */,
+				ABCDEF012345678900000011 /* CollectionStyle.swift in Sources */,
 				1695A91D2ABD32D400134F06 /* NotificateModel.swift in Sources */,
 				168B48EB2A0A421000AB2BD8 /* GarbageMapView.swift in Sources */,
 				168B48CE29DD5B8400AB2BD8 /* Geocoder.swift in Sources */,
@@ -498,6 +534,8 @@
 			files = (
 				167FA8BC2AF8CD4B006926E0 /* WidgetGarbageBundle.swift in Sources */,
 				167FA8BE2AF8CD4B006926E0 /* WidgetGarbage.swift in Sources */,
+				ABCDEF012345678900000002 /* ScheduleEngine.swift in Sources */,
+				ABCDEF012345678900000012 /* CollectionStyle.swift in Sources */,
 				167FA8C02AF8CD4B006926E0 /* AppIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -640,11 +678,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = GarbageCalendar/GarbageCalendar.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"GarbageCalendar/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 27PDE49Z62;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 27PDE49Z62;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -663,11 +701,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = yosuke.GarbageCalendar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = DistributeGarbageCalendar;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -686,11 +724,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = GarbageCalendar/GarbageCalendarRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_ASSET_PATHS = "\"GarbageCalendar/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 27PDE49Z62;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 27PDE49Z62;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -709,11 +747,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = yosuke.GarbageCalendar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = DistributeGarbageCalendar;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -729,10 +767,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = WidgetGarbageExtension.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 5;
+				DEVELOPMENT_TEAM = 27PDE49Z62;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 27PDE49Z62;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -746,11 +784,11 @@
 					"@executable_path/../../Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = yosuke.GarbageCalendar.WidgetGarbage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = GarbageCalendarWidget;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -766,10 +804,10 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = WidgetGarbageExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 5;
+				DEVELOPMENT_TEAM = 27PDE49Z62;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 27PDE49Z62;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
@@ -783,11 +821,11 @@
 					"@executable_path/../../Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = yosuke.GarbageCalendar.WidgetGarbage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = GarbageCalendarWidget;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

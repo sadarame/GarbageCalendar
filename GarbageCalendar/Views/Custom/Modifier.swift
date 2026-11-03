@@ -61,10 +61,6 @@ struct NumberPadViewModifier: ViewModifier {
                     ToolbarItem(placement: .keyboard) {
                         Spacer() // 右寄せスペーサー
                         Button(action: {
-                            if type == Const.type_NumberPad {
-                                // 郵便番号の場合の処理
-                                vm.callGetAddressAPI()
-                            }
                             endEditing()
                         }) {
                             Text("閉じる")

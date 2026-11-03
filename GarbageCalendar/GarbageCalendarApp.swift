@@ -7,48 +7,57 @@
 
 import SwiftUI
 import FirebaseCore
+import FirebaseAppCheck
 import FirebaseMessaging
 import AppVersionMonitorSwiftUI
-import GoogleMobileAds
+import FirebaseAnalytics
 
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        AppCheck.setAppCheckProviderFactory(GarbageAppCheckFactory())
         FirebaseApp.configure()
         
         UNUserNotificationCenter.current().delegate = self
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
-            if granted {
-                DispatchQueue.main.async {
-                    UIApplication.shared.registerForRemoteNotifications()
-                }
+        // Register only if permission was already granted; ask in notification settings.
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            if loadNotificateModel()?.isNotificationEnabled == true,
+               settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional {
+                DispatchQueue.main.async { UIApplication.shared.registerForRemoteNotifications() }
             }
         }
-        
+
         Messaging.messaging().delegate = self
         
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        Analytics.setAnalyticsCollectionEnabled(UserDefaults.standard.bool(forKey: "privacy.analyticsEnabled"))
         
         return true
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        let token = deviceToken.reduce("") { $0 + String(format: "%02X", $1) }
-        print("APNS Token: \(token)")
         Messaging.messaging().apnsToken = deviceToken
     }
     
     func
     messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        print("FCM Token: \(fcmToken)")
+        let tokenChanged = loadFCMToken() != fcmToken
         saveFCMToken(fcmToken ?? "")
+        if tokenChanged {
+            Task { @MainActor in NotificationServerSync.shared.enqueue() }
+        }
     }
     
-    // Other delegate methods and app lifecycle handling here...
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .list, .sound])
+    }
 }
 
 @main
 struct GarbageCalendarApp: App {
+    @StateObject private var session = UserSession.shared
+    @Environment(\.scenePhase) private var scenePhase
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     //    @StateObject private var appVersionMonitor = AppVersionMonitor(id: 1570395606)
     
@@ -56,8 +65,24 @@ struct GarbageCalendarApp: App {
     var body: some Scene {
         WindowGroup {
             LaunchScreenView()
+                .id(session.generation)
+                .onChange(of: scenePhase) { phase in
+                    if phase == .active {
+                        NotificationServerSync.shared.enqueue()
+                    }
+                }
 //            CalendarView()
             }
     }
     
+}
+
+final class GarbageAppCheckFactory: NSObject, AppCheckProviderFactory {
+    func createProvider(with app: FirebaseApp) -> AppCheckProvider? {
+#if targetEnvironment(simulator)
+        return AppCheckDebugProviderFactory().createProvider(with: app)
+#else
+        return AppAttestProvider(app: app)
+#endif
+    }
 }

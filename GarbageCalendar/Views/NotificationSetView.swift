@@ -1,76 +1,51 @@
 import SwiftUI
 
 struct NotificationSetView: View {
-    
-    @ObservedObject var vm = NotificationSetVM()
+    @StateObject var vm = NotificationSetVM()
     @Binding var isPresented: Bool
-    
-    
-    init(isPresented: Binding<Bool>) {
-        _isPresented = isPresented //
-        // UIKitのUINavigationBarの外観を設定
-        UINavigationBar.appearance().barTintColor = UIColor.white // 背景色
-        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor.black] // タイトル色
-        UINavigationBar.appearance().tintColor = .white // backボタン色
-    }
-    
+
     var body: some View {
         NavigationStack {
-            ZStack{
-                Form {
-                    Toggle("通知を有効にする", isOn: $vm.model.isNotificationEnabled)
-                        .onChange(of: vm.model.isNotificationEnabled) { newValue in
-                            // 通知の有効状態が変更されたら許可ステータスを確認
-                            vm.checkNotificationPermission()
-                        }
-                    
-                    RadioArea(vm:vm)
-                    
-                    DatePicker("日時を選択", selection: $vm.model.notificateTime, displayedComponents: .hourAndMinute)
-                        .onChange(of: vm.model.notificateTime) { newDate in
-                            // 変更内容を保存する
-                            vm.changeNotificateSetting()
-                        }
+            Form {
+                Section {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Image(systemName: "bell.badge.fill").font(.system(size: 32)).foregroundStyle(CollectionStyle.accent)
+                        Text("ちょうどいい時間に、お知らせ。")
+                            .font(.title3.bold())
+                        Text("収集するゴミがある日だけ通知します。")
+                            .font(.subheadline).foregroundStyle(.secondary)
+                    }.padding(.vertical, 12)
+                    Toggle("ゴミ出しの通知", isOn: $vm.model.isNotificationEnabled)
+                        .onChange(of: vm.model.isNotificationEnabled) { _ in vm.checkNotificationPermission() }
                 }
-                //ナビゲーション
-                if vm.isShowNavigate {
-                    PopupMessageView(vm: vm)
+                Section {
+                    Picker("通知する日", selection: $vm.model.dateType) {
+                        ForEach(NotificationTiming.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                    }.onChange(of: vm.model.dateType) { _ in vm.changeNotificateSetting() }
+                    DatePicker("時刻", selection: $vm.model.notificateTime, displayedComponents: .hourAndMinute)
+                        .onChange(of: vm.model.notificateTime) { _ in vm.changeNotificateSetting() }
+                } header: { Text("タイミング") } footer: { Text("日本時間でお知らせします。通信状況によって届く時刻が前後する場合があります。") }
+                .disabled(!vm.model.isNotificationEnabled)
+
+                Section {
+                    Button(action: vm.openAppSettings) {
+                        Label("iPhoneの設定を開く", systemImage: "gearshape")
+                    }
+                } footer: {
+                    Text("通知の許可・サウンド・バナーは、iPhoneの設定で変更できます。")
                 }
+
             }
-            .onAppear(perform: vm.onApperInit)
-            .navigationTitle("通知設定") // サイドメニューのタイトル
+            .tint(CollectionStyle.accent)
+            .navigationTitle("通知")
             .navigationBarTitleDisplayMode(.inline)
-        }
-    }
-}
-
-
-struct RadioArea: View {
-
-    @ObservedObject var vm: NotificationSetVM
-    
-
-    var body: some View {
-        HStack() {
-            Text("通知する日付を選択")
-            Spacer()
-
-            VStack(spacing: 0) {
-                ForEach(NotificationTiming.allCases, id: \.self) { timing in
-                    HStack {
-                        Text(timing.rawValue)
-                        Image(systemName: vm.model.dateType == timing ? "checkmark.circle.fill" : "circle")
-                    }
-                    .foregroundColor(vm.model.dateType == timing ? .blue : .primary)
-                    .frame(height: 40)
-                    .onTapGesture {
-                        vm.model.dateType = timing
-                        //設定を保存
-                        vm.changeNotificateSetting()
-                    }
-                }
-
-            }
+            .toolbar { ToolbarItem(placement: .confirmationAction) { Button("完了") { isPresented = false } } }
+            .modifier(CommonViewModifier(vm: vm))
+            .onAppear(perform: vm.onApperInit)
+            .alert("通知を許可してください", isPresented: $vm.isShowNavigate) {
+                Button("設定を開く", action: vm.openAppSettings)
+                Button("あとで", role: .cancel) {}
+            } message: { Text("iPhoneの設定で、このアプリからの通知を許可できます。") }
         }
     }
 }

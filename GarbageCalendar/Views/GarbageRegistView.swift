@@ -1,359 +1,305 @@
-//
-//  GarbageRegistView.swift
-//  GarbageCalendar
-//
-//  Created by Yosuke Yoshida on 2023/05/30.
-//
-
 import SwiftUI
 
-//メインView
 struct GarbageRegistView: View {
-    
-    //VM
-    @ObservedObject var vm:GarbageRegistVM = GarbageRegistVM()
-    
-    var body: some View {
-        ScrollViewReader { scrollViewProxy in
-            ZStack {
-                //ゴミ情報のリスト
-                VStack{
-                    //ゴミ情報名称エリア
-                    GarbageInfoNameAreaView(vm: vm)
-                    //ゴミ情報リスト
-                    GarbageInfoListView(vm: vm)
-                    //ボタンエリア
-                    HStack(spacing: 10) {
-                        //次へボタン
-                        ButtonToNextCal(action: vm.registData)
-                            .frame(width: UIScreen.main.bounds.width * 0.7)
-                        //プラスボタン
-                        ButtonToAdd(action: vm.addGarbageInfo)
-                            .frame(width: UIScreen.main.bounds.width * 0.1)
-                    }
-                    //広告エリア
-                    AdMobBannerView().frame(width: 320, height: 50)
-                        .background(Color.clear)
-                }
-                //位置情報取得中にプログレスを全面表示する
-                if vm.isShowProgres {EffectProgressView(10)}
-            }
-            .onAppear {
-                vm.onApperInit()
-            }
-            //画面遷移処理
-            .navigationDestination(isPresented: $vm.toNextPage, destination: {
-                CalendarView()
-            })
-            //エラーメッセージ表示用モディファイア
-            .modifier(CommonViewModifier(vm: vm))
-            //ナビゲーション処理
-            .navigationBarTitle(Text("ゴミ情報登録"))
-            .navigationBarTitleDisplayMode(.inline)
-            
-        }
-    }
-}
+    @StateObject var vm = GarbageRegistVM()
+    @State private var editingRule: GarbageRegistModel?
+    @State private var isAdding = false
+    @State private var addedIDs: Set<UUID> = []
+    @State private var pendingFocusID: UUID?
+    @State private var focusID: UUID?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @AccessibilityFocusState private var focusedRuleID: UUID?
 
-//ゴミ情報の名称エリア
-struct GarbageInfoNameAreaView: View {
-    @ObservedObject var vm: GarbageRegistVM
-    
     var body: some View {
-        //ゴミ名称エリア
-      
-        HStack(spacing: 10){
-            Text("名称")
-                .font(.headline)
-            TextField("名称", text: $vm.garbageInfoName)
-                .padding(8)
-                .clipShape(RoundedRectangle(cornerRadius: 15.0))
-                .background(Color(red: 239.0/255.0, green: 243.0/255, blue: 244.0/255.0, opacity:1.0))
-                .textFieldStyle(.plain)
-        }.padding(8)
-    }
-}
-
-
-// MARK: - ゴミ情報のScrollView
-struct GarbageInfoListView: View {
-    @ObservedObject var vm: GarbageRegistVM
-    
-    var body: some View {
-        
-        ScrollViewReader { scrollViewProxy in
-            ScrollView{
-                //モデルリストの件数文繰り返し
-                ForEach(vm.garbageRegistModelList.indices, id: \.self) { index in
-                    
-                    VStack {
-                        if index < vm.garbageRegistModelList.count {
-                            CardView(vm: vm, index: index)
-                        }
-                    }
-                    //カード形式の外の余白
-                    .padding(.horizontal,16)
-                    .padding(.bottom, 16)
-                    .onAppear {
-                           // Automatically scroll to the bottom when new elements are added
-                           if index == vm.garbageRegistModelList.count - 1 {
-                               scrollViewProxy.scrollTo(index, anchor: .bottom)
-                           }
-                       }
-                }
-            }
-            
-        }
-    }
-}
-
-// MARK: - カード形式
-struct CardView: View {
-    @ObservedObject var vm: GarbageRegistVM
-    
-    @State var index: Int
-    var body: some View {
-        if index < vm.garbageRegistModelList.count {
-            VStack(alignment: .leading) {
-                VStack{
-                    HStack {
-                        Text("ゴミの種類")
-                            .font(.headline)
-                        
-                        Spacer()
-                        
-                        
-                        CreatePickerView(
-                            selecteditem: $vm.garbageRegistModelList[index].garbageType,
-                            items: vm.garbageTypes
-                        )
-                    }
-                    
-                    HStack {
-                        Text("収集日")
-                            .font(.headline)
-                        
-                        
-                        Spacer()
-                        
-                        CreatePickerView(
-                            selecteditem: $vm.garbageRegistModelList[index].schedule,
-                            items: vm.schedules
-                        )
-                    }
-                    
-                    switch vm.garbageRegistModelList[index].schedule {
-                    case "毎週":
-                        HStack {
-                            Text("曜日")
-                                .font(.headline)
-                            
-                            
-                            Spacer()
-                            
-                            CreatePickerView(
-                                selecteditem: $vm.garbageRegistModelList[index].yobi,
-                                items: vm.yobis
-                            )
-                        }
-                        
-                    case "隔週":
-                        HStack {
-                            Text("間隔")
-                                .font(.headline)
-                            
-                            
-                            Spacer()
-                            
-                            CreatePickerView(
-                                selecteditem: $vm.garbageRegistModelList[index].freqWeek,
-                                items: vm.freqWeeks
-                            )
-                        }
-                        
-                        HStack {
-                            Text("曜日")
-                                .font(.headline)
-                            
-                            
-                            Spacer()
-                            
-                            CreatePickerView(
-                                selecteditem: $vm.garbageRegistModelList[index].yobi,
-                                items: vm.yobis
-                            )
-                        }
-                        
-                        HStack {
-                            Text("直近の収集日")
-                                .font(.headline)
-                            
-                            
-                            Spacer()
-                            
-                            DatePicker(selection: $vm.garbageRegistModelList[index].date, displayedComponents: .date) {
-                                EmptyView()
-                            }
-                            .datePickerStyle(DefaultDatePickerStyle())
-                            .environment(\.locale, Locale(identifier: "ja_JP"))
-                        }
-                        
-                    case "毎月":
-                        HStack {
-                            Text("日付")
-                                .font(.headline)
-                            
-                            
-                            Spacer()
-                            
-                            Picker("日付", selection: $vm.garbageRegistModelList[index].day) {
-                                ForEach(vm.days, id: \.self) { day in
-                                    Text(String(day) + "日")
-                                        .tag(day)
+        ScrollViewReader { proxy in
+            VStack(spacing: 0) {
+                List {
+                    Section {
+                        if !vm.garbageInfoName.isEmpty || vm.reference?.url != nil {
+                            HStack(spacing: 12) {
+                                if !vm.garbageInfoName.isEmpty {
+                                    Text(vm.garbageInfoName).font(.headline)
+                                }
+                                Spacer(minLength: 8)
+                                if let url = vm.reference?.url {
+                                    Link(destination: url) {
+                                        Text("参考サイト")
+                                            .underline()
+                                            .font(.subheadline)
+                                            .fixedSize()
+                                            .frame(minHeight: 44)
+                                    }
                                 }
                             }
-                            .pickerStyle(MenuPickerStyle())
                         }
-                        
-                    case "第○曜日":
-                        HStack {
-                            Text("第何週")
-                                .font(.headline)
-                                .padding(.trailing, 8) // 右側に8ポイントの余白を追加
-                            
-                            Spacer()
-                            
-                            CreatePickerView(
-                                selecteditem: $vm.garbageRegistModelList[index].weekOfMonth,
-                                items: vm.weekOfMonths
-                            )
-                        }
-                        
-                        HStack {
-                            Text("曜日")
-                                .font(.headline)
-                                .padding(.trailing, 8) // 右側に8ポイントの余白を追加
-                            
-                            Spacer()
-                            
-                            CreatePickerView(
-                                selecteditem: $vm.garbageRegistModelList[index].yobi,
-                                items: vm.yobis
-                            )
-                        }
-                        
-                    default:
-                        EmptyView()
                     }
-                }.padding(.horizontal,16)
-            }
-                    .modifier(
-                        CardStyle(
-                            //重複エラーのフラグを渡す
-                            duplicateError: vm.garbageRegistModelList[index].duplicateError,
-                            deleteCard: {
-                                //削除用のメソッドを渡す
-                                vm.deleteCard(at: index)
-                            }
-                        )
-                    )
-        }
-    }
-}
-
-//カードViewのモディファイアを定義
-struct CardStyle: ViewModifier {
-    
-    var duplicateError: Bool
-    var deleteCard: (() -> Void)
-    
-    func body(content: Content) -> some View {
-        content
-            .padding()
-            .background(duplicateError ? Color.red.opacity(0.5) : Color(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0))
-            .cornerRadius(10)
-            .shadow(color: Color.gray.opacity(0.3), radius: 3, x: 0, y: 2)
-            .frame(maxWidth: .infinity)
-            //閉じるボタン押下時の処理
-            .overlay(
-                Button(action: {
-                    deleteCard()
-                }) {
-                    Image(systemName: "xmark")
-                        .foregroundColor(.red)
+                    Section {
+                        if vm.garbageRegistModelList.isEmpty && !vm.isLoadingSchedule {
+                            VStack(spacing: 12) {
+                                Image(systemName: "calendar.badge.plus").font(.largeTitle)
+                                Text("収集日はまだ登録されていません").font(.headline)
+                            }.foregroundStyle(.secondary).frame(maxWidth: .infinity)
+                                .multilineTextAlignment(.center).padding(.vertical, 28)
+                        }
+                        ForEach(vm.garbageRegistModelList) { rule in
+                            Button {
+                                isAdding = false
+                                editingRule = rule
+                            } label: {
+                                HStack(spacing: 12) {
+                                    CollectionIcon(type: rule.garbageType, iconType: rule.iconType)
+                                    VStack(alignment: .leading, spacing: 5) {
+                                        Text(rule.garbageType).font(.headline).foregroundStyle(.primary)
+                                        Text(scheduleDescription(rule)).font(.subheadline).foregroundStyle(.secondary)
+                                        if addedIDs.contains(rule.id) {
+                                            Label("追加しました", systemImage: "checkmark.circle.fill")
+                                                .font(.caption.weight(.semibold)).foregroundStyle(CollectionStyle.accent)
+                                        }
+                                        if rule.duplicateError {
+                                            Text("同じ予定があります。編集または削除してください。")
+                                                .font(.caption).foregroundStyle(.red)
+                                        }
+                                    }
+                                    Spacer()
+                                    Label("編集", systemImage: "pencil").font(.subheadline).foregroundStyle(CollectionStyle.accent)
+                                }.padding(.vertical, 6)
+                            }.buttonStyle(.plain)
+                                .accessibilityHint("タップして収集日を編集")
+                                .accessibilityFocused($focusedRuleID, equals: rule.id)
+                                .id(rule.id)
+                                .listRowBackground(addedIDs.contains(rule.id)
+                                    ? CollectionStyle.accent.opacity(0.14) : CollectionStyle.surface)
+                                .swipeActions {
+                                    Button("削除", role: .destructive) {
+                                        vm.garbageRegistModelList.removeAll { $0.id == rule.id }
+                                        vm.saveCalendarEdits()
+                                    }
+                                }
+                        }
+                    } header: { Text("登録する収集日（\(vm.garbageRegistModelList.count)件）") }
+                    Section {
+                        Button {
+                            isAdding = true
+                            editingRule = GarbageRegistModel()
+                        } label: {
+                            Label("ゴミの種類・収集日を追加", systemImage: "plus.circle.fill")
+                                .font(.headline).frame(minHeight: 44)
+                        }
+                    }
                 }
-                    .padding(8)
-                    .offset(x: 5, y: -0), // ボタンを右上にオフセット
-                alignment: .topTrailing // ボタンの配置を右上に指定
-            )
-    }
-}
-
-//PickerViewを作成する汎用的なView
-struct CreatePickerView: View {
-    //タイトル
-    let title:String
-    //選択値
-    @Binding var selecteditem: String
-    //選択肢
-    let items: [String]
-    //イベント
-    var selectionChanged: (() -> Void)? = nil
-    
-    
-    init(title: String = "", selecteditem: Binding<String>, items: [String], selectionChanged: (() -> Void)? = nil) {
-        self.title = title
-        self._selecteditem = selecteditem
-        self.items = items
-        self.selectionChanged = selectionChanged
-    }
-    
-    var body: some View {
-        Picker(title, selection: $selecteditem) {
-            ForEach(items, id: \.self) { selection in
-                Text(selection)
+                .safeAreaInset(edge: .top, spacing: 0) {
+                    if focusID != nil {
+                        Label("収集日を\(addedIDs.count)件追加しました", systemImage: "checkmark.circle.fill")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(CollectionStyle.forest)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding().background(CollectionStyle.surface)
+                    }
+                }
+                .task(id: focusID) {
+                    guard let target = focusID else { return }
+                    // Wait for the dismissed sheet and updated list to finish layout.
+                    do { try await Task.sleep(for: .milliseconds(150)) } catch { return }
+                    withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.3)) {
+                        proxy.scrollTo(target, anchor: .center)
+                    }
+                    do { try await Task.sleep(for: .milliseconds(350)) } catch { return }
+                    focusedRuleID = target
+                    do { try await Task.sleep(for: .seconds(4)) } catch { return }
+                    addedIDs = []
+                    focusID = nil
+                }
+                .sheet(item: $editingRule, onDismiss: {
+                    if let target = pendingFocusID {
+                        focusID = target
+                        pendingFocusID = nil
+                    }
+                }) { rule in
+                    CollectionRuleEditor(rule: rule, isAdding: isAdding,
+                                         types: vm.garbageTypes.contains(rule.garbageType)
+                                            ? vm.garbageTypes : [rule.garbageType] + vm.garbageTypes) { rules in
+                        if isAdding {
+                            focusID = nil
+                            addedIDs = Set(rules.map(\.id))
+                            pendingFocusID = rules.first?.id
+                            vm.garbageRegistModelList.append(contentsOf: rules)
+                        } else if let index = vm.garbageRegistModelList.firstIndex(where: { $0.id == rule.id }) {
+                            vm.garbageRegistModelList[index] = rules[0]
+                        }
+                        vm.saveCalendarEdits()
+                    }
+                }
+                .sheet(isPresented: $vm.needsArea) {
+                    NavigationStack { UserAddressRegistView(onAreaSelected: { vm.needsArea = false; vm.registData() }) }
+                }
+                .disabled(vm.isShowProgres)
+                Divider()
+                Button(action: vm.registData) {
+                    HStack {
+                        if vm.isShowProgres { ProgressView().tint(.white) }
+                        Text(vm.isLoadingSchedule ? "読み込み中…" : (vm.isShowProgres ? "保存しています…" : "保存して完了")).fontWeight(.semibold)
+                    }.frame(maxWidth: .infinity).padding(17).foregroundStyle(.white)
+                        .background(vm.garbageRegistModelList.isEmpty ? Color.gray : CollectionStyle.forest,
+                                    in: RoundedRectangle(cornerRadius: 18))
+                }.buttonStyle(.plain).disabled(vm.isShowProgres || vm.garbageRegistModelList.isEmpty)
+                    .padding(.horizontal, 20).padding(.vertical, 10).background(.bar)
             }
-        }
-        .pickerStyle(MenuPickerStyle())
-        .onChange(of: selecteditem) { _ in
-            selectionChanged?()
-        }
-    }
-}
-
-struct ButtonToNextCal : View {
-    
-    var action: () -> Void
-    
-    var body: some View {
-        VStack{
-            Button(action: action) {
-                Text("次へ")
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .accentColor(Color.white)
-                    .background(Color.blue)
-                    .cornerRadius(.infinity)
+            .background(CollectionStyle.background)
+            .overlay {
+                if vm.isLoadingSchedule {
+                    ZStack {
+                        CollectionStyle.background.opacity(0.85)
+                        ProgressView("収集情報を読み込み中…")
+                            .progressViewStyle(.circular)
+                            .tint(CollectionStyle.accent)
+                            .padding(28)
+                            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20))
+                    }
+                }
             }
+            .tint(CollectionStyle.accent)
+            .navigationTitle("収集日の設定").navigationBarTitleDisplayMode(.inline)
+            .modifier(CommonViewModifier(vm: vm))
+            .navigationDestination(isPresented: $vm.toNextPage) { CalendarView() }
+            .onAppear { vm.onApperInit() }
         }
     }
 }
-struct ButtonToAdd : View {
-    
-    var action: () -> Void
-    
+
+private func scheduleDescription(_ rule: GarbageRegistModel) -> String {
+    switch rule.schedule {
+    case "指定日のみ": return "指定日のみ：\((rule.specificDates ?? []).joined(separator: "、"))"
+    case "毎月": return "毎月 \(rule.day)日"
+    case "第○曜日": return "毎月 \(rule.weekOfMonth)\(rule.yobi)"
+    case "隔週": return "\(rule.freqWeek)・\(rule.yobi)（基準日 \(CollectionStyle.date(rule.date, format: "M/d"))）"
+    default: return "毎週 \(rule.yobi)"
+    }
+}
+
+private struct CollectionRuleEditor: View {
+    @Environment(\.dismiss) private var dismiss
+    @State var rule: GarbageRegistModel
+    let isAdding: Bool
+    let types: [String]
+    let onSave: ([GarbageRegistModel]) -> Void
+    @State private var selectedDays: Set<String> = []
+    private let weekdays = ["月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日", "日曜日"]
+
     var body: some View {
-        VStack{
-            Button(action: action) {
-                Image(systemName: "plus")
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .accentColor(Color.white)
-                    .background(Color.blue)
-                    .cornerRadius(.infinity)
+        NavigationStack {
+            Form {
+                Section("1. ゴミの種類") {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 130))], spacing: 8) {
+                        ForEach(types, id: \.self) { type in
+                            Button { rule.garbageType = type } label: {
+                                HStack(spacing: 6) {
+                                    CollectionIcon(type: type, size: 28)
+                                    Text(type).font(.subheadline).foregroundStyle(.primary)
+                                    Spacer(minLength: 0)
+                                    if rule.garbageType == type { Image(systemName: "checkmark.circle.fill") }
+                                }.padding(10).frame(maxWidth: .infinity, minHeight: 52)
+                                    .background(rule.garbageType == type ? CollectionStyle.accent.opacity(0.14) : Color(uiColor: .tertiarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 12))
+                            }.buttonStyle(.plain)
+                                .accessibilityAddTraits(rule.garbageType == type ? .isSelected : [])
+                        }
+                    }.padding(.vertical, 4)
+                }
+                Section("2. 収集日") {
+                    Picker("繰り返し", selection: $rule.schedule) {
+                        Text("毎週").tag("毎週")
+                        Text("毎月 第○曜日").tag("第○曜日")
+                        if rule.schedule == "指定日のみ" { Text("指定日のみ").tag("指定日のみ") }
+                        Text("2〜4週ごと").tag("隔週")
+                        Text("毎月 決まった日").tag("毎月")
+                    }
+                    if rule.schedule == "第○曜日" {
+                        Picker("第何週", selection: $rule.weekOfMonth) {
+                            ForEach(["第一", "第二", "第三", "第四", "第五"], id: \.self) { Text($0).tag($0) }
+                        }
+                    }
+                    if rule.schedule == "隔週" {
+                        Picker("間隔", selection: $rule.freqWeek) {
+                            ForEach(["二週に一回", "三週に一回", "四週に一回"], id: \.self) { Text($0).tag($0) }
+                        }
+                        DatePicker("収集の開始日", selection: $rule.date, displayedComponents: .date)
+                            .onChange(of: rule.date) { date in
+                                rule.strDate = CollectionStyle.date(date, format: "yyyy-MM-dd")
+                            }
+                        Text("開始日以降、最初に来る指定曜日から繰り返します。")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                    if rule.schedule == "毎月" {
+                        Picker("日にち", selection: $rule.day) {
+                            ForEach(1...31, id: \.self) { Text("\($0)日").tag($0) }
+                        }
+                        Text("指定日がない月は収集予定が表示されません。")
+                            .font(.caption).foregroundStyle(.secondary)
+                    } else if isAdding && rule.schedule == "毎週" {
+                        Text("収集曜日（複数選択できます）").font(.subheadline)
+                        ForEach(weekdays, id: \.self) { day in
+                            Button {
+                                if selectedDays.contains(day) { selectedDays.remove(day) }
+                                else { selectedDays.insert(day) }
+                            } label: {
+                                HStack {
+                                    Text(day).foregroundStyle(.primary)
+                                    Spacer()
+                                    Image(systemName: selectedDays.contains(day) ? "checkmark.circle.fill" : "circle")
+                                }.frame(minHeight: 36).contentShape(Rectangle())
+                            }.buttonStyle(.plain)
+                                .accessibilityAddTraits(selectedDays.contains(day) ? .isSelected : [])
+                        }
+                    } else {
+                        Picker("曜日", selection: $rule.yobi) {
+                            ForEach(weekdays, id: \.self) { Text($0).tag($0) }
+                        }
+                    }
+                }
+                Section("登録内容") {
+                    Text(rule.garbageType).font(.headline)
+                    Text(preview).foregroundStyle(.secondary)
+                }
             }
+            .safeAreaInset(edge: .bottom) {
+                Button(action: save) {
+                    Label(isAdding ? "この収集日を追加" : "変更を完了", systemImage: "checkmark.circle.fill")
+                        .font(.headline).frame(maxWidth: .infinity).padding(14)
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(isAdding && rule.schedule == "毎週" && selectedDays.isEmpty)
+                .padding(.horizontal).padding(.vertical, 8).background(.bar)
+            }
+            .navigationTitle(isAdding ? "収集日を追加" : "収集日を編集")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) { Button("キャンセル") { dismiss() } }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(isAdding ? "追加" : "完了") { save() }
+                        .fontWeight(.semibold)
+                        .disabled(isAdding && rule.schedule == "毎週" && selectedDays.isEmpty)
+                }
+            }
+            .tint(CollectionStyle.accent)
         }
     }
+
+    private var preview: String {
+        if isAdding && rule.schedule == "毎週" {
+            return selectedDays.isEmpty ? "収集曜日を選んでください" : "毎週 " + weekdays.filter { selectedDays.contains($0) }.joined(separator: "・")
+        }
+        return scheduleDescription(rule)
+    }
+
+    private func save() {
+        rule.duplicateError = false
+        if isAdding && rule.schedule == "毎週" {
+            onSave(weekdays.filter { selectedDays.contains($0) }.map { day in
+                var copy = rule
+                copy.id = UUID()
+                copy.yobi = day
+                return copy
+            })
+        } else { onSave([rule]) }
+        dismiss()
+    }
 }
-
-

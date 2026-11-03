@@ -33,7 +33,7 @@ class CalendarVM: BaseVM {
     @Published var isSheetPresented = false
     
     
-    let calendar: Calendar = Calendar.current
+    let calendar: Calendar = ScheduleEngine.calendar
     let customLightGray = Color(red: 0.9, green: 0.9, blue: 0.9)
     
     let dateFormatter_yyyyMMdd = DateFormatter()
@@ -63,9 +63,8 @@ class CalendarVM: BaseVM {
         //Widget更新
         WidgetCenter.shared.reloadAllTimelines()
         
-        //初回遷移の場合、通知設定画面に遷移させる
+        // 初回も予定を先に表示し、通知設定はホームから任意で開く。
         if !loadIsFisrstOpenCalendar(){
-            isSheetPresented  = true
             saveIsFisrstOpenCalendar(true)
         }
         
@@ -73,43 +72,9 @@ class CalendarVM: BaseVM {
     
     // MARK: トークン更新
     func updateFcmToken() {
-        let userinfoModel = loadUserAddressRegistModel()
-        userinfoModel?.fcm_token = loadFCMToken() ?? ""
-        userinfoModel?.last_updated = dateFormatter_yyyyMMdd.string(from: Date())
-        // ゴミ情報リストをJSONデータに変換
-        let jsonData = try! JSONEncoder().encode(userinfoModel)
-        // JSONデータを文字列に変換
-        let jsonString = String(data: jsonData, encoding: .utf8)
-        // リクエストパラメータを作成
-        let requestBody = [
-            "TYPE": Const.TYPE_REGIST_USER_INFO,
-            "API_KEY": Const.API_KEY,
-            "USER_INFO": jsonString
-        ]
-        // JSONにデータ変換
-        let jsonRequestBody = try! JSONSerialization.data(withJSONObject: requestBody)
-        
-        // APIのコール
-        fetchDataFromAPI(url: Const.URL_API_CALL, type: Const.TYPE_REGIST_GARBAGE_INFO, jsonData: jsonRequestBody) { (result: Result<UserRegistRes, Error>) in
-            
-            switch result {
-            case .success(let responseData):
-                // ステータスに登録状況をセット
-                if responseData.status != Const.STATUS_SUCCSESS {
-                    print(responseData.message)
-                }
-                
-            case .failure(let error):
-                // エラー時の処理
-                print(error)
-             
-            }
-        }
+        Task { @MainActor in NotificationServerSync.shared.enqueue() }
     }
-    
-    
-   
-    
+
     // MARK: 前月に移動
     func toPreviousMonth() {
         print("戻るボタン")
@@ -155,85 +120,9 @@ class CalendarVM: BaseVM {
     // MARK: - 日付を引数で受け取って、ゴミの情報を返す
     // MARK: -戻り値を画像を返す
     func getGarbageEventImages(date: Date) -> [Image] {
-        
-        print(date)
-        
-        var events:[Image] = []
-        
-        // 引数の日付に対応する曜日を取得
-        let weekdaySymbol = getWeekdaySymbol(for: date)
-        
-        // 曜日の定義（日曜日から土曜日）
-        let weekdays: [String] = ["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"]
-        
-        // "第○曜日"の順序に対応する数値（第一: 1, 第二: 2, 第三: 3, 第四: 4, 第五: 5）
-        let weekdaysOrdinals: [String: Int] = [
-            "第一": 1,
-            "第二": 2,
-            "第三": 3,
-            "第四": 4,
-            "第五": 5
-        ]
-        
-        for model in garbageRegistModelList {
-            switch model.schedule {
-            case "毎週":
-                // 毎週の場合、指定された曜日と一致する場合にゴミの情報を追加
-                if model.yobi == weekdaySymbol {
-                    events.append(garbageTypeToImage(garbageType: model.garbageType))
-                    addEventToEventsList(date: date, garbageType: model.garbageType)
-                }
-            case "隔週":
-                // 隔週の場合、指定された頻度に応じてゴミの情報を追加
-                switch model.freqWeek {
-                case "二週に一回":
-                    let weeks = Calendar.current.dateComponents([.weekOfYear], from: model.date, to: date).weekOfYear ?? 0
-                    if weeks % 2 == 0 && model.yobi == weekdaySymbol {
-                        events.append(garbageTypeToImage(garbageType: model.garbageType))
-                        addEventToEventsList(date: date, garbageType: model.garbageType)
-                    }
-                case "三週に一回":
-                    let weeks = Calendar.current.dateComponents([.weekOfYear], from: model.date, to: date).weekOfYear ?? 0
-                    if weeks % 3 == 0 && model.yobi == weekdaySymbol {
-                        events.append(garbageTypeToImage(garbageType: model.garbageType))
-                        addEventToEventsList(date: date, garbageType: model.garbageType)
-                    }
-                case "四週に一回":
-                    let weeks = Calendar.current.dateComponents([.weekOfYear], from: model.date, to: date).weekOfYear ?? 0
-                    if weeks % 4 == 0 && model.yobi == weekdaySymbol {
-                        events.append(garbageTypeToImage(garbageType: model.garbageType))
-                        addEventToEventsList(date: date, garbageType: model.garbageType)
-                    }
-                default:
-                    break
-                }
-            case "毎月":
-                // 毎月の場合、指定された日にちと一致する場合にゴミの情報を追加
-                let calendar = Calendar.current
-                let dayOfMonth = calendar.component(.day, from: date)
-                if model.day == dayOfMonth {
-                    events.append(garbageTypeToImage(garbageType: model.garbageType))
-                    addEventToEventsList(date: date, garbageType: model.garbageType)
-                }
-            case "第○曜日":
-                
-                //登録されたゴミ情報の曜日
-                let weekdayIndex = weekdays.firstIndex(of: model.yobi) ?? 0
-                //登録されたゴミ情報の第何周か
-                let weekDayOfMonth = weekdaysOrdinals[model.weekOfMonth] ?? 0
-                //処理対象の日付の曜日
-                let targetWeekdayIndex = weekdays.firstIndex(of:weekdaySymbol ?? "") ?? 0
-                
-                if isMatchingWeekday(date: date, week: weekDayOfMonth, weekday: weekdayIndex) {
-                    events.append(garbageTypeToImage(garbageType: model.garbageType))
-                    addEventToEventsList(date: date, garbageType: model.garbageType)
-                }
-
-            default:
-                break
-            }
-        }
-        return events
+        let matching = garbageRegistModelList.filter { ScheduleEngine.matches($0, on: date) }
+        eventsList[date] = Array(Set(matching.map(\.garbageType))).sorted()
+        return matching.map { garbageTypeToImage(garbageType: $0.garbageType) }
     }
     
     // MARK: Lsitエリア作成
@@ -278,7 +167,7 @@ class CalendarVM: BaseVM {
         case "繊維":
             return Image("繊維")
         default:
-            fatalError("Invalid garbage type: \(garbageType)")
+            return Image(systemName: "trash")
         }
     }
 
@@ -310,7 +199,7 @@ class CalendarVM: BaseVM {
             calculatedWeek = 5
         }
         
-        let calculatedWeekday = (calendar.component(.weekday, from: date) + 5) % 7 + 1
+        let calculatedWeekday = calendar.component(.weekday, from: date) - 1
         
         return calculatedWeek == week && calculatedWeekday == weekday
     }
@@ -329,5 +218,4 @@ struct GarbageEvent: Hashable,Identifiable {
     let garbageType: String
     
 }
-
 

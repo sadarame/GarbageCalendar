@@ -10,28 +10,38 @@ import MapKit
 
 struct GarbageMapView: View {
     //VM
-    @ObservedObject var vm:GarbageMapVM = GarbageMapVM()
+    @StateObject var vm:GarbageMapVM = GarbageMapVM()
     
     var body: some View {
+        GeometryReader { geometry in
         ZStack {
             VStack(spacing: 0) {
                 //マップエリア
-                MapAreaView(vm:vm)
+                MapAreaView(vm:vm).frame(height: min(280, geometry.size.height * 0.34))
+                if !vm.searchMessage.isEmpty {
+                    Text(vm.searchMessage).font(.footnote).padding(8)
+                }
+                if vm.selectedPin != nil {
+                    HStack {
+                        Text("選択した場所：\(vm.visibleModels.count)件").font(.subheadline)
+                        Spacer()
+                        Button("すべて表示") { vm.selectedPin = nil }
+                    }.padding(.horizontal).padding(.vertical, 6)
+
+                }
                 //リストエリア
                 ListView(vm:vm)
                 //ボタンエリア
                 ButtonAreaVeiw(vm:vm)
                     .frame(width: UIScreen.main.bounds.width * 0.9)
                 
-                //広告エリア
-                AdMobBannerView().frame(width: 320, height: 50)
+                // Search and setup stay focused on selecting a schedule.
                 //                        .background(Color.clear)
-            }.background(Color.gray.opacity(0.1))
+            }.background(CollectionStyle.background).tint(CollectionStyle.accent)
             //位置情報取得中にプログレスを全面表示する
             if vm.isShowProgres {EffectProgressView(10)}
-            if vm.isShowNavigate {
-                PopupMessageView(vm:vm)
-            }
+
+        }
         }
         //画面遷移処理
         .navigationDestination(isPresented: $vm.toNextPage, destination: {
@@ -63,9 +73,10 @@ struct MapAreaView : View {
                     
                     Button(action: {
                         vm.getUserMapInfo()
+                        vm.callGetGarbageAreaAPI()
                     }) {
                         Image(systemName: "location.fill")
-                            .foregroundColor(.blue)
+                            .foregroundStyle(CollectionStyle.accent)
                             .padding()
                     }
                     .background(Color.white)
@@ -83,82 +94,175 @@ struct MapView: UIViewRepresentable {
     @ObservedObject var vm: GarbageMapVM
     
     func makeUIView(context: Context) -> MKMapView {
-        MKMapView(frame: .zero)
+        let map = MKMapView(frame: .zero)
+        map.delegate = context.coordinator
+        return map
     }
     
+    func makeCoordinator() -> Coordinator { Coordinator(self) }
+    final class Coordinator: NSObject, MKMapViewDelegate {
+        var parent: MapView
+        init(_ parent: MapView) { self.parent = parent }
+        func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+            DispatchQueue.main.async { self.parent.region = mapView.region }
+        }
+
+        func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+            guard let pin = view.annotation as? ScheduleMapAnnotation else { return }
+            parent.vm.selectedPin = pin
+        }
+
+        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            guard !(annotation is MKUserLocation) else { return nil }
+            let view = (mapView.dequeueReusableAnnotationView(withIdentifier: "schedule") as? MKMarkerAnnotationView)
+                ?? MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: "schedule")
+            view.annotation = annotation
+            view.canShowCallout = true
+            return view
+        }
+    }
+
     func updateUIView(_ uiView: MKMapView, context: Context) {
-        print("MapView")
-        uiView.setRegion(region, animated: true)
+        context.coordinator.parent = self
+        if abs(uiView.region.center.latitude - region.center.latitude) > 0.00001 ||
+            abs(uiView.region.center.longitude - region.center.longitude) > 0.00001 {
+            uiView.setRegion(region, animated: true)
+        }
         
-        // 既存のピンを削除
-        let existingAnnotations = uiView.annotations
-        uiView.removeAnnotations(existingAnnotations)
-        
-        // 新しいピンを追加
-        uiView.addAnnotations(pinList)
+        // Preserve annotation identity so selecting a pin survives SwiftUI updates.
+        let existing = uiView.annotations.filter { !($0 is MKUserLocation) }
+        let removed = existing.filter { old in !pinList.contains { $0 === old } }
+        let added = pinList.filter { pin in !existing.contains { $0 === pin } }
+        uiView.removeAnnotations(removed)
+        uiView.addAnnotations(added)
+        if vm.selectedPin == nil {
+            for annotation in uiView.selectedAnnotations {
+                uiView.deselectAnnotation(annotation, animated: false)
+            }
+        }
     }
 }
 
 struct ListView: View {
     @ObservedObject var vm: GarbageMapVM
-    
-    
-    
-    var body: some View {
-        List {
-            //公式フラグがあった場合
-            if vm.modelList.contains(where: { $0.officialFlag == "1" }) {
-                //公式用セクション
-                Section(header: Text("公式")) {
-                    ForEach(vm.modelList.filter { $0.officialFlag == "1" }, id: \.self) { model in
-                        
-                        HStack{
-                            Text(model.garbageInfoName ?? "") // モデルのプロパティを表示
-                            Spacer()
-                            HStack(spacing:0){
-                                Image("Usage")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 25, height: 25)
-                                Text(model.usageCount ?? "1")
-                                    .frame(width: 40, alignment: .trailing)
-                            }
-                        }
+    @State private var selectedCategory: ScheduleRegistrationCategory = .master
+    @ScaledMetric(relativeTo: .subheadline) private var usageColumnWidth = 92
 
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            // 要素がクリックされたときのイベント処理をここに書く
-                            vm.handleElementTap(model: model)
+    private var items: [GarbageAreaConvModel] {
+        vm.visibleModels.filter { $0.registrationCategory == selectedCategory }
+    }
+
+    var body: some View {
+        VStack(spacing: 8) {
+            HStack(spacing: 8) {
+                ForEach(ScheduleRegistrationCategory.allCases, id: \.self) { category in
+                    let count = vm.visibleModels.filter { $0.registrationCategory == category }.count
+                    let title = category == .master ? "公式確認済み収集日" : "利用者登録の収集日"
+                    Button { selectedCategory = category } label: {
+                        VStack(spacing: 4) {
+                            Text(title)
+                                .font(.caption.weight(.semibold))
+                                .fixedSize(horizontal: false, vertical: true)
+                            Text("\(count)件")
+                                .font(.caption2)
+                        }
+                        .frame(maxWidth: .infinity, minHeight: 52)
+                        .padding(.horizontal, 4)
+                        .foregroundStyle(selectedCategory == category ? Color.white : CollectionStyle.forest)
+                        .background(selectedCategory == category ? CollectionStyle.forest : CollectionStyle.forest.opacity(0.08))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(selectedCategory == category ? .isSelected : [])
+                }
+            }
+            .padding(.horizontal)
+            .padding(.top, 8)
+
+            if items.isEmpty {
+                VStack(spacing: 8) {
+                    Image(systemName: "calendar")
+                        .font(.title2)
+                    Text("該当する収集日はありません")
+                        .font(.subheadline)
+                    Text("別のタブや地図の場所を選んでください")
+                        .font(.caption)
+                }
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                VStack(spacing: 0) {
+                    HStack(spacing: 12) {
+                        Text("地域・収集日")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Text("利用者数")
+                            .frame(width: usageColumnWidth, alignment: .trailing)
+                        Color.clear.frame(width: 8, height: 1)
+                    }
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(CollectionStyle.forest.opacity(0.08))
+                    Divider()
+
+                    ScrollView {
+                        LazyVStack(spacing: 0) {
+                            ForEach(items, id: \.self) { model in
+                                Button { vm.handleElementTap(model: model) } label: {
+                                    HStack(spacing: 12) {
+                                        Text(model.garbageInfoName ?? "名称なし")
+                                            .font(.subheadline.weight(.medium))
+                                            .multilineTextAlignment(.leading)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        VStack(alignment: .trailing, spacing: 3) {
+                                            Text(model.usageCount.map { "\($0)人" } ?? "未集計")
+                                                .font(.subheadline.weight(.semibold))
+                                                .monospacedDigit()
+                                            if model.usageCount == nil, let legacy = model.legacyUsageCount {
+                                                Text("過去 \(legacy)件")
+                                                    .font(.caption2)
+                                                    .foregroundStyle(.secondary)
+                                            }
+                                        }
+                                        .frame(width: usageColumnWidth, alignment: .trailing)
+                                        Image(systemName: "chevron.right")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                            .frame(width: 8)
+                                    }
+                                    .padding(.horizontal, 16)
+                                    .padding(.vertical, 14)
+                                    .frame(minHeight: 56)
+                                    .contentShape(Rectangle())
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityHint("収集日を確認します")
+                                Divider().padding(.leading, 16)
+                            }
                         }
                     }
                 }
-            }
-            //一般人セクション
-            Section(header: Text("近くのゴミ情報")) {
-                ForEach(vm.modelList.filter { $0.officialFlag != "1" }, id: \.self) { model in
-                    
-                    HStack{
-                        Text(model.garbageInfoName ?? "") // モデルのプロパティを表示
-                        Spacer()
-                        HStack(spacing:0){
-                            Image("Usage")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 25, height: 25)
-                            Text(model.usageCount ?? "1")
-                                .frame(width: 40, alignment: .trailing)
-                        }
-                    }
-                    
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        // 要素がクリックされたときのイベント処理をここに書く
-                        vm.handleElementTap(model: model)
-                    }
+                .background(Color(uiColor: .secondarySystemGroupedBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .padding(.horizontal)
+                if items.contains(where: { $0.usageCount == nil && $0.legacyUsageCount != nil }) {
+                    Text("過去の件数は旧版での利用実績です。現在の利用者数とは異なります。")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal)
                 }
             }
         }
-        .listStyle(GroupedListStyle())
+        .onAppear(perform: selectAvailableCategory)
+        .onChange(of: vm.visibleModels) { _ in selectAvailableCategory() }
+    }
+
+    private func selectAvailableCategory() {
+        // When a search or pin changes, show an available category if this one is empty.
+        if items.isEmpty, let first = vm.visibleModels.first {
+            selectedCategory = first.registrationCategory
+        }
     }
 }
 
@@ -173,11 +277,11 @@ struct ButtonAreaVeiw : View {
                 vm.tapNextButton()
                 
             }) {
-                Text("次へ（該当なし）")
+                Text("手動で登録する")
                     .padding()
                     .frame(maxWidth: .infinity)
-                    .accentColor(Color.white)
-                    .background(Color.blue)
+                    .foregroundStyle(.white)
+                    .background(CollectionStyle.forest)
                     .cornerRadius(.infinity)
             }
         }

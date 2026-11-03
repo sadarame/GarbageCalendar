@@ -84,70 +84,153 @@ class BaseVM: NSObject, ObservableObject {
         isShowingPopup = false
     }
 
-    //引数ありでAPIコールする用のメソッド
-    func fetchDataFromAPI<T: Decodable>(url: String, type:String, jsonData:Data, completion: @escaping (Result<T, Error>) -> Void) {
-        
-        isShowProgres = true
-            isDisEditable = true
-        
-        guard let url = URL(string: url) else {
-            completion(.failure(APIError.invalidURL))
-            return
+}
+
+import FirebaseAuth
+import FirebaseFunctions
+
+@MainActor
+final class CollectionAPI {
+    static let shared = CollectionAPI()
+    private var login: Task<Void, Error>?
+    private var contributionSync: Task<Void, Error>?
+
+    func waitForAuthentication() async throws {
+        if let login { try await login.value }
+    }
+
+    func authenticate() async throws {
+        if let login { return try await login.value }
+        guard Auth.auth().currentUser == nil else { return }
+        let task = Task { _ = try await Auth.auth().signInAnonymously() }
+        login = task
+        defer { login = nil }
+        try await task.value
+    }
+
+    func call<T: Decodable>(_ endpoint: String, data: [String: Any]) async throws -> T {
+        try await authenticate()
+        let result = try await Functions.functions(region: "asia-northeast1").httpsCallable(endpoint).call(data)
+        let bytes = try JSONSerialization.data(withJSONObject: result.data)
+        return try JSONDecoder().decode(T.self, from: bytes)
+    }
+
+    // Recover schedules saved locally by the earlier opt-in version.
+    func syncSavedContributionIfNeeded() async throws {
+        if let contributionSync { return try await contributionSync.value }
+        guard !UserDefaults.standard.bool(forKey: "collection.hasPublishedContribution") else { return }
+        let saved = loadGarbageRegistModels()
+        guard !saved.isEmpty,
+              let area = loadUserAddressRegistModel(),
+              let latitude = Double(area.latitude), let longitude = Double(area.longitude) else { return }
+        let name = loadGarbageInfoName().flatMap { $0.isEmpty ? nil : $0 } ?? "この地域の収集予定"
+        let task = Task { @MainActor in
+            let _: SharedSaveResponse = try await self.call("saveSharedScheduleV2", data: [
+                "name": name, "latitude": latitude, "longitude": longitude,
+                "rules": try Self.rules(saved)])
+            UserDefaults.standard.set(true, forKey: "collection.hasPublishedContribution")
         }
-        
-        //リクエスト作成
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        //引数で受け取ったjsonを設定
-        request.httpBody = jsonData
-        
-        isLoading = true
-        
-        URLSession.shared.dataTask(with: request) { (data, response, error) in
-            DispatchQueue.main.async {
-                self.isLoading = false
-                self.isShowProgres = false
-                self.isDisEditable = false
-            }
-            
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            guard let data = data else {
-                completion(.failure(APIError.noData))
-                return
-            }
-            
-            do {
-//                logData(data)
-                let decodedData = try JSONDecoder().decode(T.self, from: data)
-                completion(.success(decodedData))
-            } catch {
-                completion(.failure(error))
-            }
-        }.resume()
+        contributionSync = task
+        defer { contributionSync = nil }
+        try await task.value
+    }
+
+    static func rules(_ models: [GarbageRegistModel]) throws -> Any {
+        let formatter = DateFormatter()
+        formatter.calendar = ScheduleEngine.calendar
+        formatter.timeZone = ScheduleEngine.calendar.timeZone
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy-MM-dd"
+        let normalized = models.map { original in
+            var model = original
+            if model.strDate.isEmpty { model.strDate = formatter.string(from: model.date) }
+            return model
+        }
+        return try JSONSerialization.jsonObject(with: JSONEncoder().encode(normalized))
     }
 }
 
-enum APIError: Error {
-    case invalidURL
-    case noData
+struct SharedSearchResponse: Decodable {
+    let result: [GarbageAreaConvModel]
+    let truncated: Bool
 }
+struct SharedSaveResponse: Decodable { let id: String }
+struct SharedWithdrawResponse: Decodable { let withdrawn: Bool }
+struct SharedScheduleResponse: Decodable {
+    let sourceUrl: String?
+    let id: String
+    let name: String
+    let rules: [SharedRule]
+}
+struct SharedRule: Decodable {
+    let garbageType: String
+    let iconType: String?
+    let schedule: String
+    let yobi: String?
+    let day: Int?
+    let weekOfMonth: String?
+    let freqWeek: String?
+    let strDate: String?
+    let validFrom: String?
+    let validTo: String?
+    let specificDates: [String]?
+    let excludedDates: [String]?
+    let additionalDates: [String]?
 
-func logData(_ data: Data) {
-    if let jsonString = String(data: data, encoding: .utf8) {
-        print(jsonString)
-    } else {
-        print("Invalid data")
+    func model() -> GarbageRegistModel {
+        var result = GarbageRegistModel()
+        result.garbageType = garbageType
+        result.iconType = iconType
+        result.schedule = schedule
+        result.validFrom = validFrom
+        result.validTo = validTo
+        result.specificDates = specificDates
+        result.excludedDates = excludedDates
+        result.additionalDates = additionalDates
+        if let yobi { result.yobi = yobi }
+        if let day { result.day = day }
+        if let weekOfMonth { result.weekOfMonth = weekOfMonth }
+        if let freqWeek { result.freqWeek = freqWeek }
+        if let strDate {
+            let formatter = DateFormatter()
+            formatter.calendar = Calendar(identifier: .gregorian)
+            formatter.timeZone = .current
+            formatter.locale = Locale(identifier: "en_US_POSIX")
+            formatter.dateFormat = "yyyy-MM-dd"
+            if let date = formatter.date(from: strDate) { result.date = date }
+            result.strDate = strDate
+        }
+        return result
     }
-    
-
 }
 
 
+/// Reset the entire navigation tree only after server cleanup and identity deletion succeed.
+@MainActor
+final class UserSession: ObservableObject {
+    static let shared = UserSession()
+    @Published var generation = UUID()
+    @Published var isResetting = false
 
+    func reset() async throws {
+        guard !isResetting else { return }
+        isResetting = true
+        await NotificationServerSync.shared.suspendForReset()
+        defer {
+            isResetting = false
+            NotificationServerSync.shared.resumeAfterReset()
+        }
+        // Await an in-flight anonymous login before deciding which identity to delete.
+        try await CollectionAPI.shared.syncSavedContributionIfNeeded()
+        try await CollectionAPI.shared.waitForAuthentication()
+        if let user = Auth.auth().currentUser {
+            let _: UserResetResponse = try await CollectionAPI.shared.call("resetUserDataV2", data: [:])
+            try await user.delete()
+        }
+        try Auth.auth().signOut()
+        clearLocalUserData()
+        generation = UUID()
+    }
+}
+
+struct UserResetResponse: Decodable { let reset: Bool }

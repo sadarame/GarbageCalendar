@@ -15,7 +15,7 @@ struct Provider: AppIntentTimelineProvider {
     }
 
     func snapshot(for configuration: ConfigurationAppIntent, in context: Context) async -> SimpleEntry {
-        SimpleEntry(date: Date(), configuration: configuration,garbageImgList: nil,garbageStrList: nil,dispCalDate: nil)
+        SimpleEntry(date: Date(), configuration: configuration,garbageImgList: nil,garbageStrList: ["燃えるゴミ", "プラスチック"],dispCalDate: Date())
     }
     
     func timeline(for configuration: ConfigurationAppIntent, in context: Context) async -> Timeline<SimpleEntry> {
@@ -28,7 +28,7 @@ struct Provider: AppIntentTimelineProvider {
         
         // ウィジェットの設定が明日の場合の分岐
         if configuration.isSetTomorrow {
-            dispDate = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
+            dispDate = ScheduleEngine.calendar.date(byAdding: .day, value: 1, to: Date()) ?? Date()
             manager.getGarbageEventImages(date: dispDate)
         } else {
             manager.getGarbageEventImages(date: Date())
@@ -36,12 +36,12 @@ struct Provider: AppIntentTimelineProvider {
 
         // タイムラインの生成（1エントリだけ）
         let currentDate = Date()
-        let entry = SimpleEntry(date: currentDate, configuration: configuration, garbageImgList: manager.garbageImgList, garbageStrList: manager.garbageStrList, dispCalDate: dispDate)
+        let entry = SimpleEntry(date: currentDate, configuration: configuration, garbageImgList: manager.garbageImgList, garbageStrList: manager.garbageStrList, dispCalDate: dispDate, iconTypes: manager.iconTypes)
         
         entries.append(entry)
 
         // タイムラインのポリシーを設定して、毎日0時に更新
-        let calendar = Calendar.current
+        let calendar = ScheduleEngine.calendar
         let nextMidnight = calendar.startOfDay(for: currentDate).addingTimeInterval(24 * 60 * 60)
         let refreshDate = calendar.dateComponents([.year, .month, .day], from: nextMidnight)
         let nextUpdate = calendar.date(from: refreshDate)!
@@ -57,6 +57,7 @@ struct SimpleEntry: TimelineEntry {
     let garbageImgList:[Image]?
     let garbageStrList:[String]?
     let dispCalDate:Date?
+    var iconTypes: [String: String] = [:]
     
 }
 
@@ -79,201 +80,74 @@ struct WidgetGarbageEntryView : View {
     }
 }
 
-// MARK: - スモールビュー
 struct SmallWidgetView: View {
     var entry: Provider.Entry
-
-    var body: some View {
-        ZStack {
-            VStack(alignment: .leading,spacing: 0){
-                if entry.configuration.isSetTomorrow {
-                    Text("明日")
-                        .fontWeight(.bold)  // 太字
-                        .font(.system(size: 10))
-                        .foregroundColor(.black)
-                }
-                HStack{
-                    
-                    
-                    //日付：dd
-                    Text(formatDate(entry.dispCalDate ?? Date()))
-                        .fontWeight(.bold)  // 太字
-                        .font(.system(size: 30))
-                        .foregroundColor(.black)
-                    
-                    // 縦線を挿入
-                    Divider()
-                        .frame(width: 2, height: 30)
-                    
-                    //日付：曜日
-                    Text(formatDateDay(entry.dispCalDate ?? Date()))
-                        .fontWeight(.bold)
-                        .foregroundColor(isWeekend(entry.date) ? .red : .black)
-                    
-                    
-                    
-                    Spacer()
-                    
-                    //ロゴ
-                    Image("splash")
-                        .resizable()
-                        .frame(width: 35, height: 35)
-                        .clipShape(Circle()) // 画像を丸くクリップ
-                        .overlay(
-                            Circle() // 白い線の円をオーバーレイ
-                                .stroke(Color.white, lineWidth: 3) // 白い線の設定
-                        )
-                        .padding(.bottom, 4)
-  
-                }
-                //ライン
-                LineView().padding(.bottom)
-                    .foregroundColor(.black)
-                //ゴミの文字列リストエリア
-                Group {
-                    //アンラップ
-                    
-                    if let garbageStrList = entry.garbageStrList, !garbageStrList.isEmpty {
-                        //ゴミ情報の登録件数分繰り返し
-                        ForEach(garbageStrList.indices, id: \.self) { index in
-                            
-                            if index > 2 {
-                                //３つ以上は表示しない
-                            }
-                            
-                            else if index == 2 && garbageStrList.count > 2{
-                                // 3回目のループかつ、３つ以上ゴミの登録がある場合
-                                // 「・・・」を追加する
-                                HStack {
-                                    Text(garbageStrList[index])
-                                        .font(.system(size: 15))
-                                        .foregroundColor(.black)
-                                    Text("他")
-                                        .fontWeight(.bold)
-                                        .foregroundColor(.black)
-                                }
-                            } else {
-                                Text(garbageStrList[index])
-                                    .font(.system(size: 15))
-                                    .foregroundColor(.black)
-                                
-                            }
-                        }
-                    } else {
-                        Text("ゴミの日はありません")
-                            .font(.system(size: 15))
-                            .foregroundColor(.black)
-                    }
-                    
-                    Spacer()
-                }
-            }
-            
-        }
-            
-    }
+    var body: some View { CollectionWidgetCard(entry: entry, spacious: false) }
 }
-
-// MARK: - ミドルビュー
 struct MediumWidgetView: View {
     var entry: Provider.Entry
+    var body: some View { CollectionWidgetCard(entry: entry, spacious: true) }
+}
+struct CollectionWidgetCard: View {
+    var entry: Provider.Entry
+    var spacious: Bool
+    private var types: [String] { entry.garbageStrList ?? [] }
+    private var date: Date { entry.dispCalDate ?? entry.date }
 
     var body: some View {
-        ZStack {
-            HStack {
-                VStack(alignment: .leading,spacing: 0) {
-                    if entry.configuration.isSetTomorrow {
-                        Text("明日")
-                            .fontWeight(.bold)  // 太字
-                            .font(.system(size: 10))
-                            .foregroundColor(.black)
-                    }
-                    //日付のエリア
-                    HStack{
-                        //日付：dd
-                        Text(formatDate(entry.dispCalDate ?? Date()))
-                            .fontWeight(.bold)  // 太字
-                            .font(.system(size: 40))
-                            .foregroundColor(.black)
-                        
-                        // 縦線を挿入
-                        Divider()
-                            .frame(width: 2, height: 30)
-                            .foregroundColor(.black)
-                        
-                        //日付：曜日
-                        Text(formatDateDay(entry.dispCalDate ?? Date()))
-                            .fontWeight(.bold)
-                            .foregroundColor(isWeekend(entry.date) ? .red : .black)
-                        
-                        
-                        Spacer()
-                        
-                        Image("splash")
-                            .resizable()
-                            .frame(width: 40, height: 40)
-                            .clipShape(Circle()) // 画像を丸くクリップ
-                            .overlay(
-                                Circle() // 白い線の円をオーバーレイ
-                                    .stroke(Color.white, lineWidth: 3) // 白い線の設定
-                            )
-                        
-                    }
-                    //ライン
-                    LineView().padding(.bottom)
-                    //ゴミの文字列リストエリア
-                    Group {
-                        //アンラップ
-                        
-                        if let garbageStrList = entry.garbageStrList, !garbageStrList.isEmpty {
-                            //ゴミ情報の登録件数分繰り返し
-                            ForEach(garbageStrList.indices, id: \.self) { index in
-                                
-                                if index > 2 {
-                                    //３つ以上は表示しない
-                                }
-                                
-                                else if index == 2 && garbageStrList.count > 2{
-                                    // 3回目のループかつ、３つ以上ゴミの登録がある場合
-                                    // 「・・・」を追加する
-                                    HStack {
-                                        Text(garbageStrList[index])
-                                            .font(.system(size: 20))
-                                            .foregroundColor(.black)
-                                        Text("他")
-                                            .fontWeight(.bold)
-                                            .foregroundColor(.black)
-                                    }
-                                } else {
-                                    Text(garbageStrList[index])
-                                        .font(.system(size: 20))
-                                        .foregroundColor(.black)
-                                    
-                                }
-                            }
-                        } else {
-                            Text("ゴミの日はありません")
-                                .foregroundColor(.black)
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(entry.configuration.isSetTomorrow ? "明日" : "今日")
+                    .font(.headline.bold())
+                Spacer(minLength: 4)
+                Text(CollectionStyle.date(date, format: "M/d（E）"))
+                    .font(.caption.weight(.semibold))
+            }
+            if types.isEmpty {
+                Spacer(minLength: 0)
+                HStack(spacing: 8) {
+                    Image(systemName: "leaf.fill").font(.title2)
+                    Text("収集なし").font(.headline)
+                }
+                Spacer(minLength: 0)
+            } else if spacious {
+                HStack(spacing: 8) {
+                    ForEach(Array(types.prefix(3)), id: \.self) { type in
+                        VStack(spacing: 6) {
+                            CollectionIcon(type: type, size: 40, iconType: entry.iconTypes[type])
+                            Text(type)
+                                .font(.caption.weight(.semibold))
+                                .lineLimit(1).minimumScaleFactor(0.75)
                         }
-                        
-                        Spacer()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .padding(.horizontal, 4)
+                        .background(.white.opacity(0.55), in: RoundedRectangle(cornerRadius: 16))
                     }
                 }
-                //イメージ画像のエリア
-                Group{
-                    if let firstImage = entry.garbageImgList?.first {
-                        firstImage
-                            .resizable()
-                            .frame(width: 100, height: 100)
-                    } else {
-                        Image("gomi_mark13_Nodata")
-                            .resizable()
-                            .frame(width: 100, height: 100)
+                if types.count > 3 { overflow }
+            } else {
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(Array(types.prefix(3)), id: \.self) { type in
+                        HStack(spacing: 6) {
+                            CollectionIcon(type: type, size: 24, iconType: entry.iconTypes[type])
+                            Text(type)
+                                .font(.caption.weight(.semibold))
+                                .lineLimit(1).minimumScaleFactor(0.75)
+                        }
                     }
-                    
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                if types.count > 3 { overflow }
             }
         }
+        .foregroundStyle(CollectionStyle.forest)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+    }
+
+    private var overflow: some View {
+        Text("ほか\(types.count - 3)種類")
+            .font(.system(size: 10, weight: .medium))
+            .lineLimit(1)
     }
 }
 
@@ -284,12 +158,11 @@ struct WidgetGarbage: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
             WidgetGarbageEntryView(entry: entry)
-//                .containerBackground(.fill.tertiary, for: .widget)
-                .containerBackground(Color("WidgetBackground"), for: .widget)
+.containerBackground(CollectionStyle.onboarding, for: .widget)
         }
         .supportedFamilies([.systemSmall, .systemMedium])
         .configurationDisplayName("ゴミカレンダー")
-        .description("ゴミ情報を表示します。")
+        .description("今日・明日のゴミ出しをホーム画面で確認できます。")
     }
 }
 
@@ -298,100 +171,31 @@ struct ContainerGroupManager {
     var garbageList:[GarbageRegistModel] = []
     var garbageStrList:[String] = []
     var garbageImgList:[Image] = []
+    var iconTypes: [String: String] = [:]
     
     mutating func setGarbageModels(){
         guard let encodedData = UserDefaults(suiteName: "group.yosuke.garbagecal.widget")?.object(forKey: "garbageRegistModels")else{
             return
         }
         
-        self.garbageList = try! JSONDecoder().decode([GarbageRegistModel].self, from: encodedData as! Data)
+        guard let data = encodedData as? Data, let models = try? JSONDecoder().decode([GarbageRegistModel].self, from: data) else { return }
+        self.garbageList = models
         
     }
     
     // MARK: - 日付と合致するゴミの画像に変更
     mutating func getGarbageEventImages(date: Date) {
-        
-        // 引数の日付に対応する曜日を取得
-        let weekdaySymbol = getWeekdaySymbol(for: date)
-        
-        // 曜日の定義（日曜日から土曜日）
-        let weekdays: [String] = ["日曜日", "月曜日", "火曜日", "水曜日", "木曜日", "金曜日", "土曜日"]
-        
-        // "第○曜日"の順序に対応する数値（第一: 1, 第二: 2, 第三: 3, 第四: 4, 第五: 5）
-        let weekdaysOrdinals: [String: Int] = [
-            "第一": 1,
-            "第二": 2,
-            "第三": 3,
-            "第四": 4,
-            "第五": 5
-        ]
-        
-        for model in self.garbageList {
-            switch model.schedule {
-            case "毎週":
-                // 毎週の場合、指定された曜日と一致する場合にゴミの情報を追加
-                if model.yobi == weekdaySymbol {
-                    self.garbageImgList.append(garbageTypeToImage(garbageType: model.garbageType))
-                    self.garbageStrList.append(model.garbageType)
-                }
-            case "隔週":
-                // 隔週の場合、指定された頻度に応じてゴミの情報を追加
-                switch model.freqWeek {
-                case "二週に一回":
-                    let weeks = Calendar.current.dateComponents([.weekOfYear], from: model.date, to: date).weekOfYear ?? 0
-                    if weeks % 2 == 0 && model.yobi == weekdaySymbol {
-                        self.garbageImgList.append(garbageTypeToImage(garbageType: model.garbageType))
-                        self.garbageStrList.append(model.garbageType)
-                       
-                    }
-                case "三週に一回":
-                    let weeks = Calendar.current.dateComponents([.weekOfYear], from: model.date, to: date).weekOfYear ?? 0
-                    if weeks % 3 == 0 && model.yobi == weekdaySymbol {
-                        self.garbageImgList.append(garbageTypeToImage(garbageType: model.garbageType))
-                        self.garbageStrList.append(model.garbageType)
-                    }
-                case "四週に一回":
-                    let weeks = Calendar.current.dateComponents([.weekOfYear], from: model.date, to: date).weekOfYear ?? 0
-                    if weeks % 4 == 0 && model.yobi == weekdaySymbol {
-                        self.garbageImgList.append(garbageTypeToImage(garbageType: model.garbageType))
-                        self.garbageStrList.append(model.garbageType)
-                        
-                    }
-                default:
-                    break
-                }
-            case "毎月":
-                // 毎月の場合、指定された日にちと一致する場合にゴミの情報を追加
-                let calendar = Calendar.current
-                let dayOfMonth = calendar.component(.day, from: date)
-                if model.day == dayOfMonth {
-                    self.garbageImgList.append(garbageTypeToImage(garbageType: model.garbageType))
-                    self.garbageStrList.append(model.garbageType)
-                   
-                }
-            case "第○曜日":
-                
-                //登録されたゴミ情報の曜日
-                let weekdayIndex = weekdays.firstIndex(of: model.yobi) ?? 0
-                //登録されたゴミ情報の第何周か
-                let weekDayOfMonth = weekdaysOrdinals[model.weekOfMonth] ?? 0
-                //処理対象の日付の曜日
-                let targetWeekdayIndex = weekdays.firstIndex(of:weekdaySymbol ?? "") ?? 0
-                
-                if isMatchingWeekday(date: date, week: weekDayOfMonth, weekday: weekdayIndex) {
-                    self.garbageImgList.append(garbageTypeToImage(garbageType: model.garbageType))
-                    self.garbageStrList.append(model.garbageType)
-                   
-                }
-
-            default:
-                break
-            }
+        let matching = garbageList.filter { ScheduleEngine.matches($0, on: date) }
+        garbageStrList = Array(Set(matching.map(\.garbageType))).sorted()
+        iconTypes = [:]
+        for type in garbageStrList {
+            iconTypes[type] = CollectionStyle.iconType(for: type, on: date, models: matching)
         }
+        garbageImgList = garbageStrList.map { Image(systemName: CollectionStyle.symbol($0)) }
     }
-    
+
     func getWeekdaySymbol(for date: Date) -> String? {
-        let calendar = Calendar.current
+        let calendar = ScheduleEngine.calendar
         let components = calendar.dateComponents([.weekday], from: date)
         if let weekday = components.weekday {
             return calendar.weekdaySymbols[weekday - 1]
@@ -424,12 +228,12 @@ struct ContainerGroupManager {
         case "繊維":
             return Image("繊維")
         default:
-            fatalError("Invalid garbage type: \(garbageType)")
+            return Image(systemName: "trash")
         }
     }
     
     func isMatchingWeekday(date: Date, week: Int, weekday: Int) -> Bool {
-        let calendar = Calendar.current
+        let calendar = ScheduleEngine.calendar
         let day = calendar.component(.day, from: date)
         let calculatedWeek: Int
         
@@ -445,14 +249,14 @@ struct ContainerGroupManager {
             calculatedWeek = 5
         }
         
-        let calculatedWeekday = (calendar.component(.weekday, from: date) + 5) % 7 + 1
+        let calculatedWeekday = calendar.component(.weekday, from: date) - 1
         
         return calculatedWeek == week && calculatedWeekday == weekday
     }
 }
 
 func isWeekend(_ date: Date) -> Bool {
-    let calendar = Calendar.current
+    let calendar = ScheduleEngine.calendar
     let dayOfWeek = calendar.component(.weekday, from: date)
     return dayOfWeek == 1 || dayOfWeek == 7 // 1は日曜日、7は土曜日
 }
@@ -494,6 +298,7 @@ struct GarbageRegistModel:Identifiable,Codable{
     var id = UUID()
     //ゴミの種類
     var garbageType:String = "燃えるゴミ"
+    var iconType: String?
     
     var garbageInfoName:String = ""
     //スケジュール
@@ -514,6 +319,12 @@ struct GarbageRegistModel:Identifiable,Codable{
     var strDate = ""
     //エラー用
     var duplicateError = false
+    // Optional fields preserve decoding of schedules saved by older releases.
+    var validFrom: String?
+    var validTo: String?
+    var specificDates: [String]?
+    var excludedDates: [String]?
+    var additionalDates: [String]?
     
     //初期処理
     init(date: Date = Date()) {
@@ -523,7 +334,7 @@ struct GarbageRegistModel:Identifiable,Codable{
     
     //日付の形式を変更する
     private mutating func resetTimeOfDate() {
-        let calendar = Calendar.current
+        let calendar = ScheduleEngine.calendar
         var components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: self.date)
         
         // 時間を0時0分0秒に設定する
@@ -595,4 +406,13 @@ extension ConfigurationAppIntent {
 } timeline: {
     SimpleEntry(date: .now, configuration: .smiley,garbageImgList: nil,garbageStrList: nil, dispCalDate: nil)
     SimpleEntry(date: .now, configuration: .starEyes,garbageImgList: nil,garbageStrList: nil, dispCalDate: nil)
+}
+
+#Preview(as: .systemMedium) {
+    WidgetGarbage()
+} timeline: {
+    SimpleEntry(date: .now, configuration: .starEyes, garbageImgList: nil,
+                garbageStrList: ["燃えるゴミ", "プラスチック", "ペットボトル"], dispCalDate: .now)
+    SimpleEntry(date: .now, configuration: .smiley, garbageImgList: nil,
+                garbageStrList: ["燃えるゴミ", "プラスチック", "ペットボトル", "古紙"], dispCalDate: .now)
 }

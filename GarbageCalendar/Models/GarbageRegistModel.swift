@@ -14,6 +14,7 @@ struct GarbageRegistModel:Identifiable,Codable{
     var id = UUID()
     //ゴミの種類
     var garbageType:String = "燃えるゴミ"
+    var iconType: String?
     
     var garbageInfoName:String = ""
     //スケジュール
@@ -34,6 +35,12 @@ struct GarbageRegistModel:Identifiable,Codable{
     var strDate = ""
     //エラー用
     var duplicateError = false
+    // Optional fields preserve decoding of schedules saved by older releases.
+    var validFrom: String?
+    var validTo: String?
+    var specificDates: [String]?
+    var excludedDates: [String]?
+    var additionalDates: [String]?
     
     //初期処理
     init(date: Date = Date()) {

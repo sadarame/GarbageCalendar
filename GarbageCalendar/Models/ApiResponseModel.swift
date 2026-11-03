@@ -78,3 +78,49 @@ struct GarbageItemRes: Codable {
     let weekOfMonth: String?
     let freqWeek: String?
 }
+
+// Postal codes are resolved against the postal directory before geocoding an address.
+enum PostalCodeLookup {
+    enum LookupError: LocalizedError {
+        case invalid, notFound, unavailable
+        var errorDescription: String? {
+            switch self {
+            case .invalid: return "郵便番号を7桁で入力してください。"
+            case .notFound: return "この郵便番号の住所が見つかりませんでした。番号を確認してください。"
+            case .unavailable: return "住所を取得できませんでした。通信を確認して再試行してください。"
+            }
+        }
+    }
+
+    static func normalize(_ value: String) throws -> String {
+        let text = (value.applyingTransform(.fullwidthToHalfwidth, reverse: false) ?? value)
+            .replacingOccurrences(of: "〒", with: "")
+            .filter { !$0.isWhitespace && !"-−‐‑–—ー".contains($0) }
+        guard text.count == 7, text.allSatisfy({ $0.isASCII && $0.isNumber }) else {
+            throw LookupError.invalid
+        }
+        return text
+    }
+
+    static func addresses(for input: String, session: URLSession = .shared) async throws -> [ApiAddress] {
+        let code = try normalize(input)
+        var components = URLComponents(string: "https://zipcloud.ibsnet.co.jp/api/search")!
+        components.queryItems = [URLQueryItem(name: "zipcode", value: code), URLQueryItem(name: "limit", value: "1000")]
+        var request = URLRequest(url: components.url!)
+        request.timeoutInterval = 20
+        let (data, response) = try await session.data(for: request)
+        guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw LookupError.unavailable }
+        let result = try JSONDecoder().decode(ApiAddressResponse.self, from: data)
+        guard result.status == 200 else { throw LookupError.unavailable }
+        let matches = (result.results ?? []).filter { $0.zipcode == code }
+        guard !matches.isEmpty else { throw LookupError.notFound }
+        return matches
+    }
+}
+
+extension ApiAddress {
+    var displayAddress: String { address1 + address2 + address3 }
+    var geocodingAddress: String {
+        address1 + address2 + (address3 == "以下に掲載がない場合" ? "" : address3)
+    }
+}

@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-# platform :ios, '17.0'
+platform :ios, '17.0'
 
 target 'GarbageCalendar' do
   # Comment the next line if you don't want to use dynamic frameworks
@@ -9,15 +9,18 @@ target 'GarbageCalendar' do
 
 #  pod 'RealmSwift'
   
-  pod 'Firebase/Analytics'
+  pod 'Firebase/Auth', '~> 10.29.0'
+  pod 'Firebase/Functions', '~> 10.29.0'
+  pod 'Firebase/AppCheck', '~> 10.29.0'
+  pod 'Firebase/Analytics', '~> 10.29.0'
   
-  pod 'Firebase/Messaging'
+  pod 'Firebase/Messaging', '~> 10.29.0'
   
-  pod 'FirebaseAnalytics'
+  pod 'FirebaseAnalytics', '~> 10.29.0'
   
-  pod 'FirebaseMessaging'
+  pod 'FirebaseMessaging', '~> 10.29.0'
   
-  pod 'Google-Mobile-Ads-SDK'
+  pod 'Google-Mobile-Ads-SDK', '~> 11.13.0'
 
   # Pods for GarbageCalendar
 end

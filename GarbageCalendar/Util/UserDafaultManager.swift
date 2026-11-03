@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import WidgetKit
+import UserNotifications
+import UIKit
 
 
 
@@ -31,8 +34,11 @@ func saveGarbageRegistModels(_ models: [GarbageRegistModel]) {
         let data = try JSONEncoder().encode(models)
         UserDefaults.standard.set(data, forKey: "garbageRegistModels")
     
+        // Refresh reminders whenever the stored collection rules change.
+        Task { @MainActor in NotificationServerSync.shared.enqueue() }
         //Widget用データの保存
         UserDefaults(suiteName: "group.yosuke.garbagecal.widget")?.set(data, forKey: "garbageRegistModels")
+        WidgetCenter.shared.reloadAllTimelines()
         
         
     } catch {
@@ -179,4 +185,18 @@ func saveIsFisrstOpenCalendar(_ value: Bool) {
 
 func loadIsFisrstOpenCalendar() -> Bool {
     return UserDefaults.standard.bool(forKey: "isFirstLoadCalendar")
+}
+
+
+@MainActor
+func clearLocalUserData() {
+    UIApplication.shared.unregisterForRemoteNotifications()
+    if let domain = Bundle.main.bundleIdentifier {
+        UserDefaults.standard.removePersistentDomain(forName: domain)
+    }
+    let widgets = UserDefaults(suiteName: "group.yosuke.garbagecal.widget")
+    widgets?.removePersistentDomain(forName: "group.yosuke.garbagecal.widget")
+    UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    UNUserNotificationCenter.current().removeAllDeliveredNotifications()
+    WidgetCenter.shared.reloadAllTimelines()
 }

@@ -15,6 +15,8 @@ class GarbageRegistVM : BaseVM {
     @Published var garbageRegistModelList:[GarbageRegistModel] = []
     //ゴミ情報名称
     @Published var garbageInfoName = ""
+    @Published var reference: CollectionReference?
+    @Published private(set) var isLoadingSchedule = false
     //画面遷移用のフラグ
     @Published var toNextPage:Bool = false
     
@@ -28,16 +30,23 @@ class GarbageRegistVM : BaseVM {
     let days:[Int] = Array(1...31)
     let months:[Int] = Array(1...12)
     
+    @Published var needsArea = false
+    @Published var hasPublishedContribution = UserDefaults.standard.bool(forKey: "collection.hasPublishedContribution")
+    private var selectedScheduleId: String?
+    private var didLoad = false
+    private(set) var editsSavedAutomatically = false
     var count = 0
     
     override init() {
         super.init()
-        onApperInit()
     }
     
     // MARK: 画面表示時の処理
     func onApperInit(){
+        guard !didLoad else { return }
+        didLoad = true
         let trigger = loadTriggerFlg()
+        editsSavedAutomatically = trigger == Const.TRG_SIDE_MENU
         //リストタップで遷移
         if trigger == Const.TRG_LIST_TAP {
             //タップされたListをもとに情報を取得する
@@ -47,11 +56,10 @@ class GarbageRegistVM : BaseVM {
             //ユーザデフォルトからモデル変数リストを取得
             garbageRegistModelList = loadGarbageRegistModels()
             //はじめましてだったらリスト作る
-            if garbageRegistModelList.isEmpty{
-                self.addGarbageInfo()
-            }
+
             //ゴミ情報名称を設定
             garbageInfoName = loadGarbageInfoName() ?? ""
+            reference = CollectionReference.load()
             
         } else {
             //なにもしない
@@ -71,34 +79,26 @@ class GarbageRegistVM : BaseVM {
         
         garbageInfoName = tmpGarbageInfoName
         
-        //リクエスト作成
-        let requestBody = [
-            "TYPE": Const.TYPE_GET_GARBAGE_INFO,
-            "API_KEY": Const.API_KEY,
-            "GROUP_ID": id
-        ]
-        
-        // JSONにデータ変換
-        let jsonRequestBody = try! JSONSerialization.data(withJSONObject: requestBody)
-        
-        //APIのコール
-        fetchDataFromAPI(url: Const.URL_API_CALL, type: Const.TYPE_GET_GARBAGE_AREA,jsonData:jsonRequestBody) { [self] (result: Result<GetGarbageInfoRes, Error>) in
-            DispatchQueue.main.async {
-                switch result {
-                    
-                case .success(let responseData):
-                    //レスポンスをデータモデルに変換してユーザーデフォルトに保存し、
-                    //クラス変数二セット
-                    self.assignValues(from: responseData)
-                case .failure(let error):
-                    // エラー時の処理
-                    self.showPopup(withMessage: "ゴミ情報が取得できませんでした。")
-                    print("Error: \(error)")
-                }
+        isShowProgres = true
+        isLoadingSchedule = true
+        Task { @MainActor in
+            defer {
+                self.isLoadingSchedule = false
+                self.isShowProgres = false
+            }
+            do {
+                let response: SharedScheduleResponse = try await CollectionAPI.shared.call(
+                    "getSharedScheduleV2", data: ["id": id])
+                self.selectedScheduleId = response.id
+                self.reference = CollectionReference(scheduleId: response.id, sourceUrl: response.sourceUrl)
+                self.garbageInfoName = response.name
+                self.garbageRegistModelList = response.rules.map { $0.model() }
+            } catch {
+                self.showPopup(withMessage: "収集情報を取得できませんでした。戻って再検索してください。")
             }
         }
     }
-    
+
     // MARK: プラスボタン押下時のイベント
     //リストに構造体を追加
     func addGarbageInfo(){
@@ -108,63 +108,77 @@ class GarbageRegistVM : BaseVM {
     
     // MARK: 登録ボタン押下時の処理
     func registData(){
-        
-        saveGarbageInfoName(garbageInfoName)
-        //重複チェック
-        if checkForDuplicates() {
+
+        guard !isShowProgres else { return }
+        guard !garbageRegistModelList.isEmpty else {
+            showPopup(withMessage: "収集ルールを1件以上追加してください。")
             return
         }
-        //ユーザーデフォルトに登録
-        saveGarbageRegistModels(garbageRegistModelList)
-        //登録用のAPIを叩く
+        guard !checkForDuplicates() else { return }
+        if garbageInfoName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            let area = loadUserAddressRegistModel()
+            let label = (area?.locality ?? "") + (area?.thoroughfare ?? "")
+            garbageInfoName = label.isEmpty ? "この地域の収集予定" : label + "の収集予定"
+        }
         callRegistGarbageInfoAPI()
     }
-    
-    // MARK: ゴミ情報登録APIをコールする
-    func callRegistGarbageInfoAPI(){
-        // ゴミ情報リストをJSONデータに変換
-        let jsonData = try! JSONEncoder().encode(garbageRegistModelList)
-        // JSONデータを文字列に変換
-        let jsonString = String(data: jsonData, encoding: .utf8)
-        
-        let model = loadGarbageAreaConvModel()
-        
-        // リクエストパラメータを作成
-        let requestBody = [
-            "TYPE": Const.TYPE_REGIST_GARBAGE_INFO,
-            "API_KEY": Const.API_KEY,
-            "USER_ID":loadUserID(),
-            "GARBAGE_INFO": jsonString,
-            "GARBAGE_INFO_NAME": garbageInfoName,
-            "CONV_NO": model?.No
-        ]
-        
-        // JSONにデータ変換
-        let jsonRequestBody = try! JSONSerialization.data(withJSONObject: requestBody)
-        
-        //APIのコール
-        fetchDataFromAPI(url: Const.URL_API_CALL, type: Const.TYPE_REGIST_GARBAGE_INFO, jsonData: jsonRequestBody) { (result: Result<GarbageRegistRes, Error>) in
-            //メインスレッドで実行
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let responseData):
-                    //ステータスに登録状況をセット
-                    if responseData.status == "succsess" {
-                        //画面遷移
-                        self.toNextPage = true
-                    }else{
-                        self.showPopup(withMessage: "ゴミ情報登録でエラーが発生しました。")
-                    }
-                    
-                case .failure(let error):
-                    // エラー時の処理
-                    self.showPopup(withMessage: "ゴミ情報登録でエラーが発生しました。")
-                    print("Error: \(error)")
-                }
+
+    func saveCalendarEdits() {
+        guard editsSavedAutomatically else { return }
+        saveGarbageInfoName(garbageInfoName)
+        saveGarbageRegistModels(garbageRegistModelList)
+    }
+
+    private func finishSaving() {
+        CollectionReference.save(reference)
+        saveGarbageInfoName(garbageInfoName)
+        saveGarbageRegistModels(garbageRegistModelList)
+        saveDestination(Const.view_CalendarView)
+        toNextPage = true
+    }
+
+    // Registration updates only this Firebase user's own community contribution.
+    func callRegistGarbageInfoAPI() {
+        guard let address = loadUserAddressRegistModel(),
+              let latitude = Double(address.latitude), let longitude = Double(address.longitude),
+              !garbageInfoName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            needsArea = true
+            return
+        }
+        isShowProgres = true
+        Task { @MainActor in
+            defer { self.isShowProgres = false }
+            do {
+                var payload: [String: Any] = [
+                    "name": self.garbageInfoName, "latitude": latitude, "longitude": longitude,
+                    "rules": try CollectionAPI.rules(self.garbageRegistModelList)]
+                if let id = self.selectedScheduleId { payload["selectedScheduleId"] = id }
+                let _: SharedSaveResponse = try await CollectionAPI.shared.call("saveSharedScheduleV2", data: payload)
+                self.hasPublishedContribution = true
+                UserDefaults.standard.set(true, forKey: "collection.hasPublishedContribution")
+                self.finishSaving()
+            } catch {
+                self.showPopup(withMessage: "保存できませんでした。通信を確認して再試行してください。")
             }
         }
-    }//ファンクションの括弧
-    
+    }
+
+    func withdrawSharing() {
+        guard !isShowProgres else { return }
+        isShowProgres = true
+        Task { @MainActor in
+            defer { self.isShowProgres = false }
+            do {
+                let _: SharedWithdrawResponse = try await CollectionAPI.shared.call("unpublishSharedScheduleV2", data: [:])
+                self.hasPublishedContribution = false
+                UserDefaults.standard.set(false, forKey: "collection.hasPublishedContribution")
+                self.showPopup(withMessage: "共有を停止しました。端末の予定は引き続き利用できます。")
+            } catch {
+                self.showPopup(withMessage: "共有を停止できませんでした。通信を確認して再試行してください。")
+            }
+        }
+    }
+
     // MARK: 入力チェック
     func checkForDuplicates() -> Bool {
         
@@ -180,7 +194,7 @@ class GarbageRegistVM : BaseVM {
             //前回のエラーをクリア
             garbageRegistModelList[index].duplicateError = false
             // UUID以外の項目で重複をチェック
-            let uniqueKey = "\(model.garbageType)-\(model.schedule)-\(model.yobi)-\(model.day)-\(model.weekOfMonth)-\(model.freqWeek)-\(model.strDate)"
+            let uniqueKey = "\(model.garbageType)-\(model.schedule)-\(model.yobi)-\(model.day)-\(model.weekOfMonth)-\(model.freqWeek)-\(model.strDate)-\((model.excludedDates ?? []).sorted())-\((model.additionalDates ?? []).sorted())-\(model.validFrom ?? "")-\(model.validTo ?? "")-\((model.specificDates ?? []).sorted())"
             //            print(uniqueKey)
             if uniqueSet.contains(uniqueKey) {
                 // 重複が見つかった場合は重複要素のエラーを設定
@@ -199,7 +213,6 @@ class GarbageRegistVM : BaseVM {
     // MARK: 削除イベント
     func deleteCard(at index: Int) {
         garbageRegistModelList.remove(at: index)
-        saveGarbageRegistModels(garbageRegistModelList)
     }
     
     // MARK: 構造体の詰め込みメソッド
